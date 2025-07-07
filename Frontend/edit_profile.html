@@ -11,25 +11,24 @@
   <div class="w-full max-w-2xl bg-white bg-opacity-90 backdrop-blur-md p-8 rounded-lg shadow-lg">
     <h1 class="text-3xl font-bold text-yellow-700 mb-6 text-center">Edit Profile</h1>
 
-    <form action="#" method="POST" class="space-y-6">
+    <form id="edit-profile-form" class="space-y-6">
 
       <!-- Full Name -->
       <div>
-        <label class="block text-gray-700 font-semibold mb-1">Full Name</label>
-        <input type="text" placeholder="Your Full Name" class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-yellow-500">
+        <label for="fullName" class="block text-gray-700 font-semibold mb-1">Full Name</label>
+        <input type="text" id="fullName" name="fullName" placeholder="Your Full Name" class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-yellow-500">
       </div>
 
-      <!-- Email -->
+      <!-- Email (read-only) -->
       <div>
-        <label class="block text-gray-700 font-semibold mb-1">Email</label>
-        <input type="email" placeholder="you@example.com" class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-yellow-500">
+        <label for="email" class="block text-gray-700 font-semibold mb-1">Email (cannot be changed)</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" class="w-full px-4 py-2 border rounded-md bg-gray-200 cursor-not-allowed" readonly>
       </div>
-
 
       <!-- Dietary Preferences -->
       <div>
-        <label class="block text-gray-700 font-semibold mb-1">Dietary Preference</label>
-        <select class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-yellow-500">
+        <label for="dietaryPreference" class="block text-gray-700 font-semibold mb-1">Dietary Preference</label>
+        <select id="dietaryPreference" name="dietaryPreference" class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-yellow-500">
           <option>None</option>
           <option>Vegetarian</option>
           <option>Vegan</option>
@@ -40,14 +39,14 @@
 
       <!-- Allergies -->
       <div>
-        <label class="block text-gray-700 font-semibold mb-1">Allergies (comma-separated)</label>
-        <input type="text" placeholder="e.g., prawn, nuts, dairy" class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-yellow-500">
+        <label for="allergies" class="block text-gray-700 font-semibold mb-1">Allergies (comma-separated)</label>
+        <input type="text" id="allergies" name="allergies" placeholder="e.g., prawn, nuts, dairy" class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-yellow-500">
       </div>
 
       <!-- Favorite Meal Type -->
       <div>
-        <label class="block text-gray-700 font-semibold mb-1">Favorite Meal Type</label>
-        <select class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-yellow-500">
+        <label for="favoriteMeal" class="block text-gray-700 font-semibold mb-1">Favorite Meal Type</label>
+        <select id="favoriteMeal" name="favoriteMeal" class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-yellow-500">
           <option>Breakfast</option>
           <option>Lunch</option>
           <option>Dinner</option>
@@ -61,9 +60,98 @@
         <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-2 rounded-md transition">
           Save Changes
         </button>
+         <a href="user.html" class="ml-4 text-gray-600 hover:underline">Cancel</a>
       </div>
+       <p id="message-display" class="mt-4 text-center font-semibold"></p>
     </form>
   </div>
 
+  <script>
+    const token = localStorage.getItem('token');
+    // If no token, redirect to login immediately
+    if (!token) {
+      window.location.href = 'login.html';
+    }
+
+    const form = document.getElementById('edit-profile-form');
+    const messageDisplay = document.getElementById('message-display');
+
+    // Function to load current user data into the form
+    async function loadProfileData() {
+      try {
+        const response = await fetch('/api/users/profile', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error('Failed to fetch profile');
+        
+        const user = await response.json();
+        
+        // Populate the form fields with user data
+        document.getElementById('fullName').value = user.fullName;
+        document.getElementById('email').value = user.email;
+        document.getElementById('dietaryPreference').value = user.dietaryPreference;
+        document.getElementById('favoriteMeal').value = user.favoriteMeal;
+        document.getElementById('allergies').value = user.allergies.join(', ');
+
+      } catch (error) {
+        console.error('Error loading profile data:', error);
+        messageDisplay.textContent = 'Could not load your profile data.';
+        messageDisplay.className = 'text-center font-semibold text-red-500';
+      }
+    }
+
+    // Function to handle form submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      messageDisplay.textContent = '';
+
+      const formData = new FormData(form);
+      const allergies = formData.get('allergies').split(',').map(item => item.trim()).filter(item => item);
+
+      const updatedData = {
+        fullName: formData.get('fullName'),
+        dietaryPreference: formData.get('dietaryPreference'),
+        favoriteMeal: formData.get('favoriteMeal'),
+        allergies: allergies
+      };
+
+      try {
+        const response = await fetch('/api/users/profile', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(updatedData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // Update userInfo in localStorage with the new details
+          localStorage.setItem('userInfo', JSON.stringify(result));
+          
+          messageDisplay.textContent = 'Profile updated successfully!';
+          messageDisplay.className = 'text-center font-semibold text-green-600';
+
+          // Redirect back to the profile page after a delay
+          setTimeout(() => {
+            window.location.href = 'user.html';
+          }, 1500);
+
+        } else {
+          messageDisplay.textContent = result.message || 'Failed to update profile.';
+          messageDisplay.className = 'text-center font-semibold text-red-500';
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        messageDisplay.textContent = 'An error occurred. Please try again.';
+        messageDisplay.className = 'text-center font-semibold text-red-500';
+      }
+    });
+
+    // Load the user's data when the page is ready
+    document.addEventListener('DOMContentLoaded', loadProfileData);
+  </script>
 </body>
 </html>

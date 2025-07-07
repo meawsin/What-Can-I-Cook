@@ -11,75 +11,116 @@
       <!-- Sidebar -->
       <div id="sidebar" class="fixed md:relative z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 w-64 min-h-screen bg-black p-6 flex flex-col rounded-br-3xl">
         <div class="flex items-center mb-6">
-          <img src="logo-removebg.png" alt="Logo" class="w-20 h-20 object-contain filter invert">
+          <img src="images/logo-removebg.png" alt="Logo" class="w-20 h-20 object-contain filter invert">
           <h1 class="text-xl font-semibold tracking-wide text-white ml-3">What Can I Cook?</h1>
         </div>
         <input type="text" placeholder="Search by Ingredients" class="w-full px-3 py-2 rounded-md text-black mb-4" />
-        <nav class="space-y-4">
-          <a href="home.html" class="block text-white text-lg hover:text-yellow-500">HOME</a>
-          <div>
-            <button onclick class="flex items-center text-white hover:text-yellow-500 text-lg w-full"></button>
-            <div>
-             <a href="recipes.html" class="block text-white text-lg hover:text-yellow-500">All Recipes</a>
-            <button onclick class="flex items-center text-white hover:text-yellow-500 text-lg w-full"></button>
-        
-              
-            </div>
-          </div>
-          <a href="favourites.html" class="block text-white text-lg hover:text-yellow-500">FAVOURITES</a>
-          <a href="about.html" class="block text-white text-lg hover:text-yellow-500">ABOUT US</a>
-          <a href="login.html" class="block text-white text-lg hover:text-yellow-500">LOGOUT</a>
+        <nav id="navbar" class="space-y-4">
+          <!-- Navigation links will be dynamically inserted here -->
         </nav>
       </div>
 
       <!-- Topbar + Content -->
       <div class="flex-1">
         <div class="flex items-center justify-between p-4 shadow-md bg-black text-white">
-          <button onclick="toggleSidebar()" class="text-3xl">☰</button>
+          <button onclick="toggleSidebar()" class="text-3xl md:hidden">☰</button> <!-- Hide on medium screens and up -->
           <input type="text" placeholder="Search By Ingredients" class="w-full md:w-1/2 px-4 py-2 rounded-full border border-gray-300 text-black" />
         </div>
         
+        <main class="p-6">
+          <!-- Personalized Greeting Message -->
+          <div id="greeting" class="mb-6 text-2xl font-bold text-yellow-800"></div>
+
           <!-- Meal Cards Grid -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Repeat for each meal type -->
+            <!-- Breakfast -->
             <div class="text-center">
               <h2 class="text-xl font-bold text-yellow-600 mb-2">Breakfast</h2>
-              <img src="breakfast.jpg" class="w-full h-48 object-cover rounded-lg mb-2" />
+              <img src="images/breakfast.jpg" alt="Breakfast" class="w-full h-48 object-cover rounded-lg mb-2" />
               <a href="breakfast.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
             </div>
-            <!-- Add other meals similarly -->
+            <!-- Lunch -->
              <div class="text-center">
               <h2 class="text-xl font-bold text-yellow-600 mb-2">Lunch</h2>
-              <img src="lunch.jpg" class="w-full h-48 object-cover rounded-lg mb-2" />
+              <img src="images/lunch.jpg" alt="Lunch" class="w-full h-48 object-cover rounded-lg mb-2" />
               <a href="lunch.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
             </div>
-
+            <!-- Dinner -->
             <div class="text-center">
               <h2 class="text-xl font-bold text-yellow-600 mb-2">Dinner</h2>
-              <img src="dinner.jpg" class="w-full h-48 object-cover rounded-lg mb-2" />
+              <img src="images/dinner.jpg" alt="Dinner" class="w-full h-48 object-cover rounded-lg mb-2" />
               <a href="dinner.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
             </div>
-
+            <!-- Snacks -->
             <div class="text-center">
               <h2 class="text-xl font-bold text-yellow-600 mb-2">Snacks</h2>
-              <img src="snacks.jpg" class="w-full h-48 object-cover rounded-lg mb-2" />
+              <img src="images/snacks.jpg" alt="Snacks" class="w-full h-48 object-cover rounded-lg mb-2" />
               <a href="snacks.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
             </div>
-
+            <!-- Dessert -->
             <div class="text-center">
               <h2 class="text-xl font-bold text-yellow-600 mb-2">Dessert</h2>
-              <img src="dessert.jpg" class="w-full h-48 object-cover rounded-lg mb-2" />
+              <img src="images/dessert.jpg" alt="Dessert" class="w-full h-48 object-cover rounded-lg mb-2" />
               <a href="dessert.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
             </div>
-
+            <!-- Drinks -->
             <div class="text-center">
               <h2 class="text-xl font-bold text-yellow-600 mb-2">Drinks</h2>
-              <img src="drinks.jpg" class="w-full h-48 object-cover rounded-lg mb-2" />
+              <img src="images/drinks.jpg" alt="Drinks" class="w-full h-48 object-cover rounded-lg mb-2" />
               <a href="drinks.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
             </div>
           </div>
-        </section>
+        </main>
       </div>
     </div>
+
+    <script>
+      // Function to toggle the sidebar on mobile
+      function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('-translate-x-full');
+      }
+
+      // Function to handle logout
+      function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userInfo');
+        window.location.href = 'login.html';
+      }
+
+      // This code runs when the page is loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        const greetingDiv = document.getElementById('greeting');
+        const navbar = document.getElementById('navbar');
+
+        if (userInfo && userInfo.token) {
+          // User is logged in
+          greetingDiv.textContent = `Hello, ${userInfo.fullName}!`;
+
+          // Populate the navbar for a logged-in user
+          navbar.innerHTML = `
+            <a href="home.html" class="block text-white text-lg hover:text-yellow-500">HOME</a>
+            <a href="user.html" class="block text-white text-lg hover:text-yellow-500">PROFILE</a>
+            <a href="recipes.html" class="block text-white text-lg hover:text-yellow-500">ALL RECIPES</a>
+            <a href="favourites.html" class="block text-white text-lg hover:text-yellow-500">FAVOURITES</a>
+            <a href="upload.html" class="block text-white text-lg hover:text-yellow-500">UPLOAD RECIPE</a>
+            <a href="about.html" class="block text-white text-lg hover:text-yellow-500">ABOUT US</a>
+            <button onclick="logout()" class="w-full text-left block text-red-400 text-lg hover:text-red-300">LOGOUT</button>
+          `;
+        } else {
+          // User is not logged in (guest)
+          greetingDiv.textContent = 'Welcome, Guest! Sign up to save your favorite recipes.';
+          
+          // Populate the navbar for a guest
+           navbar.innerHTML = `
+            <a href="home.html" class="block text-white text-lg hover:text-yellow-500">HOME</a>
+            <a href="recipes.html" class="block text-white text-lg hover:text-yellow-500">ALL RECIPES</a>
+            <a href="about.html" class="block text-white text-lg hover:text-yellow-500">ABOUT US</a>
+            <a href="login.html" class="block text-green-400 text-lg hover:text-green-300">LOGIN / SIGNUP</a>
+          `;
+        }
+      });
+    </script>
   </body>
 </html>

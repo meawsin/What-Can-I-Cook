@@ -1,80 +1,96 @@
-<!-- favourites.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Favorite Recipes</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 min-h-screen font-sans">
+
+  <!-- Header -->
+  <header class="bg-yellow-500 text-white py-4 shadow">
+    <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
+      <h1 class="text-3xl font-bold">Your Favorite Recipes</h1>
+      <a href="home.html" class="bg-white text-yellow-600 font-bold px-4 py-2 rounded hover:bg-yellow-100">← Home</a>
+    </div>
+  </header>
+
   <div class="max-w-6xl mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-yellow-600 mb-6">🍽️ Your Favorite Recipes</h1>
     <div id="favoritesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <!-- Favorite recipes will load here -->
+      <p id="loading-message" class="col-span-full text-center text-gray-600">Loading your favorites...</p>
     </div>
-    <p id="noFavorites" class="text-gray-500 text-center mt-10 hidden">No favorites yet! Go back and save some delicious recipes. 🍲</p>
-    <a href="index.html" class="block text-center mt-8 text-yellow-600 font-medium hover:underline">← Back to All Recipes</a>
+    <div id="noFavorites" class="text-center mt-10 hidden">
+        <p class="text-gray-500">You haven't saved any favorite recipes yet. 🍲</p>
+        <a href="recipes.html" class="block mt-4 text-yellow-600 font-medium hover:underline">Explore and Find Recipes</a>
+    </div>
   </div>
 
   <script>
-    // Same recipe data (reuse this if you extract into a shared JS file later)
-    const recipes = {
-      "Apple Pancakes": {
-        image: "images/apple_pancakes.jpg",
-        description: "Fluffy pancakes with apple slices and a hint of cinnamon.",
-        ingredients: [
-          "1 cup flour", "1 apple (sliced)", "1 egg", "1/2 cup milk", "1 tsp cinnamon", "1 tbsp sugar"
-        ],
-        procedure: "Mix all ingredients. Cook both sides on a hot pan until golden."
-      },
-      "Banana Muffins": {
-        image: "images/banana_muffins.jpg",
-        description: "Moist and sweet muffins perfect with morning coffee.",
-        ingredients: ["2 ripe bananas", "1 cup flour", "1/2 cup sugar", "1 egg", "1/3 cup oil", "1 tsp baking powder"],
-        procedure: "Mash bananas, mix with other ingredients. Pour into tins. Bake at 180°C for 20 mins."
-      },
-      "Chia Pudding": {
-        image: "images/chia_pudding.jpg",
-        description: "Healthy chia seeds soaked overnight for a creamy delight.",
-        ingredients: ["1/4 cup chia seeds", "1 cup almond milk", "1 tbsp honey", "Fresh fruits"],
-        procedure: "Mix chia, milk & honey. Refrigerate overnight. Top with fruits."
-      },
-      // Add the rest of your recipes here...
-    };
+    const token = localStorage.getItem('token');
+    const favoritesGrid = document.getElementById('favoritesGrid');
+    const noFavoritesDiv = document.getElementById('noFavorites');
+    const loadingMessage = document.getElementById('loading-message');
 
-    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-const grid = document.getElementById("favoritesGrid");
+    async function fetchAndDisplayFavorites() {
+      // If user is not logged in, redirect them
+      if (!token) {
+        window.location.href = 'login.html';
+        return;
+      }
 
-if (favorites.length === 0) {
-  document.getElementById("noFavorites").classList.remove("hidden");
-} else {
-  favorites.forEach(title => {
-    const recipe = recipes[title];
-    if (!recipe) return;
+      try {
+        const response = await fetch('/api/users/favorites', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
 
-    const card = document.createElement("div");
-    card.className = "bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300";
+        if (!response.ok) {
+          // If token is invalid or expired, log the user out
+          localStorage.clear();
+          window.location.href = 'login.html';
+          return;
+        }
 
-    card.innerHTML = `
-      <img src="${recipe.image}" alt="${title}" class="w-full h-40 object-cover">
-      <div class="p-4">
-        <h2 class="text-lg font-semibold text-yellow-600">${title}</h2>
-        <p class="text-sm mt-2">${recipe.description}</p>
-        <div class="mt-4 bg-yellow-50 p-3 rounded">
-          <h3 class="text-sm font-bold text-gray-700 mb-1">Ingredients:</h3>
-          <ul class="list-disc pl-5 text-sm text-gray-700">
-            ${recipe.ingredients.map(i => `<li>${i}</li>`).join("")}
-          </ul>
-          <p class="mt-2 text-sm text-gray-700"><strong>Procedure:</strong> ${recipe.procedure}</p>
-        </div>
-      </div>
-    `;
+        const favoriteRecipes = await response.json();
+        loadingMessage.style.display = 'none'; // Hide loading message
 
-    grid.appendChild(card);
-  });
-}
+        if (favoriteRecipes.length === 0) {
+          noFavoritesDiv.classList.remove('hidden');
+        } else {
+          favoritesGrid.innerHTML = ''; // Clear grid
+          favoriteRecipes.forEach(recipe => {
+            const card = document.createElement('div');
+            card.className = "bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300";
+
+            card.innerHTML = `
+              <img src="${recipe.imageUrl}" alt="${recipe.title}" class="w-full h-40 object-cover">
+              <div class="p-4">
+                <h2 class="text-lg font-semibold text-yellow-600">${recipe.title}</h2>
+                <p class="text-sm mt-2 text-gray-700">${recipe.description}</p>
+                <div class="mt-4 bg-yellow-50 p-3 rounded">
+                  <h3 class="text-sm font-bold text-gray-700 mb-1">Ingredients:</h3>
+                  <ul class="list-disc pl-5 text-sm text-gray-700">
+                    ${recipe.ingredients.map(i => `<li>${i}</li>`).join("")}
+                  </ul>
+                  <p class="mt-2 text-sm text-gray-700"><strong>Procedure:</strong> ${recipe.instructions}</p>
+                </div>
+              </div>
+            `;
+            favoritesGrid.appendChild(card);
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching favorites:', error);
+        loadingMessage.textContent = 'Could not load your favorites. Please try again.';
+        loadingMessage.className = 'col-span-full text-center text-red-600';
+      }
+    }
+
+    // Fetch favorites when the page loads
+    document.addEventListener('DOMContentLoaded', fetchAndDisplayFavorites);
   </script>
-
-  
 </body>
 </html>

@@ -8,41 +8,107 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-yellow-100 via-white to-yellow-200 text-black">
 
-  <!-- Navbar -->
-  <nav class="bg-yellow-500 p-4 shadow-md flex flex-wrap justify-between items-center">
-    <div class="flex items-center space-x-3">
-      <img src="logo-removebg.png" alt="Logo" class="w-20 h-25">
-      <span class="text-xl font-bold">What Can I Cook?</span>
-    </div>
-    <div class="flex space-x-4 text-black font-semibold">
-      <a href="home.html" class="hover:underline">Home</a>
-      <a href="about.html" class="hover:underline">About Us</a>
-      <a href="recipes.html" class="hover:underline">Recipes</a>
-      <a href="favourites.html" class="hover:underline">Favourites</a>
-      <a href="login.html" class="hover:underline text-red-100">Logout</a>
-    </div>
-  </nav>
+  <!-- Dynamic Navbar will be inserted here -->
+  <div id="navbar-container"></div>
 
   <!-- Profile Info -->
   <section class="max-w-3xl mx-auto p-6 mt-10 bg-white bg-opacity-90 rounded-lg shadow-lg">
     <h1 class="text-3xl font-bold text-yellow-700 mb-4 text-center">User Profile</h1>
 
-    <div class="space-y-4">
-      <div class="flex flex-col md:flex-row justify-between">
-        <p><span class="font-semibold">Full Name:</span> John Doe</p>
-        <p><span class="font-semibold">Email:</span> john@example.com</p>
-      </div>
+    <!-- Profile details will be loaded here -->
+    <div id="profile-details" class="space-y-4">
+      <div class="text-center p-8">Loading profile...</div>
+    </div>
 
-      <div class="flex flex-col md:flex-row justify-between">
-        <p><span class="font-semibold">Favorite Meal:</span> Dinner</p>
-        <p><span class="font-semibold">Dietary Preference:</span> Halal</p>
-      </div>
+    <div class="text-center mt-6">
+      <a href="edit_profile.html" class="inline-block bg-yellow-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-yellow-600 transition">
+        Edit Profile
+      </a>
+    </div>
+  </section>
 
-      <div>
-        <p><span class="font-semibold">Allergies:</span> Prawn, Nuts</p>
-      </div>
+  <script>
+    // --- Dynamic Navbar Script ---
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userInfo');
+      window.location.href = 'login.html';
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const navbarContainer = document.getElementById('navbar-container');
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      if (userInfo && userInfo.token) {
+        navbarContainer.innerHTML = `
+          <nav class="bg-yellow-500 p-4 shadow-md flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3">
+              <a href="home.html"><img src="images/logo-removebg.png" alt="Logo" class="w-20 h-25"></a>
+              <a href="home.html"><span class="text-xl font-bold">What Can I Cook?</span></a>
+            </div>
+            <div class="flex space-x-4 text-black font-semibold">
+              <a href="home.html" class="hover:underline">Home</a>
+              <a href="about.html" class="hover:underline">About Us</a>
+              <a href="recipes.html" class="hover:underline">Recipes</a>
+              <a href="favourites.html" class="hover:underline">Favourites</a>
+              <button onclick="logout()" class="hover:underline text-red-700">Logout</button>
+            </div>
+          </nav>
+        `;
+      } else {
+        // Redirect to login if not authenticated
+        window.location.href = 'login.html';
+      }
+    });
 
-      <div class="text-center mt-6">
-        <a href="edit_profile.html" class="inline-block bg-yellow-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-yellow-600 transition">
-          Edit Profile
-        </
+    // --- Fetch and Display Profile Data ---
+    async function fetchProfile() {
+      const token = localStorage.getItem('token');
+      const profileDetailsDiv = document.getElementById('profile-details');
+
+      if (!token) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/users/profile', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          const user = await response.json();
+          // Display the fetched data
+          profileDetailsDiv.innerHTML = `
+            <div class="flex flex-col md:flex-row justify-between">
+              <p><span class="font-semibold">Full Name:</span> <span id="fullName">${user.fullName}</span></p>
+              <p><span class="font-semibold">Username:</span> <span id="username">${user.username}</span></p>
+            </div>
+             <div class="flex flex-col md:flex-row justify-between">
+              <p><span class="font-semibold">Email:</span> <span id="email">${user.email}</span></p>
+               <p><span class="font-semibold">Favorite Meal:</span> <span id="favoriteMeal">${user.favoriteMeal}</span></p>
+            </div>
+            <div class="flex flex-col md:flex-row justify-between">
+              <p><span class="font-semibold">Dietary Preference:</span> <span id="dietaryPreference">${user.dietaryPreference}</span></p>
+            </div>
+            <div>
+              <p><span class="font-semibold">Allergies:</span> <span id="allergies">${user.allergies.join(', ') || 'None'}</span></p>
+            </div>
+          `;
+        } else {
+          // If token is invalid or expired, log out the user
+          logout();
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        profileDetailsDiv.innerHTML = `<div class="text-center text-red-500">Could not load profile.</div>`;
+      }
+    }
+
+    // Fetch profile when the page loads
+    document.addEventListener('DOMContentLoaded', fetchProfile);
+  </script>
+</body>
+</html>

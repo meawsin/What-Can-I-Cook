@@ -9,7 +9,9 @@
     body {
       background-color: #fdf1c1;
     }
-    
+    .modal {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
   </style>
 </head>
 <body class="min-h-screen text-black">
@@ -18,185 +20,216 @@
   <header class="bg-yellow-500 text-white py-4 shadow">
     <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
       <h1 class="text-3xl font-bold">All Recipes</h1>
-      <a href="index.html" class="bg-white text-yellow-600 font-bold px-4 py-2 rounded hover:bg-yellow-100">← Home</a>
+      <a href="home.html" class="bg-white text-yellow-600 font-bold px-4 py-2 rounded hover:bg-yellow-100">← Home</a>
     </div>
   </header>
-  <div>
-
-<h3 class="text-2xl text-black text-center mb-4">Use filters to find meals that suit your needs</h3>
-
-<div class="bg-gradient-to-br from-white/50 to-yellow-100 shadow-lg rounded-lg p-6 mb-6">
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-black">
-    
-    <!-- Meal Selector -->
-    <div>
-      <label class="block text-sm font-semibold mb-2">Meal</label>
-      <select class="w-full px-3 py-2 bg-white bg-opacity-90 text-gray-800 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400">
-        <option value="">Select Meal</option>
-        <option value="breakfast">Breakfast</option>
-        <option value="lunch">Lunch</option>
-        <option value="dinner">Dinner</option>
-        <option value="snack/side">Snacks/Sides</option>
-        <option value="dessert">Dessert</option>
-      </select>
-    </div>
-
-    <!-- Special Diet -->
-    <div>
-      <label class="block text-sm font-semibold mb-2">Special Diet</label>
-      <div class="space-y-2">
-        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="vegetarian"><span class="ml-2">Vegetarian</span></label>
-        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="diabetes-friendly"><span class="ml-2">Diabetes-friendly</span></label>
-        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="dairy-free"><span class="ml-2">Dairy-free</span></label>
-        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="gluten-free"><span class="ml-2">Gluten-free</span></label>
+  
+  <div class="max-w-6xl mx-auto p-6">
+    <!-- Filter Section -->
+    <div id="filter-section" class="bg-gradient-to-br from-white/50 to-yellow-100 shadow-lg rounded-lg p-6 mb-6">
+      <h3 class="text-2xl text-black text-center mb-4">Use filters to find meals that suit your needs</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-black">
+        <!-- Meal Selector -->
+        <div>
+          <label for="meal-select" class="block text-sm font-semibold mb-2">Meal Type</label>
+          <select id="meal-select" class="filter-control w-full px-3 py-2 bg-white rounded-md border">
+            <option value="">All</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner">Dinner</option>
+            <option value="Snacks">Snacks</option>
+            <option value="Dessert">Dessert</option>
+            <option value="Drinks">Drinks</option>
+          </select>
+        </div>
+        <!-- Cuisine -->
+        <div>
+          <label for="cuisine-input" class="block text-sm font-semibold mb-2">Cuisine</label>
+          <input type="text" id="cuisine-input" placeholder="e.g., Italian" class="filter-control w-full px-3 py-2 bg-white rounded-md border">
+        </div>
+        <!-- Search by Ingredient -->
+        <div class="lg:col-span-2">
+           <label for="search-input" class="block text-sm font-semibold mb-2">Search by Title or Ingredient</label>
+           <input type="text" id="search-input" placeholder="e.g., Chicken, Pasta" class="filter-control w-full px-3 py-2 bg-white rounded-md border">
+        </div>
       </div>
     </div>
 
-    <!-- Recipe Type -->
-    <div>
-      <label class="block text-sm font-semibold mb-2">Recipe Type</label>
-      <div class="space-y-2">
-        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="kid-friendly"><span class="ml-2">Kid-friendly</span></label>
-        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="crowd-friendly"><span class="ml-2">Crowd-friendly</span></label>
-        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="no-cook"><span class="ml-2">No Cook</span></label>
-        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="freezer-friendly"><span class="ml-2">Freezer-friendly</span></label>
-      </div>
-    </div>
-
-    <!-- Cuisine Type -->
-<div>
-  <label class="block text-sm font-semibold mb-2">Cuisine</label>
-  <div class="space-y-2">
-    <label class="flex items-center">
-      <input type="checkbox" class="form-checkbox text-yellow-500" value="Bangladeshi">
-      <span class="ml-2">Bangladeshi</span>
-    </label>
-    <label class="flex items-center">
-      <input type="checkbox" class="form-checkbox text-yellow-500" value="Indian">
-      <span class="ml-2">Indian</span>
-    </label>
-    <label class="flex items-center">
-      <input type="checkbox" class="form-checkbox text-yellow-500" value="Chinese">
-      <span class="ml-2">Chinese</span>
-    </label>
-    <label class="flex items-center">
-      <input type="checkbox" class="form-checkbox text-yellow-500" value="Thai">
-      <span class="ml-2">Thai</span>
-    </label>
-    <label class="flex items-center">
-      <input type="checkbox" class="form-checkbox text-yellow-500" value="Italian">
-      <span class="ml-2">Italian</span>
-    </label>
+    <!-- Recipes Grid -->
+    <main id="recipes-grid" class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <!-- Recipes will be loaded here by JavaScript -->
+      <p id="loading-message" class="col-span-full text-center text-gray-600">Loading recipes...</p>
+    </main>
   </div>
-</div>
-
-    <!-- Time Filters -->
-    
-    
-  </div>
-
-  <!-- Apply Filters Button -->
-  <div class="mt-8 flex justify-center">
-    <button id="apply-filters" class="px-6 py-3 bg-yellow-500 text-black font-semibold rounded-md hover:bg-yellow-600 transition duration-200 shadow-md">
-      Apply Filters
-    </button>
-  </div>
-
-</div>
-
-
-<div class="mb-8">
-      <input
-        type="text"
-        id="searchInput"
-        oninput="filterRecipes()"
-        placeholder="Search by ingredient..."
-         class="w-full max-w-md px-4 py-2 border border-yellow-300 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-500"
-      />
-    </div>
-    </div>
-  <!-- Recipes Grid -->
-  <main class="max-w-6xl mx-auto p-6 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-    <!-- Recipe Card -->
-    <div class="bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden">
-      <img src="images/chicken_biryani.jpg" alt="Chicken Biryani" class="w-full h-48 object-cover">
-      <div class="p-4">
-        <h3 class="text-xl font-semibold mb-2">Chicken Biryani</h3>
-        <p class="text-gray-700 text-sm mb-3">A flavorful rice dish with layers of marinated chicken, fragrant spices, and herbs.</p>
-        <button onclick="showRecipe('Chicken Biryani', '• Chicken\n• Basmati Rice\n• Spices\n• Yogurt\n• Onion\n\n', '1. Marinate chicken with spices and yogurt.\n2. Partially cook rice.\n3. Layer chicken and rice.\n4. Cook on low heat until done.')" 
-          class="text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">🍽 View Recipe</button>
-      </div>
-    </div>
-    
-    <!-- You can copy & add more recipe cards here -->
-     
-    <!-- Recipe Card -->
-    <div class="bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden">
-      <img src="images/Beef_curry.jpg" alt="Beef Curry" class="w-full h-48 object-cover">
-      <div class="p-4">
-        <h3 class="text-xl font-semibold mb-2">Beef Curry</h3>
-        <p class="text-gray-700 text-sm mb-3">A flavorful rice dish with layers of marinated chicken, fragrant spices, and herbs.</p>
-        <button onclick="showRecipe('Chicken Biryani', '• Chicken\n• Basmati Rice\n• Spices\n• Yogurt\n• Onion\n\n', '1. Marinate chicken with spices and yogurt.\n2. Partially cook rice.\n3. Layer chicken and rice.\n4. Cook on low heat until done.')" 
-          class="text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">🍽 View Recipe</button>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden">
-      <img src="images/Pasta.jpg" alt="Pasta" class="w-full h-48 object-cover">
-      <div class="p-4">
-        <h3 class="text-xl font-semibold mb-2">Beef Curry</h3>
-        <p class="text-gray-700 text-sm mb-3">A flavorful rice dish with layers of marinated chicken, fragrant spices, and herbs.</p>
-        <button onclick="showRecipe('Chicken Biryani', '• Chicken\n• Basmati Rice\n• Spices\n• Yogurt\n• Onion\n\n', '1. Marinate chicken with spices and yogurt.\n2. Partially cook rice.\n3. Layer chicken and rice.\n4. Cook on low heat until done.')" 
-          class="text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">🍽 View Recipe</button>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden">
-      <img src="images/Beef_curry.jpg" alt="Beef Curry" class="w-full h-48 object-cover">
-      <div class="p-4">
-        <h3 class="text-xl font-semibold mb-2">Beef Curry</h3>
-        <p class="text-gray-700 text-sm mb-3">A flavorful rice dish with layers of marinated chicken, fragrant spices, and herbs.</p>
-        <button onclick="showRecipe('Chicken Biryani', '• Chicken\n• Basmati Rice\n• Spices\n• Yogurt\n• Onion\n\n', '1. Marinate chicken with spices and yogurt.\n2. Partially cook rice.\n3. Layer chicken and rice.\n4. Cook on low heat until done.')" 
-          class="text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">🍽 View Recipe</button>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden">
-      <img src="images/Pasta.jpg" alt="Pasta" class="w-full h-48 object-cover">
-      <div class="p-4">
-        <h3 class="text-xl font-semibold mb-2">Beef Curry</h3>
-        <p class="text-gray-700 text-sm mb-3">A flavorful rice dish with layers of marinated chicken, fragrant spices, and herbs.</p>
-        <button onclick="showRecipe('Chicken Biryani', '• Chicken\n• Basmati Rice\n• Spices\n• Yogurt\n• Onion\n\n', '1. Marinate chicken with spices and yogurt.\n2. Partially cook rice.\n3. Layer chicken and rice.\n4. Cook on low heat until done.')" 
-          class="text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">🍽 View Recipe</button>
-      </div>
-    </div>
-  </main>
 
   <!-- Full Screen Recipe Modal -->
   <div id="recipeModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center">
     <div class="bg-white rounded-xl max-w-xl w-full mx-4 p-6 shadow-lg relative">
       <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-yellow-600"></h2>
       <h4 class="font-semibold text-lg">Ingredients:</h4>
-      <pre id="modalIngredients" class="mb-4 text-sm text-gray-700 whitespace-pre-wrap"></pre>
+      <ul id="modalIngredients" class="mb-4 text-sm text-gray-700 list-disc pl-5"></ul>
       <h4 class="font-semibold text-lg">Procedure:</h4>
-      <pre id="modalProcedure" class="text-sm text-gray-700 whitespace-pre-wrap"></pre>
+      <p id="modalProcedure" class="text-sm text-gray-700 whitespace-pre-wrap"></p>
       <button onclick="closeRecipe()" class="mt-6 bg-yellow-500 text-white font-bold px-4 py-2 rounded hover:bg-yellow-600">Close</button>
     </div>
   </div>
 
   <!-- Script -->
   <script>
+    const recipesGrid = document.getElementById('recipes-grid');
+    const loadingMessage = document.getElementById('loading-message');
+    let allRecipes = []; // To store a copy of all recipes for client-side search
+    let userFavorites = []; // To store the IDs of the user's favorite recipes
+    const token = localStorage.getItem('token'); // Check for token once at the start
+
+    // Function to show the recipe modal
     function showRecipe(title, ingredients, procedure) {
       document.getElementById('modalTitle').textContent = title;
-      document.getElementById('modalIngredients').textContent = ingredients;
+      document.getElementById('modalIngredients').innerHTML = ingredients.map(i => `<li>${i}</li>`).join('');
       document.getElementById('modalProcedure').textContent = procedure;
       document.getElementById('recipeModal').classList.remove('hidden');
     }
 
+    // Function to close the recipe modal
     function closeRecipe() {
       document.getElementById('recipeModal').classList.add('hidden');
     }
+
+    // Function to handle toggling a favorite recipe
+    async function toggleFavorite(recipeId, buttonElement) {
+      if (!token) {
+        alert('You must be logged in to save recipes.');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/users/favorites/${recipeId}`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          // Update the button's appearance and the userFavorites array
+          const index = userFavorites.indexOf(recipeId);
+          if (index > -1) {
+            userFavorites.splice(index, 1); // Unfavorited
+            buttonElement.textContent = '❤️ Save';
+            buttonElement.classList.remove('saved', 'bg-green-500');
+            buttonElement.classList.add('bg-pink-500');
+          } else {
+            userFavorites.push(recipeId); // Favorited
+            buttonElement.textContent = '💚 Saved';
+            buttonElement.classList.add('saved', 'bg-green-500');
+            buttonElement.classList.remove('bg-pink-500');
+          }
+        } else {
+          alert('Failed to update favorites.');
+        }
+      } catch (error) {
+        console.error('Error toggling favorite:', error);
+      }
+    }
+
+    // Function to render recipes to the page
+    function renderRecipes(recipes) {
+      recipesGrid.innerHTML = ''; // Clear existing recipes
+      if (recipes.length === 0) {
+        recipesGrid.innerHTML = `<p class="col-span-full text-center text-gray-600">No recipes found matching your criteria.</p>`;
+        return;
+      }
+
+      recipes.forEach(recipe => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden';
+        
+        const ingredientsString = JSON.stringify(recipe.ingredients);
+        const isFavorite = userFavorites.includes(recipe._id);
+        const favoriteButtonText = isFavorite ? '💚 Saved' : '❤️ Save';
+        const favoriteButtonClass = isFavorite ? 'saved bg-green-500' : 'bg-pink-500';
+        
+        let favoriteButtonHTML = '';
+        if (token) {
+          favoriteButtonHTML = `
+            <button onclick="toggleFavorite('${recipe._id}', this)" 
+              class="ml-2 text-sm px-3 py-1 text-white rounded hover:bg-opacity-80 ${favoriteButtonClass}">
+              ${favoriteButtonText}
+            </button>
+          `;
+        }
+
+        card.innerHTML = `
+          <img src="${recipe.imageUrl}" alt="${recipe.title}" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <h3 class="text-xl font-semibold mb-2">${recipe.title}</h3>
+            <p class="text-gray-700 text-sm mb-3">${recipe.description}</p>
+            <p class="text-xs text-gray-500 mb-3">Uploaded by: ${recipe.uploadedBy ? recipe.uploadedBy.username : 'Unknown'}</p>
+            <button onclick='showRecipe("${recipe.title}", ${ingredientsString}, "${recipe.instructions.replace(/"/g, '&quot;')}")' 
+              class="text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">🍽 View Recipe</button>
+            ${favoriteButtonHTML}
+          </div>
+        `;
+        recipesGrid.appendChild(card);
+      });
+    }
+
+    // Function to fetch the logged-in user's favorites
+    async function fetchUserFavorites() {
+      if (!token) return;
+      try {
+        const response = await fetch('/api/users/favorites', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const favorites = await response.json();
+          userFavorites = favorites.map(fav => fav._id); // Store only the IDs for quick lookup
+        }
+      } catch (error) {
+        console.error('Could not fetch user favorites:', error);
+      }
+    }
+
+    // Function to fetch all recipes from the backend
+    async function fetchAllRecipes() {
+      await fetchUserFavorites(); // Load user favorites first
+      try {
+        const response = await fetch('/api/recipes');
+        if (!response.ok) throw new Error('Network response was not ok');
+        allRecipes = await response.json();
+        renderRecipes(allRecipes);
+      } catch (error) {
+        console.error('Failed to fetch recipes:', error);
+        loadingMessage.textContent = 'Failed to load recipes. Please try again later.';
+        loadingMessage.className = 'col-span-full text-center text-red-600';
+      }
+    }
+    
+    // Function to handle filtering
+    function applyFilters() {
+        const mealType = document.getElementById('meal-select').value.toLowerCase();
+        const cuisine = document.getElementById('cuisine-input').value.toLowerCase();
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+        let filteredRecipes = allRecipes.filter(recipe => {
+            const matchesMeal = !mealType || recipe.mealType.toLowerCase() === mealType;
+            const matchesCuisine = !cuisine || (recipe.cuisine && recipe.cuisine.toLowerCase().includes(cuisine));
+            const matchesSearch = !searchTerm || 
+                                  recipe.title.toLowerCase().includes(searchTerm) ||
+                                  recipe.ingredients.some(ing => ing.toLowerCase().includes(searchTerm));
+            return matchesMeal && matchesCuisine && matchesSearch;
+        });
+
+        renderRecipes(filteredRecipes);
+    }
+
+    // Add event listeners to all filter controls
+    document.querySelectorAll('.filter-control').forEach(control => {
+        control.addEventListener('input', applyFilters);
+        control.addEventListener('change', applyFilters);
+    });
+
+    // Fetch all recipes when the page loads
+    document.addEventListener('DOMContentLoaded', fetchAllRecipes);
   </script>
 
   <!-- Footer -->

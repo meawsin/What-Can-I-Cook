@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
       body {
-        background-image: url('login_bg.png');
+        background-image: url('images/login_bg.png'); /* Assuming login_bg.png is in an images folder */
         background-size: cover;
         background-position: center;
       }
@@ -15,19 +15,21 @@
   </head>
   <body class="min-h-screen flex items-center justify-center">
     <div class="bg-white bg-opacity-80 rounded-lg shadow-lg p-10 w-full max-w-md text-center">
-      <img src="logo-removebg.png" alt="Logo" class="mx-auto w-40 h-30 object-contain">
+      <img src="images/logo-removebg.png" alt="Logo" class="mx-auto w-40 h-30 object-contain">
       <h1 class="text-3xl font-bold text-black mb-4">What Can I Cook?</h1>
       <h3 class="text-xl font-bold text-black mb-2">Sign Up</h3>
 
-      <form action="signup.php" method="POST" class="space-y-4 text-left">
-        <input type="text" name="full_name" placeholder="Full Name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+      <!-- Removed the action attribute and added an ID to the form -->
+      <form id="signup-form" class="space-y-4 text-left">
+        <input type="text" name="fullName" placeholder="Full Name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
         <input type="text" name="username" placeholder="Username" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
         <input type="email" name="email" placeholder="Email Address" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
         <input type="password" name="password" placeholder="Password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
-        <input type="password" placeholder="Confirm Password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+        <!-- It's good practice to have a password confirmation, but we'll handle validation on the frontend for now -->
+        <input type="password" name="confirmPassword" placeholder="Confirm Password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
 
         <label class="block text-black font-semibold mt-4">Favorite Meal Type</label>
-        <select name="meal_type" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+        <select name="favoriteMeal" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
           <option value="Breakfast">Breakfast</option>
           <option value="Lunch">Lunch</option>
           <option value="Dinner">Dinner</option>
@@ -36,34 +38,96 @@
         </select>
 
         <label class="block text-black font-semibold mt-4">Dietary Preference</label>
-        <select name="dietary_preference" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+        <select name="dietaryPreference" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
           <option value="None">None</option>
           <option value="Vegetarian">Vegetarian</option>
           <option value="Vegan">Vegan</option>
           <option value="Halal">Halal</option>
         </select>
 
-        <label class="block text-black font-semibold mt-4">Cooking Experience</label>
-        <div class="flex space-x-4">
-          <label class="flex items-center">
-            <input type="radio" name="experience" value="Beginner" class="mr-2" required> Beginner
-          </label>
-          <label class="flex items-center">
-            <input type="radio" name="experience" value="Intermediate" class="mr-2"> Intermediate
-          </label>
-          <label class="flex items-center">
-            <input type="radio" name="experience" value="Chef" class="mr-2"> Chef
-          </label>
-        </div>
-          <label class="block text-black font-semibold mt-4">Allergies (comma-separated)</label>
-      <input type="text" name="allergies" placeholder="E.g., prawn, milk" class="w-full px-4 py-2 border border-gray-300 rounded-md">
+        <label class="block text-black font-semibold mt-4">Allergies (comma-separated)</label>
+        <input type="text" name="allergies" placeholder="E.g., prawn, milk" class="w-full px-4 py-2 border border-gray-300 rounded-md">
 
         <button type="submit" class="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 rounded-md mt-4">Sign Up</button>
       </form>
+      
+      <!-- To display success or error messages -->
+      <p id="message-display" class="mt-4 text-sm font-semibold"></p>
 
       <p class="mt-4 text-sm text-black">Already have an account? 
         <a href="login.html" class="text-yellow-600 font-semibold hover:underline">Sign In</a>
       </p>
     </div>
+
+    <script>
+      const form = document.getElementById('signup-form');
+      const messageDisplay = document.getElementById('message-display');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Prevent the default form submission (page reload)
+
+        // Reset any previous messages
+        messageDisplay.textContent = '';
+        messageDisplay.className = 'mt-4 text-sm font-semibold';
+
+        // Get form data
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        // Basic password confirmation check
+        if (data.password !== data.confirmPassword) {
+          messageDisplay.textContent = 'Passwords do not match!';
+          messageDisplay.classList.add('text-red-600');
+          return;
+        }
+
+        // Convert comma-separated allergies string to an array
+        const allergies = data.allergies.split(',').map(item => item.trim()).filter(item => item);
+
+        try {
+          const response = await fetch('/api/users/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              fullName: data.fullName,
+              username: data.username,
+              email: data.email,
+              password: data.password,
+              favoriteMeal: data.favoriteMeal,
+              dietaryPreference: data.dietaryPreference,
+              allergies: allergies,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            // Registration successful
+            messageDisplay.textContent = 'Registration successful! Redirecting to login...';
+            messageDisplay.classList.add('text-green-600');
+            
+            // Save the token to localStorage
+            localStorage.setItem('token', result.token);
+            
+            // Redirect to the login page after a short delay
+            setTimeout(() => {
+              window.location.href = 'login.html';
+            }, 2000);
+
+          } else {
+            // Display error message from the server
+            messageDisplay.textContent = result.message || 'Registration failed. Please try again.';
+            messageDisplay.classList.add('text-red-600');
+          }
+        } catch (error) {
+          // Handle network errors
+          console.error('Error:', error);
+          messageDisplay.textContent = 'An error occurred. Please check your connection and try again.';
+          messageDisplay.classList.add('text-red-600');
+        }
+      });
+    </script>
   </body>
 </html>
