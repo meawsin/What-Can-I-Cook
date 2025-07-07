@@ -4,7 +4,8 @@ const bcrypt = require('bcryptjs');
 
 // Function to generate a JWT token
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+  const secret = process.env.JWT_SECRET || 'fallback-secret-key-for-development-only';
+  return jwt.sign({ id }, secret, {
     expiresIn: '30d',
   });
 };
@@ -12,10 +13,29 @@ const generateToken = (id) => {
 // @desc    Register a new user
 // @route   POST /api/users/register
 const registerUser = async (req, res) => {
-  // ... (existing registerUser code)
-  const { fullName, username, email, password, favoriteMeal, dietaryPreference, allergies } = req.body;
-
   try {
+    const { fullName, username, email, password, favoriteMeal, dietaryPreference, allergies } = req.body;
+
+    // Input validation
+    if (!fullName || !username || !email || !password) {
+      return res.status(400).json({ message: 'Please fill in all required fields' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: 'Please enter a valid email address' });
+    }
+
+    // Username validation
+    if (username.length < 3) {
+      return res.status(400).json({ message: 'Username must be at least 3 characters long' });
+    }
+
     const userExists = await User.findOne({ $or: [{ email }, { username }] });
 
     if (userExists) {
@@ -44,6 +64,11 @@ const registerUser = async (req, res) => {
       res.status(400).json({ message: 'Invalid user data' });
     }
   } catch (error) {
+    console.error('Registration error:', error);
+    if (error.code === 11000) {
+      // Duplicate key error
+      return res.status(400).json({ message: 'User with this email or username already exists' });
+    }
     res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
@@ -51,10 +76,14 @@ const registerUser = async (req, res) => {
 // @desc    Authenticate user & get token (Login)
 // @route   POST /api/users/login
 const loginUser = async (req, res) => {
-  // ... (existing loginUser code)
-  const { username, password } = req.body;
-
   try {
+    const { username, password } = req.body;
+
+    // Input validation
+    if (!username || !password) {
+      return res.status(400).json({ message: 'Please provide username/email and password' });
+    }
+
     const user = await User.findOne({ $or: [{ email: username }, { username: username }] });
 
     if (user && (await bcrypt.compare(password, user.password))) {
@@ -69,6 +98,7 @@ const loginUser = async (req, res) => {
       res.status(401).json({ message: 'Invalid credentials' });
     }
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
@@ -76,28 +106,31 @@ const loginUser = async (req, res) => {
 // @desc    Get user profile
 // @route   GET /api/users/profile
 const getUserProfile = async (req, res) => {
-  // ... (existing getUserProfile code)
-  const user = req.user; 
+  try {
+    const user = req.user; 
 
-  if (user) {
-    res.json({
-      _id: user._id,
-      fullName: user.fullName,
-      username: user.username,
-      email: user.email,
-      favoriteMeal: user.favoriteMeal,
-      dietaryPreference: user.dietaryPreference,
-      allergies: user.allergies,
-    });
-  } else {
-    res.status(404).json({ message: 'User not found' });
+    if (user) {
+      res.json({
+        _id: user._id,
+        fullName: user.fullName,
+        username: user.username,
+        email: user.email,
+        favoriteMeal: user.favoriteMeal,
+        dietaryPreference: user.dietaryPreference,
+        allergies: user.allergies,
+      });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Get profile error:', error);
+    res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
 
 // @desc    Update user profile
 // @route   PUT /api/users/profile
 const updateUserProfile = async (req, res) => {
-  // ... (existing updateUserProfile code)
   try {
     const user = await User.findById(req.user._id);
 
@@ -120,7 +153,8 @@ const updateUserProfile = async (req, res) => {
       res.status(404).json({ message: 'User not found' });
     }
   } catch (error) {
-     res.status(500).json({ message: 'Server Error', error: error.message });
+    console.error('Update profile error:', error);
+    res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
 
@@ -134,6 +168,10 @@ const toggleFavorite = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (!recipeId) {
+      return res.status(400).json({ message: 'Recipe ID is required' });
     }
 
     const index = user.favorites.indexOf(recipeId);

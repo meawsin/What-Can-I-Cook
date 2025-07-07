@@ -3,40 +3,99 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lunch Recipes - What Can I Cook?</title>
+  <title>Drinks - What Can I Cook?</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    body { background-color: #fdf1c1; }
-    .modal { background-color: rgba(0, 0, 0, 0.5); }
+    body {
+      background-color: #fdf1c1;
+    }
+    .modal {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
     .loading-spinner { border: 2px solid #f3f3f3; border-top: 2px solid #f59e0b; border-radius: 50%; width: 16px; height: 16px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
 <body class="min-h-screen text-black">
+
   <!-- Header -->
   <header class="bg-yellow-500 text-white py-4 shadow">
     <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
-      <h1 class="text-3xl font-bold">Lunch Recipes</h1>
+      <h1 class="text-3xl font-bold">Drinks</h1>
       <a href="#" onclick="navigateHome(); return false;" class="bg-white text-yellow-600 font-bold px-4 py-2 rounded hover:bg-yellow-100">← Home</a>
     </div>
   </header>
+  
   <div class="max-w-6xl mx-auto p-6">
     <!-- Allergy Note -->
     <div id="allergy-note" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"></div>
     <!-- Filter Section -->
     <div id="filter-section" class="bg-gradient-to-br from-white/50 to-yellow-100 shadow-lg rounded-lg p-6 mb-6">
-      <h3 class="text-2xl text-black text-center mb-4">Filter Lunch Recipes</h3>
+      <h3 class="text-2xl text-black text-center mb-4">Filter Drinks</h3>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-black">
         <div><label for="cuisine-input" class="block text-sm font-semibold mb-2">Cuisine</label><input type="text" id="cuisine-input" placeholder="e.g., Italian" class="filter-control w-full px-3 py-2 bg-white rounded-md border"></div>
-        <div><label for="search-input" class="block text-sm font-semibold mb-2">Search by Title or Ingredient</label><input type="text" id="search-input" placeholder="e.g., rice, chicken, salad" class="filter-control w-full px-3 py-2 bg-white rounded-md border"></div>
+        <div><label for="search-input" class="block text-sm font-semibold mb-2">Search by Title or Ingredient</label><input type="text" id="search-input" placeholder="e.g., Coffee, Tea, Juice" class="filter-control w-full px-3 py-2 bg-white rounded-md border"></div>
         <div id="allergy-section" class="hidden"><label for="allergy-input" class="block text-sm font-semibold mb-2">Exclude Allergens</label><select id="allergy-input" class="filter-control w-full px-3 py-2 bg-white rounded-md border"><option value="">No allergies</option><option value="nuts">Nuts</option><option value="dairy">Dairy</option><option value="eggs">Eggs</option><option value="gluten">Gluten</option><option value="shellfish">Shellfish</option><option value="soy">Soy</option><option value="wheat">Wheat</option></select></div>
         <div class="flex items-end"><button onclick="clearFilters()" class="w-full bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Clear Filters</button></div>
-  </div>
+      </div>
     </div>
-    <main id="recipes-grid" class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"><div id="loading-skeleton" class="col-span-full"><div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"><div class="bg-white rounded-lg shadow animate-pulse"><div class="h-48 bg-gray-300 rounded-t-lg"></div><div class="p-4"><div class="h-4 bg-gray-300 rounded mb-2"></div><div class="h-3 bg-gray-300 rounded mb-4"></div><div class="h-8 bg-gray-300 rounded"></div></div></div><div class="bg-white rounded-lg shadow animate-pulse"><div class="h-48 bg-gray-300 rounded-t-lg"></div><div class="p-4"><div class="h-4 bg-gray-300 rounded mb-2"></div><div class="h-3 bg-gray-300 rounded mb-4"></div><div class="h-8 bg-gray-300 rounded"></div></div></div><div class="bg-white rounded-lg shadow animate-pulse"><div class="h-48 bg-gray-300 rounded-t-lg"></div><div class="p-4"><div class="h-4 bg-gray-300 rounded mb-2"></div><div class="h-3 bg-gray-300 rounded mb-4"></div><div class="h-8 bg-gray-300 rounded"></div></div></div></div></div></main>
+
+    <!-- Recipes Grid -->
+    <main id="recipes-grid" class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <!-- Recipes will be loaded here by JavaScript -->
+      <div id="loading-skeleton" class="col-span-full">
+        <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="bg-white rounded-lg shadow animate-pulse">
+            <div class="h-48 bg-gray-300 rounded-t-lg"></div>
+            <div class="p-4">
+              <div class="h-4 bg-gray-300 rounded mb-2"></div>
+              <div class="h-3 bg-gray-300 rounded mb-4"></div>
+              <div class="h-8 bg-gray-300 rounded"></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow animate-pulse">
+            <div class="h-48 bg-gray-300 rounded-t-lg"></div>
+            <div class="p-4">
+              <div class="h-4 bg-gray-300 rounded mb-2"></div>
+              <div class="h-3 bg-gray-300 rounded mb-4"></div>
+              <div class="h-8 bg-gray-300 rounded"></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow animate-pulse">
+            <div class="h-48 bg-gray-300 rounded-t-lg"></div>
+            <div class="p-4">
+              <div class="h-4 bg-gray-300 rounded mb-2"></div>
+              <div class="h-3 bg-gray-300 rounded mb-4"></div>
+              <div class="h-8 bg-gray-300 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
+
   <!-- Full Screen Recipe Modal -->
-  <div id="recipeModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center"><div class="bg-white rounded-xl max-w-2xl w-full mx-4 p-6 shadow-lg relative"><button onclick="closeRecipe()" class="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-2xl">&times;</button><h2 id="modalTitle" class="text-2xl font-bold mb-4 text-yellow-600"></h2><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div><h4 class="font-semibold text-lg mb-2">Ingredients:</h4><ul id="modalIngredients" class="text-sm text-gray-700 list-disc pl-5 space-y-1"></ul></div><div><h4 class="font-semibold text-lg mb-2">Procedure:</h4><p id="modalProcedure" class="text-sm text-gray-700 whitespace-pre-wrap"></p></div></div><div class="mt-6 flex justify-end"><button onclick="closeRecipe()" class="bg-yellow-500 text-white font-bold px-6 py-2 rounded hover:bg-yellow-600">Close</button></div></div></div>
+  <div id="recipeModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-xl max-w-2xl w-full mx-4 p-6 shadow-lg relative">
+      <button onclick="closeRecipe()" class="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-2xl">&times;</button>
+      <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-yellow-600"></h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-semibold text-lg mb-2">Ingredients:</h4>
+          <ul id="modalIngredients" class="text-sm text-gray-700 list-disc pl-5 space-y-1"></ul>
+        </div>
+        <div>
+          <h4 class="font-semibold text-lg mb-2">Procedure:</h4>
+          <p id="modalProcedure" class="text-sm text-gray-700 whitespace-pre-wrap"></p>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end">
+        <button onclick="closeRecipe()" class="bg-yellow-500 text-white font-bold px-6 py-2 rounded hover:bg-yellow-600">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script -->
   <script>
     const recipesGrid = document.getElementById('recipes-grid');
     const loadingSkeleton = document.getElementById('loading-skeleton');
@@ -168,9 +227,9 @@
         recipesGrid.innerHTML = `
           <div class="col-span-full text-center py-12">
             <div class="text-gray-500 text-lg mb-4">🍽️</div>
-            <p class="text-gray-600 text-lg">No lunch recipes found matching your criteria.</p>
+            <p class="text-gray-600 text-lg">No drinks found matching your criteria.</p>
             <p class="text-gray-500 text-sm mt-2">Try adjusting your filters or search terms.</p>
-  </div>
+          </div>
         `;
         return;
       }
@@ -198,7 +257,7 @@
             <button onclick="toggleFavorite('${recipe._id}', this)" 
               class="ml-2 text-sm px-3 py-1 text-white rounded hover:bg-opacity-80 ${favoriteButtonClass}">
               ${favoriteButtonText}
-    </button>
+            </button>
           `;
         }
 
@@ -212,8 +271,8 @@
               <button onclick='showRecipe("${title.replace(/'/g, "\\'")}", ${ingredientsString}, "${instructions.replace(/"/g, '&quot;').replace(/'/g, "\\'")}")' 
                 class="text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">🍽 View Recipe</button>
               ${favoriteButtonHTML}
-  </div>
-</div>
+            </div>
+          </div>
         `;
         recipesGrid.appendChild(card);
       });
@@ -231,9 +290,9 @@
         if (response.status === 401) {
           // Token is invalid, logout user
           logout();
-      return;
-    }
-
+          return;
+        }
+        
         if (response.ok) {
           const favorites = await response.json();
           userFavorites = favorites.map(fav => fav._id); // Store only the IDs for quick lookup
@@ -243,32 +302,32 @@
       }
     }
 
-    // Function to fetch lunch recipes from the backend
-    async function fetchLunchRecipes() {
+    // Function to fetch drink recipes from the backend
+    async function fetchDrinkRecipes() {
       await fetchUserFavorites(); // Load user favorites first
       try {
-        const response = await fetch('/api/recipes?mealType=Lunch');
+        const response = await fetch('/api/recipes?mealType=Drinks');
         if (!response.ok) throw new Error('Network response was not ok');
         allRecipes = await response.json();
         renderRecipes(allRecipes);
       } catch (error) {
-        console.error('Failed to fetch lunch recipes:', error);
+        console.error('Failed to fetch drink recipes:', error);
         loadingSkeleton.innerHTML = `
           <div class="col-span-full text-center py-12">
             <div class="text-red-500 text-lg mb-4">❌</div>
-            <p class="text-red-600 text-lg">Failed to load lunch recipes.</p>
+            <p class="text-red-600 text-lg">Failed to load drink recipes.</p>
             <p class="text-gray-500 text-sm mt-2">Please try again later.</p>
             <button onclick="location.reload()" class="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
               Retry
             </button>
           </div>
         `;
-  }
+      }
     }
     
     // Function to handle filtering with allergy support
     function applyFilters() {
-        const mealType = 'Lunch'; // Fixed for lunch page
+        const mealType = 'Drinks'; // Fixed for drinks page
         const cuisine = document.getElementById('cuisine-input').value.toLowerCase();
         const searchTerm = document.getElementById('search-input').value.toLowerCase();
         const allergyFilter = document.getElementById('allergy-input').value.toLowerCase();
@@ -320,10 +379,10 @@
             allergyNote.classList.remove('hidden');
         } else {
             allergyNote.classList.add('hidden');
-  }
+        }
 
         renderRecipes(filteredRecipes);
-}
+    }
 
     // Add event listeners to all filter controls
     document.querySelectorAll('.filter-control').forEach(control => {
@@ -332,7 +391,7 @@
     });
 
     // This code runs when the page is loaded
-document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
       const isAuthenticated = checkAuthStatus();
       
       // Show allergy section for logged-in users
@@ -340,8 +399,13 @@ document.addEventListener('DOMContentLoaded', () => {
         allergySection.classList.remove('hidden');
       }
       
-      fetchLunchRecipes();
+      fetchDrinkRecipes();
     });
   </script>
+
+  <!-- Footer -->
+  <footer class="text-center py-6 text-sm text-gray-600">
+    © 2025 What Can I Cook? All rights reserved.
+  </footer>
 </body>
-</html>
+</html> 

@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
       body {
-        background-image: url('background.png');
+        background-image: url('images/background.png');
         background-size: cover;
         background-position: center;
         backdrop-filter: blur(2px);
@@ -30,10 +30,76 @@
     </section>
 
     <!-- Footer -->
+    <footer class="footer">
+      <p class="px-2 py-6 text-xl text-center">© 2025 What Can I Cook? All rights reserved.</p>
+    </footer>
 
-   <footer class="footer">
-    <p class="px-2 py-6 text-xl text-center">© 2025 What Can I Cook? All rights reserved.</p>
-  </footer>
-  </div>
+    <script>
+      // Function to check authentication status
+      function checkAuthStatus() {
+        const token = localStorage.getItem('token');
+        const userInfo = localStorage.getItem('userInfo');
+        
+        if (!token || !userInfo) {
+          return false;
+        }
+        
+        try {
+          const user = JSON.parse(userInfo);
+          if (!user || !user.token) {
+            return false;
+          }
+          return true;
+        } catch (error) {
+          return false;
+        }
+      }
+
+      // Function to handle navigation based on auth status
+      function navigateHome() {
+        const isAuthenticated = checkAuthStatus();
+        if (isAuthenticated) {
+          window.location.href = 'home.html';
+        } else {
+          window.location.href = 'index.html';
+        }
+      }
+
+      // This code runs when the page is loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        const isAuthenticated = checkAuthStatus();
+        const navbar = document.getElementById('navbar');
+
+        if (isAuthenticated) {
+          // User is logged in
+          const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+          
+          navbar.innerHTML = `
+            <a href="#" onclick="navigateHome(); return false;" class="block text-white text-lg hover:text-yellow-500">HOME</a>
+            <a href="user.html" class="block text-white text-lg hover:text-yellow-500">PROFILE</a>
+            <a href="recipes.html" class="block text-white text-lg hover:text-yellow-500">ALL RECIPES</a>
+            <a href="favourites.html" class="block text-white text-lg hover:text-yellow-500">FAVOURITES</a>
+            <a href="upload.html" class="block text-white text-lg hover:text-yellow-500">UPLOAD RECIPE</a>
+            <a href="about.html" class="block text-white text-lg hover:text-yellow-500">ABOUT US</a>
+            <button onclick="logout()" class="w-full text-left block text-red-400 text-lg hover:text-red-300">LOGOUT</button>
+          `;
+        } else {
+          // User is not logged in (guest)
+          navbar.innerHTML = `
+            <a href="index.html" class="block text-white text-lg hover:text-yellow-500">HOME</a>
+            <a href="recipes.html" class="block text-white text-lg hover:text-yellow-500">ALL RECIPES</a>
+            <a href="about.html" class="block text-white text-lg hover:text-yellow-500">ABOUT US</a>
+            <a href="login.html" class="block text-green-400 text-lg hover:text-green-300">LOGIN / SIGNUP</a>
+          `;
+        }
+      });
+
+      // Function to handle logout
+      function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userInfo');
+        window.location.href = 'index.html';
+      }
+    </script>
   </body>
 </html>

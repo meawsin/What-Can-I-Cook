@@ -14,63 +14,63 @@
           <img src="images/logo-removebg.png" alt="Logo" class="w-20 h-20 object-contain filter invert">
           <h1 class="text-xl font-semibold tracking-wide text-white ml-3">What Can I Cook?</h1>
         </div>
-        <input type="text" placeholder="Search by Ingredients" class="w-full px-3 py-2 rounded-md text-black mb-4" />
-        <nav id="navbar" class="space-y-4">
-          <!-- Navigation links will be dynamically inserted here -->
-        </nav>
+        <nav id="navbar" class="space-y-4"></nav>
       </div>
 
       <!-- Topbar + Content -->
       <div class="flex-1">
         <div class="flex items-center justify-between p-4 shadow-md bg-black text-white">
-          <button onclick="toggleSidebar()" class="text-3xl md:hidden">☰</button> <!-- Hide on medium screens and up -->
-          <input type="text" placeholder="Search By Ingredients" class="w-full md:w-1/2 px-4 py-2 rounded-full border border-gray-300 text-black" />
+          <button onclick="toggleSidebar()" class="text-3xl md:hidden">☰</button>
+          <input id="search-input" type="text" placeholder="Search recipes..." class="w-full md:w-1/2 px-4 py-2 rounded-full border border-gray-300 text-black filter-control" />
         </div>
-        
         <main class="p-6">
           <!-- Personalized Greeting Message -->
           <div id="greeting" class="mb-6 text-2xl font-bold text-yellow-800"></div>
 
-          <!-- Meal Cards Grid -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Breakfast -->
-            <div class="text-center">
-              <h2 class="text-xl font-bold text-yellow-600 mb-2">Breakfast</h2>
-              <img src="images/breakfast.jpg" alt="Breakfast" class="w-full h-48 object-cover rounded-lg mb-2" />
-              <a href="breakfast.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
+          <!-- Allergy Filter and Note -->
+          <div class="mb-6">
+            <div id="allergy-section" class="hidden mb-2">
+              <label for="allergy-input" class="block text-sm font-semibold mb-2">Exclude Allergens</label>
+              <select id="allergy-input" class="filter-control w-full md:w-1/3 px-3 py-2 bg-white rounded-md border">
+                <option value="">No allergies</option>
+                <option value="nuts">Nuts</option>
+                <option value="dairy">Dairy</option>
+                <option value="eggs">Eggs</option>
+                <option value="gluten">Gluten</option>
+                <option value="shellfish">Shellfish</option>
+                <option value="soy">Soy</option>
+                <option value="wheat">Wheat</option>
+              </select>
             </div>
-            <!-- Lunch -->
-             <div class="text-center">
-              <h2 class="text-xl font-bold text-yellow-600 mb-2">Lunch</h2>
-              <img src="images/lunch.jpg" alt="Lunch" class="w-full h-48 object-cover rounded-lg mb-2" />
-              <a href="lunch.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
+            <div id="allergy-note" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-2">
+              <p class="text-sm">You said you have allergy on <strong id="allergy-name"></strong>, so we have removed <strong id="allergy-count"></strong> recipes.</p>
             </div>
-            <!-- Dinner -->
-            <div class="text-center">
-              <h2 class="text-xl font-bold text-yellow-600 mb-2">Dinner</h2>
-              <img src="images/dinner.jpg" alt="Dinner" class="w-full h-48 object-cover rounded-lg mb-2" />
-              <a href="dinner.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
-            </div>
-            <!-- Snacks -->
-            <div class="text-center">
-              <h2 class="text-xl font-bold text-yellow-600 mb-2">Snacks</h2>
-              <img src="images/snacks.jpg" alt="Snacks" class="w-full h-48 object-cover rounded-lg mb-2" />
-              <a href="snacks.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
-            </div>
-            <!-- Dessert -->
-            <div class="text-center">
-              <h2 class="text-xl font-bold text-yellow-600 mb-2">Dessert</h2>
-              <img src="images/dessert.jpg" alt="Dessert" class="w-full h-48 object-cover rounded-lg mb-2" />
-              <a href="dessert.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
-            </div>
-            <!-- Drinks -->
-            <div class="text-center">
-              <h2 class="text-xl font-bold text-yellow-600 mb-2">Drinks</h2>
-              <img src="images/drinks.jpg" alt="Drinks" class="w-full h-48 object-cover rounded-lg mb-2" />
-              <a href="drinks.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
+          </div>
+
+          <!-- Dashboard Sections -->
+          <div class="mb-8">
+            <h2 class="text-xl font-bold mb-2 text-yellow-700">Recommended for You</h2>
+            <div id="recipes-grid" class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"></div>
+            <div id="loading-skeleton" class="col-span-full">
+              <div class="flex items-center justify-center mb-6">
+                <div class="loading-spinner mr-3"></div>
+                <span class="text-lg text-gray-600">Loading recipes...</span>
+              </div>
             </div>
           </div>
         </main>
+      </div>
+    </div>
+
+    <!-- Full Screen Recipe Modal -->
+    <div id="recipeModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center">
+      <div class="bg-white rounded-xl max-w-xl w-full mx-4 p-6 shadow-lg relative">
+        <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-yellow-600"></h2>
+        <h4 class="font-semibold text-lg">Ingredients:</h4>
+        <ul id="modalIngredients" class="mb-4 text-sm text-gray-700 list-disc pl-5"></ul>
+        <h4 class="font-semibold text-lg">Procedure:</h4>
+        <p id="modalProcedure" class="text-sm text-gray-700 whitespace-pre-wrap"></p>
+        <button onclick="closeRecipe()" class="mt-6 bg-yellow-500 text-white font-bold px-4 py-2 rounded hover:bg-yellow-600">Close</button>
       </div>
     </div>
 
@@ -81,46 +81,219 @@
         sidebar.classList.toggle('-translate-x-full');
       }
 
+      // Function to check authentication status
+      function checkAuthStatus() {
+        const token = localStorage.getItem('token');
+        const userInfo = localStorage.getItem('userInfo');
+        
+        if (!token || !userInfo) {
+          // User is not authenticated, clear any stale data
+          localStorage.removeItem('token');
+          localStorage.removeItem('userInfo');
+          return false;
+        }
+        
+        try {
+          // Verify the token is valid by checking if userInfo exists
+          const user = JSON.parse(userInfo);
+          if (!user || !user.token) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userInfo');
+            return false;
+          }
+          return true;
+        } catch (error) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('userInfo');
+          return false;
+        }
+      }
+
       // Function to handle logout
       function logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('userInfo');
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
       }
 
-      // This code runs when the page is loaded
-      document.addEventListener('DOMContentLoaded', () => {
-        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-        const greetingDiv = document.getElementById('greeting');
-        const navbar = document.getElementById('navbar');
+      // Modal logic
+      function showRecipe(title, ingredients, procedure) {
+        const safeTitle = title || 'Untitled Recipe';
+        const safeIngredients = Array.isArray(ingredients) ? ingredients : [];
+        const safeProcedure = procedure || 'No instructions available';
+        document.getElementById('modalTitle').textContent = safeTitle;
+        document.getElementById('modalIngredients').innerHTML = safeIngredients.length > 0 
+          ? safeIngredients.map(i => `<li>${i}</li>`).join('')
+          : '<li>No ingredients listed</li>';
+        document.getElementById('modalProcedure').textContent = safeProcedure;
+        document.getElementById('recipeModal').classList.remove('hidden');
+      }
+      function closeRecipe() {
+        document.getElementById('recipeModal').classList.add('hidden');
+      }
 
-        if (userInfo && userInfo.token) {
-          // User is logged in
-          greetingDiv.textContent = `Hello, ${userInfo.fullName}!`;
-
-          // Populate the navbar for a logged-in user
-          navbar.innerHTML = `
-            <a href="home.html" class="block text-white text-lg hover:text-yellow-500">HOME</a>
-            <a href="user.html" class="block text-white text-lg hover:text-yellow-500">PROFILE</a>
-            <a href="recipes.html" class="block text-white text-lg hover:text-yellow-500">ALL RECIPES</a>
-            <a href="favourites.html" class="block text-white text-lg hover:text-yellow-500">FAVOURITES</a>
-            <a href="upload.html" class="block text-white text-lg hover:text-yellow-500">UPLOAD RECIPE</a>
-            <a href="about.html" class="block text-white text-lg hover:text-yellow-500">ABOUT US</a>
-            <button onclick="logout()" class="w-full text-left block text-red-400 text-lg hover:text-red-300">LOGOUT</button>
-          `;
-        } else {
-          // User is not logged in (guest)
-          greetingDiv.textContent = 'Welcome, Guest! Sign up to save your favorite recipes.';
-          
-          // Populate the navbar for a guest
-           navbar.innerHTML = `
-            <a href="home.html" class="block text-white text-lg hover:text-yellow-500">HOME</a>
-            <a href="recipes.html" class="block text-white text-lg hover:text-yellow-500">ALL RECIPES</a>
-            <a href="about.html" class="block text-white text-lg hover:text-yellow-500">ABOUT US</a>
-            <a href="login.html" class="block text-green-400 text-lg hover:text-green-300">LOGIN / SIGNUP</a>
-          `;
+      // Dashboard logic
+      let allRecipes = [];
+      function renderRecipes(recipes) {
+        const recipesGrid = document.getElementById('recipes-grid');
+        const loadingSkeleton = document.getElementById('loading-skeleton');
+        loadingSkeleton.classList.add('hidden');
+        recipesGrid.innerHTML = '';
+        if (recipes.length === 0) {
+          recipesGrid.innerHTML = `<div class="col-span-full text-center py-12">
+            <div class="text-gray-500 text-lg mb-4">🍽️</div>
+            <p class="text-gray-600 text-lg">No recipes found matching your criteria.</p>
+            <p class="text-gray-500 text-sm mt-2">Try adjusting your filters or search terms.</p>
+          </div>`;
+          return;
         }
+        recipes.forEach(recipe => {
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden';
+          const title = recipe.title || 'Untitled Recipe';
+          const description = recipe.description || 'No description available';
+          const ingredients = Array.isArray(recipe.ingredients) ? recipe.ingredients : [];
+          const instructions = recipe.instructions || 'No instructions available';
+          const imageUrl = recipe.imageUrl || 'images/placeholder_recipe.jpg';
+          const uploadedBy = recipe.uploadedBy ? (recipe.uploadedBy.username || 'Unknown') : 'Unknown';
+          card.innerHTML = `
+            <img src="${imageUrl}" alt="${title}" class="w-full h-48 object-cover" onerror="this.src='images/placeholder_recipe.jpg'">
+            <div class="p-4">
+              <h3 class="text-xl font-semibold mb-2">${title}</h3>
+              <p class="text-gray-700 text-sm mb-3">${description}</p>
+              <p class="text-xs text-gray-500 mb-3">Uploaded by: ${uploadedBy}</p>
+              <button class="view-recipe-btn text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                data-title="${encodeURIComponent(title)}"
+                data-ingredients="${encodeURIComponent(JSON.stringify(ingredients))}"
+                data-instructions="${encodeURIComponent(instructions)}">
+                🍽 View Recipe
+              </button>
+            </div>
+          `;
+          recipesGrid.appendChild(card);
+        });
+        document.querySelectorAll('.view-recipe-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const title = decodeURIComponent(this.getAttribute('data-title'));
+            const ingredients = JSON.parse(decodeURIComponent(this.getAttribute('data-ingredients')));
+            const instructions = decodeURIComponent(this.getAttribute('data-instructions'));
+            showRecipe(title, ingredients, instructions);
+          });
+        });
+      }
+
+      // Allergy filter logic
+      function applyFilters() {
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        const allergyFilter = document.getElementById('allergy-input') ? document.getElementById('allergy-input').value.toLowerCase() : '';
+        let filteredRecipes = allRecipes.filter(recipe => {
+          const matchesSearch = !searchTerm || 
+            recipe.title.toLowerCase().includes(searchTerm) ||
+            recipe.ingredients.some(ing => ing.toLowerCase().includes(searchTerm));
+          let matchesAllergy = true;
+          if (allergyFilter && checkAuthStatus()) {
+            const ingredients = recipe.ingredients.map(ing => ing.toLowerCase());
+            const allergyKeywords = {
+              'nuts': ['nuts', 'almond', 'walnut', 'peanut', 'cashew', 'pecan'],
+              'dairy': ['milk', 'cheese', 'cream', 'butter', 'yogurt', 'dairy'],
+              'eggs': ['egg', 'eggs'],
+              'gluten': ['wheat', 'gluten', 'flour', 'bread', 'pasta'],
+              'shellfish': ['shrimp', 'crab', 'lobster', 'shellfish'],
+              'soy': ['soy', 'soya'],
+              'wheat': ['wheat', 'flour', 'bread', 'pasta']
+            };
+            if (allergyKeywords[allergyFilter]) {
+              matchesAllergy = !allergyKeywords[allergyFilter].some(keyword => 
+                ingredients.some(ing => ing.includes(keyword))
+              );
+            }
+          }
+          return matchesSearch && matchesAllergy;
+        });
+        // Show allergy note if filter is applied
+        const allergyNote = document.getElementById('allergy-note');
+        if (allergyFilter && checkAuthStatus()) {
+          const excludedCount = allRecipes.length - filteredRecipes.length;
+          const allergyNames = {
+            'nuts': 'nuts',
+            'dairy': 'dairy products',
+            'eggs': 'eggs',
+            'gluten': 'gluten',
+            'shellfish': 'shellfish',
+            'soy': 'soy',
+            'wheat': 'wheat'
+          };
+          document.getElementById('allergy-name').textContent = allergyNames[allergyFilter];
+          document.getElementById('allergy-count').textContent = excludedCount;
+          allergyNote.classList.remove('hidden');
+        } else {
+          allergyNote.classList.add('hidden');
+        }
+        renderRecipes(filteredRecipes);
+      }
+
+      // Fetch recommended/random recipes
+      async function fetchRecommendedRecipes() {
+        const loadingSkeleton = document.getElementById('loading-skeleton');
+        loadingSkeleton.classList.remove('hidden');
+        try {
+          const response = await fetch('/api/recipes');
+          if (!response.ok) throw new Error('Network response was not ok');
+          let recipes = await response.json();
+          // Shuffle and pick 6 random recipes for dashboard
+          recipes = recipes.sort(() => 0.5 - Math.random()).slice(0, 6);
+          allRecipes = recipes;
+          applyFilters();
+        } catch (error) {
+          loadingSkeleton.innerHTML = `<div class="col-span-full text-center py-12">
+            <div class="text-red-500 text-lg mb-4">❌</div>
+            <p class="text-red-600 text-lg">Failed to load recipes.</p>
+            <p class="text-gray-500 text-sm mt-2">Please try again later.</p>
+            <button onclick="location.reload()" class="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Retry</button>
+          </div>`;
+        }
+      }
+
+      // Add event listeners to filter controls
+      document.addEventListener('DOMContentLoaded', () => {
+        const isAuthenticated = checkAuthStatus();
+        if (!isAuthenticated) {
+          window.location.href = 'index.html';
+          return;
+        }
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        document.getElementById('greeting').textContent = `Hello, ${userInfo.fullName}!`;
+        // Populate the navbar
+        document.getElementById('navbar').innerHTML = `
+          <a href="home.html" class="block text-white text-lg hover:text-yellow-500">HOME</a>
+          <a href="user.html" class="block text-white text-lg hover:text-yellow-500">PROFILE</a>
+          <a href="recipes.html" class="block text-white text-lg hover:text-yellow-500">ALL RECIPES</a>
+          <a href="favourites.html" class="block text-white text-lg hover:text-yellow-500">FAVOURITES</a>
+          <a href="upload.html" class="block text-white text-lg hover:text-yellow-500">UPLOAD RECIPE</a>
+          <a href="about.html" class="block text-white text-lg hover:text-yellow-500">ABOUT US</a>
+          <button onclick="logout()" class="w-full text-left block text-red-400 text-lg hover:text-red-300">LOGOUT</button>
+        `;
+        if (isAuthenticated) {
+          document.getElementById('allergy-section').classList.remove('hidden');
+        }
+        document.querySelectorAll('.filter-control').forEach(control => {
+          control.addEventListener('input', applyFilters);
+          control.addEventListener('change', applyFilters);
+        });
+        fetchRecommendedRecipes();
       });
     </script>
+    <style>
+      .modal { background-color: rgba(0, 0, 0, 0.5); }
+      .loading-spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #f59e0b;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
   </body>
 </html>

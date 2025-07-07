@@ -3,10 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Desserts - What Can I Cook?</title>
+    <title>Dessert Recipes - What Can I Cook?</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <style>
+      body { background-color: #fdf1c1; }
+      .modal { background-color: rgba(0, 0, 0, 0.5); }
+      .loading-spinner { border: 2px solid #f3f3f3; border-top: 2px solid #f59e0b; border-radius: 50%; width: 16px; height: 16px; animation: spin 1s linear infinite; }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
   </head>
-  <body class="min-h-screen bg-white text-black">
+  <body class="min-h-screen text-black">
     <script defer>
       function toggleDropdown(id) {
         const menu = document.getElementById(id);
@@ -45,71 +51,380 @@
           resultDiv.classList.remove('hidden');
         }
       }
+
+      // Function to check authentication status
+      function checkAuthStatus() {
+        const token = localStorage.getItem('token');
+        const userInfo = localStorage.getItem('userInfo');
+        
+        if (!token || !userInfo) {
+          return false;
+        }
+        
+        try {
+          const user = JSON.parse(userInfo);
+          if (!user || !user.token) {
+            return false;
+          }
+          return true;
+        } catch (error) {
+          return false;
+        }
+      }
+
+      // Function to handle navigation based on auth status
+      function navigateHome() {
+        const isAuthenticated = checkAuthStatus();
+        if (isAuthenticated) {
+          window.location.href = 'home.html';
+        } else {
+          window.location.href = 'index.html';
+        }
+      }
+
+      // This code runs when the page is loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        const isAuthenticated = checkAuthStatus();
+        
+        // Update the home button to use the correct navigation
+        const homeButton = document.querySelector('a[href="index.html"]');
+        if (homeButton) {
+          homeButton.onclick = function(e) {
+            e.preventDefault();
+            navigateHome();
+          };
+        }
+      });
     </script>
-  </head>
-  <body class="min-h-screen bg-white text-black">
-    <div class="flex flex-col md:flex-row">
-      <!-- Sidebar -->
-      <div id="sidebar" class="fixed md:relative z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 w-64 min-h-screen bg-black p-6 flex flex-col rounded-br-3xl">
-        <div class="flex items-center mb-6">
-          <img src="logo-removebg.png" alt="Logo" class="w-20 h-20 object-contain filter invert">
-          <h1 class="text-xl font-semibold tracking-wide text-white">What Can I Cook?</h1>
-        </div>
-
-        <div class="mb-4">
-          <input type="text" placeholder="Search by Ingredients" class="w-full px-3 py-2 rounded-md text-black" />
-        </div>
-
-        <nav class="space-y-4">
-          <a href="home.html" class="block text-white text-lg hover:text-yellow-500">HOME</a>
-
-          <div>
-            <button onclick="toggleDropdown('catDropdown')" class="flex items-center text-white hover:text-yellow-500 text-lg w-full">
-              CATAGORIES <span class="ml-2">&#9660;</span>
-            </button>
-            <div id="catDropdown" class="ml-4 mt-2 bg-yellow-50 text-black rounded-xl p-4 hidden">
-              <form id="categoryForm" class="space-y-2">
-                <label><input type="checkbox" name="category" value="High Protein" class="mr-2">High Protein</label><br>
-                <label><input type="checkbox" name="category" value="Halal" class="mr-2">Halal</label><br>
-                <label><input type="checkbox" name="category" value="Vegetarian" class="mr-2">Vegetarian</label><br>
-                <label><input type="checkbox" name="category" value="Easy to Cook" class="mr-2">Easy to Cook</label><br>
-                <button type="button" onclick="submitCategories()" class="mt-2 bg-yellow-500 px-3 py-1 text-black rounded-md">Go</button>
-              </form>
-              <div id="categoryResult" class="mt-3 text-sm text-gray-700 hidden"></div>
-            </div>
-          </div>
-
-          <div>
-            <button onclick="toggleDropdown('mealDropdown')" class="flex items-center text-white hover:text-yellow-500 text-lg w-full">
-              MEAL TYPE <span class="ml-2">&#9660;</span>
-            </button>
-            <div id="mealDropdown" class="ml-4 mt-2 bg-yellow-50 text-black rounded-xl p-4 hidden">
-              <form id="mealTypeForm" class="space-y-2">
-                <label><input type="checkbox" name="mealtype" value="BREAKFAST" class="mr-2">BREAKFAST</label><br>
-                <label><input type="checkbox" name="mealtype" value="LUNCH" class="mr-2">LUNCH</label><br>
-                <label><input type="checkbox" name="mealtype" value="DINNER" class="mr-2">DINNER</label><br>
-                <label><input type="checkbox" name="mealtype" value="SNACKS" class="mr-2">SNACKS</label><br>
-                <label><input type="checkbox" name="mealtype" value="DESSERT" class="mr-2">DESSERT</label><br>
-                <label><input type="checkbox" name="mealtype" value="DRINKS" class="mr-2">DRINKS</label><br>
-                <button type="button" onclick="submitMealTypes()" class="mt-2 bg-yellow-500 px-3 py-1 text-black rounded-md">Go</button>
-              </form>
-              <div id="mealResult" class="mt-3 text-sm text-gray-700 hidden"></div>
-            </div>
-          </div>
-
-          <a href="#" class="block text-white text-lg hover:text-yellow-500">FAVOURITES</a>
-          <a href="about.html" class="block text-white text-lg hover:text-yellow-500">ABOUT US</a>
-          <a href="login.html" class="block text-white text-lg hover:text-yellow-500">LOGOUT</a>
-        </nav>
+    <!-- Header -->
+    <header class="bg-yellow-500 text-white py-4 shadow">
+      <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
+        <h1 class="text-3xl font-bold">Dessert Recipes</h1>
+        <a href="#" onclick="navigateHome(); return false;" class="bg-white text-yellow-600 font-bold px-4 py-2 rounded hover:bg-yellow-100">← Home</a>
       </div>
-
-      <!-- Top bar and main content -->
-      <div class="flex-1">
-        <!-- Top bar -->
-        <div class="flex items-center justify-between p-4 shadow-md bg-black text-white">
-          <button onclick="toggleSidebar()" class="text-3xl">☰</button>
-          <input type="text" placeholder="Search By Ingredients" class="w-full md:w-1/2 px-4 py-2 rounded-full border border-gray-300 text-black" />
+    </header>
+    <div class="max-w-6xl mx-auto p-6">
+      <!-- Allergy Note -->
+      <div id="allergy-note" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"></div>
+      <!-- Filter Section -->
+      <div id="filter-section" class="bg-gradient-to-br from-white/50 to-yellow-100 shadow-lg rounded-lg p-6 mb-6">
+        <h3 class="text-2xl text-black text-center mb-4">Filter Dessert Recipes</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-black">
+          <div><label for="cuisine-input" class="block text-sm font-semibold mb-2">Cuisine</label><input type="text" id="cuisine-input" placeholder="e.g., French" class="filter-control w-full px-3 py-2 bg-white rounded-md border"></div>
+          <div><label for="search-input" class="block text-sm font-semibold mb-2">Search by Title or Ingredient</label><input type="text" id="search-input" placeholder="e.g., chocolate, cake, fruit" class="filter-control w-full px-3 py-2 bg-white rounded-md border"></div>
+          <div id="allergy-section" class="hidden"><label for="allergy-input" class="block text-sm font-semibold mb-2">Exclude Allergens</label><select id="allergy-input" class="filter-control w-full px-3 py-2 bg-white rounded-md border"><option value="">No allergies</option><option value="nuts">Nuts</option><option value="dairy">Dairy</option><option value="eggs">Eggs</option><option value="gluten">Gluten</option><option value="shellfish">Shellfish</option><option value="soy">Soy</option><option value="wheat">Wheat</option></select></div>
+          <div class="flex items-end"><button onclick="clearFilters()" class="w-full bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Clear Filters</button></div>
         </div>
-    
+      </div>
+      <main id="recipes-grid" class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"><div id="loading-skeleton" class="col-span-full"><div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"><div class="bg-white rounded-lg shadow animate-pulse"><div class="h-48 bg-gray-300 rounded-t-lg"></div><div class="p-4"><div class="h-4 bg-gray-300 rounded mb-2"></div><div class="h-3 bg-gray-300 rounded mb-4"></div><div class="h-8 bg-gray-300 rounded"></div></div></div><div class="bg-white rounded-lg shadow animate-pulse"><div class="h-48 bg-gray-300 rounded-t-lg"></div><div class="p-4"><div class="h-4 bg-gray-300 rounded mb-2"></div><div class="h-3 bg-gray-300 rounded mb-4"></div><div class="h-8 bg-gray-300 rounded"></div></div></div><div class="bg-white rounded-lg shadow animate-pulse"><div class="h-48 bg-gray-300 rounded-t-lg"></div><div class="p-4"><div class="h-4 bg-gray-300 rounded mb-2"></div><div class="h-3 bg-gray-300 rounded mb-4"></div><div class="h-8 bg-gray-300 rounded"></div></div></div></div></div></main>
+    </div>
+    <!-- Full Screen Recipe Modal -->
+    <div id="recipeModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center"><div class="bg-white rounded-xl max-w-2xl w-full mx-4 p-6 shadow-lg relative"><button onclick="closeRecipe()" class="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-2xl">&times;</button><h2 id="modalTitle" class="text-2xl font-bold mb-4 text-yellow-600"></h2><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div><h4 class="font-semibold text-lg mb-2">Ingredients:</h4><ul id="modalIngredients" class="text-sm text-gray-700 list-disc pl-5 space-y-1"></ul></div><div><h4 class="font-semibold text-lg mb-2">Procedure:</h4><p id="modalProcedure" class="text-sm text-gray-700 whitespace-pre-wrap"></p></div></div><div class="mt-6 flex justify-end"><button onclick="closeRecipe()" class="bg-yellow-500 text-white font-bold px-6 py-2 rounded hover:bg-yellow-600">Close</button></div></div></div>
+    <script>
+      const recipesGrid = document.getElementById('recipes-grid');
+      const loadingSkeleton = document.getElementById('loading-skeleton');
+      const allergySection = document.getElementById('allergy-section');
+      const allergyNote = document.getElementById('allergy-note');
+      let allRecipes = []; // To store a copy of all recipes for client-side search
+      let userFavorites = []; // To store the IDs of the user's favorite recipes
+      let token = localStorage.getItem('token'); // Check for token once at the start
+
+      // Function to check authentication status
+      function checkAuthStatus() {
+        const token = localStorage.getItem('token');
+        const userInfo = localStorage.getItem('userInfo');
+        
+        if (!token || !userInfo) {
+          return false;
+        }
+        
+        try {
+          const user = JSON.parse(userInfo);
+          if (!user || !user.token) {
+            return false;
+          }
+          return true;
+        } catch (error) {
+          return false;
+        }
+      }
+
+      // Function to handle navigation based on auth status
+      function navigateHome() {
+        const isAuthenticated = checkAuthStatus();
+        if (isAuthenticated) {
+          window.location.href = 'home.html';
+        } else {
+          window.location.href = 'index.html';
+        }
+      }
+
+      // Function to clear all filters
+      function clearFilters() {
+        document.getElementById('cuisine-input').value = '';
+        document.getElementById('search-input').value = '';
+        document.getElementById('allergy-input').value = '';
+        allergyNote.classList.add('hidden');
+        applyFilters();
+      }
+
+      // Function to logout
+      function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userInfo');
+        token = null;
+        userFavorites = [];
+        window.location.href = 'index.html';
+      }
+
+      // Function to show the recipe modal
+      function showRecipe(title, ingredients, procedure) {
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalIngredients').innerHTML = ingredients.map(i => `<li>${i}</li>`).join('');
+        document.getElementById('modalProcedure').textContent = procedure;
+        document.getElementById('recipeModal').classList.remove('hidden');
+      }
+
+      // Function to close the recipe modal
+      function closeRecipe() {
+        document.getElementById('recipeModal').classList.add('hidden');
+      }
+
+      // Function to handle toggling a favorite recipe
+      async function toggleFavorite(recipeId, buttonElement) {
+        // Check authentication status before proceeding
+        if (!checkAuthStatus()) {
+          alert('You must be logged in to save recipes.');
+          window.location.href = 'login.html';
+          return;
+        }
+
+        // Show loading state on button
+        const originalText = buttonElement.textContent;
+        buttonElement.disabled = true;
+        buttonElement.innerHTML = '<div class="loading-spinner"></div>';
+
+        try {
+          const response = await fetch(`/api/users/favorites/${recipeId}`, {
+            method: 'PUT',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+
+          if (response.status === 401) {
+            // Token is invalid, logout user
+            logout();
+            return;
+          }
+
+          if (response.ok) {
+            // Update the button's appearance and the userFavorites array
+            const index = userFavorites.indexOf(recipeId);
+            if (index > -1) {
+              userFavorites.splice(index, 1); // Unfavorited
+              buttonElement.textContent = '❤️ Save';
+              buttonElement.classList.remove('saved', 'bg-green-500');
+              buttonElement.classList.add('bg-pink-500');
+            } else {
+              userFavorites.push(recipeId); // Favorited
+              buttonElement.textContent = '💚 Saved';
+              buttonElement.classList.add('saved', 'bg-green-500');
+              buttonElement.classList.remove('bg-pink-500');
+            }
+          } else {
+            alert('Failed to update favorites.');
+          }
+        } catch (error) {
+          console.error('Error toggling favorite:', error);
+          alert('An error occurred while updating favorites.');
+        } finally {
+          buttonElement.disabled = false;
+        }
+      }
+
+      // Function to render recipes to the page
+      function renderRecipes(recipes) {
+        // Hide loading skeleton
+        loadingSkeleton.classList.add('hidden');
+        
+        recipesGrid.innerHTML = ''; // Clear existing recipes
+        if (recipes.length === 0) {
+          recipesGrid.innerHTML = `
+            <div class="col-span-full text-center py-12">
+              <div class="text-gray-500 text-lg mb-4">🍽️</div>
+              <p class="text-gray-600 text-lg">No dessert recipes found matching your criteria.</p>
+              <p class="text-gray-500 text-sm mt-2">Try adjusting your filters or search terms.</p>
+        </div>
+          `;
+          return;
+        }
+
+        recipes.forEach(recipe => {
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden';
+          
+          // Handle missing or invalid data gracefully
+          const title = recipe.title || 'Untitled Recipe';
+          const description = recipe.description || 'No description available';
+          const ingredients = Array.isArray(recipe.ingredients) ? recipe.ingredients : [];
+          const instructions = recipe.instructions || 'No instructions available';
+          const imageUrl = recipe.imageUrl || 'images/placeholder_recipe.jpg';
+          const uploadedBy = recipe.uploadedBy ? (recipe.uploadedBy.username || 'Unknown') : 'Unknown';
+          
+          const ingredientsString = JSON.stringify(ingredients);
+          const isFavorite = userFavorites.includes(recipe._id);
+          const favoriteButtonText = isFavorite ? '💚 Saved' : '❤️ Save';
+          const favoriteButtonClass = isFavorite ? 'saved bg-green-500' : 'bg-pink-500';
+          
+          let favoriteButtonHTML = '';
+          if (token && checkAuthStatus()) {
+            favoriteButtonHTML = `
+              <button onclick="toggleFavorite('${recipe._id}', this)" 
+                class="ml-2 text-sm px-3 py-1 text-white rounded hover:bg-opacity-80 ${favoriteButtonClass}">
+                ${favoriteButtonText}
+            </button>
+            `;
+          }
+
+          card.innerHTML = `
+            <img src="${imageUrl}" alt="${title}" class="w-full h-48 object-cover" onerror="this.src='images/placeholder_recipe.jpg'">
+            <div class="p-4">
+              <h3 class="text-xl font-semibold mb-2">${title}</h3>
+              <p class="text-gray-700 text-sm mb-3">${description}</p>
+              <p class="text-xs text-gray-500 mb-3">Uploaded by: ${uploadedBy}</p>
+              <div class="flex justify-between items-center">
+                <button onclick='showRecipe("${title.replace(/'/g, "\\'")}", ${ingredientsString}, "${instructions.replace(/"/g, '&quot;').replace(/'/g, "\\'")}")' 
+                  class="text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">🍽 View Recipe</button>
+                ${favoriteButtonHTML}
+              </div>
+            </div>
+          `;
+          recipesGrid.appendChild(card);
+        });
+      }
+
+      // Function to fetch the logged-in user's favorites
+      async function fetchUserFavorites() {
+        if (!checkAuthStatus()) return;
+        
+        try {
+          const response = await fetch('/api/users/favorites', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          
+          if (response.status === 401) {
+            // Token is invalid, logout user
+            logout();
+            return;
+          }
+          
+          if (response.ok) {
+            const favorites = await response.json();
+            userFavorites = favorites.map(fav => fav._id); // Store only the IDs for quick lookup
+          }
+        } catch (error) {
+          console.error('Could not fetch user favorites:', error);
+        }
+      }
+
+      // Function to fetch dessert recipes from the backend
+      async function fetchDessertRecipes() {
+        await fetchUserFavorites(); // Load user favorites first
+        try {
+          const response = await fetch('/api/recipes?mealType=Dessert');
+          if (!response.ok) throw new Error('Network response was not ok');
+          allRecipes = await response.json();
+          renderRecipes(allRecipes);
+        } catch (error) {
+          console.error('Failed to fetch dessert recipes:', error);
+          loadingSkeleton.innerHTML = `
+            <div class="col-span-full text-center py-12">
+              <div class="text-red-500 text-lg mb-4">❌</div>
+              <p class="text-red-600 text-lg">Failed to load dessert recipes.</p>
+              <p class="text-gray-500 text-sm mt-2">Please try again later.</p>
+              <button onclick="location.reload()" class="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+                Retry
+            </button>
+            </div>
+          `;
+        }
+      }
+      
+      // Function to handle filtering with allergy support
+      function applyFilters() {
+          const mealType = 'Dessert'; // Fixed for dessert page
+          const cuisine = document.getElementById('cuisine-input').value.toLowerCase();
+          const searchTerm = document.getElementById('search-input').value.toLowerCase();
+          const allergyFilter = document.getElementById('allergy-input').value.toLowerCase();
+
+          let filteredRecipes = allRecipes.filter(recipe => {
+              const matchesMeal = recipe.mealType && recipe.mealType === mealType;
+              const matchesCuisine = !cuisine || (recipe.cuisine && recipe.cuisine.toLowerCase().includes(cuisine));
+              const matchesSearch = !searchTerm || 
+                                    recipe.title.toLowerCase().includes(searchTerm) ||
+                                    recipe.ingredients.some(ing => ing.toLowerCase().includes(searchTerm));
+              
+              // Allergy filtering (only for logged-in users)
+              let matchesAllergy = true;
+              if (allergyFilter && checkAuthStatus()) {
+                  const ingredients = recipe.ingredients.map(ing => ing.toLowerCase());
+                  const allergyKeywords = {
+                      'nuts': ['nuts', 'almond', 'walnut', 'peanut', 'cashew', 'pecan'],
+                      'dairy': ['milk', 'cheese', 'cream', 'butter', 'yogurt', 'dairy'],
+                      'eggs': ['egg', 'eggs'],
+                      'gluten': ['wheat', 'gluten', 'flour', 'bread', 'pasta'],
+                      'shellfish': ['shrimp', 'crab', 'lobster', 'shellfish'],
+                      'soy': ['soy', 'soya'],
+                      'wheat': ['wheat', 'flour', 'bread', 'pasta']
+                  };
+                  
+                  if (allergyKeywords[allergyFilter]) {
+                      matchesAllergy = !allergyKeywords[allergyFilter].some(keyword => 
+                          ingredients.some(ing => ing.includes(keyword))
+                      );
+                  }
+              }
+              
+              return matchesMeal && matchesCuisine && matchesSearch && matchesAllergy;
+          });
+
+          // Show allergy note if filter is applied
+          if (allergyFilter && checkAuthStatus()) {
+              const excludedCount = allRecipes.length - filteredRecipes.length;
+              const allergyNames = {
+                  'nuts': 'nuts',
+                  'dairy': 'dairy products',
+                  'eggs': 'eggs',
+                  'gluten': 'gluten',
+                  'shellfish': 'shellfish',
+                  'soy': 'soy',
+                  'wheat': 'wheat'
+              };
+              allergyNote.innerHTML = `You said you have allergy on <strong>${allergyNames[allergyFilter]}</strong>, so we have removed <strong>${excludedCount}</strong> recipes.`;
+              allergyNote.classList.remove('hidden');
+          } else {
+              allergyNote.classList.add('hidden');
+          }
+
+          renderRecipes(filteredRecipes);
+      }
+
+      // Add event listeners to all filter controls
+      document.querySelectorAll('.filter-control').forEach(control => {
+          control.addEventListener('input', applyFilters);
+          control.addEventListener('change', applyFilters);
+      });
+
+      // This code runs when the page is loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        const isAuthenticated = checkAuthStatus();
+        
+        // Show allergy section for logged-in users
+        if (isAuthenticated) {
+          allergySection.classList.remove('hidden');
+        }
+        
+        fetchDessertRecipes();
+      });
+    </script>
   </body>
 </html>

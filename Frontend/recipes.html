@@ -12,6 +12,30 @@
     .modal {
       background-color: rgba(0, 0, 0, 0.5);
     }
+    .loading-spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #f59e0b;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+    }
+    
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
   </style>
 </head>
 <body class="min-h-screen text-black">
@@ -20,7 +44,7 @@
   <header class="bg-yellow-500 text-white py-4 shadow">
     <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
       <h1 class="text-3xl font-bold">All Recipes</h1>
-      <a href="home.html" class="bg-white text-yellow-600 font-bold px-4 py-2 rounded hover:bg-yellow-100">← Home</a>
+      <a href="#" onclick="navigateHome(); return false;" class="bg-white text-yellow-600 font-bold px-4 py-2 rounded hover:bg-yellow-100">← Home</a>
     </div>
   </header>
   
@@ -52,13 +76,65 @@
            <label for="search-input" class="block text-sm font-semibold mb-2">Search by Title or Ingredient</label>
            <input type="text" id="search-input" placeholder="e.g., Chicken, Pasta" class="filter-control w-full px-3 py-2 bg-white rounded-md border">
         </div>
+        <!-- Allergy Filter (for logged-in users only) -->
+        <div id="allergy-section" class="hidden lg:col-span-2">
+          <label for="allergy-input" class="block text-sm font-semibold mb-2">Exclude Allergens</label>
+          <select id="allergy-input" class="filter-control w-full px-3 py-2 bg-white rounded-md border">
+            <option value="">No allergies</option>
+            <option value="nuts">Nuts</option>
+            <option value="dairy">Dairy</option>
+            <option value="eggs">Eggs</option>
+            <option value="gluten">Gluten</option>
+            <option value="shellfish">Shellfish</option>
+            <option value="soy">Soy</option>
+            <option value="wheat">Wheat</option>
+          </select>
+        </div>
+      </div>
+      <!-- Allergy Note -->
+      <div id="allergy-note" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
+        <p class="text-sm">You said you have allergy on <strong id="allergy-name"></strong>, so we have removed <strong id="allergy-count"></strong> recipes.</p>
       </div>
     </div>
 
     <!-- Recipes Grid -->
     <main id="recipes-grid" class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-      <!-- Recipes will be loaded here by JavaScript -->
-      <p id="loading-message" class="col-span-full text-center text-gray-600">Loading recipes...</p>
+      <!-- Loading skeleton cards -->
+      <div id="loading-skeleton" class="col-span-full">
+        <div class="flex items-center justify-center mb-6">
+          <div class="loading-spinner mr-3"></div>
+          <span class="text-lg text-gray-600">Loading recipes...</span>
+        </div>
+        <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="skeleton h-48"></div>
+            <div class="p-4">
+              <div class="skeleton h-6 w-3/4 mb-2"></div>
+              <div class="skeleton h-4 w-full mb-2"></div>
+              <div class="skeleton h-4 w-2/3 mb-3"></div>
+              <div class="skeleton h-8 w-24"></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="skeleton h-48"></div>
+            <div class="p-4">
+              <div class="skeleton h-6 w-3/4 mb-2"></div>
+              <div class="skeleton h-4 w-full mb-2"></div>
+              <div class="skeleton h-4 w-2/3 mb-3"></div>
+              <div class="skeleton h-8 w-24"></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="skeleton h-48"></div>
+            <div class="p-4">
+              <div class="skeleton h-6 w-3/4 mb-2"></div>
+              <div class="skeleton h-4 w-full mb-2"></div>
+              <div class="skeleton h-4 w-2/3 mb-3"></div>
+              <div class="skeleton h-8 w-24"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 
@@ -77,16 +153,62 @@
   <!-- Script -->
   <script>
     const recipesGrid = document.getElementById('recipes-grid');
-    const loadingMessage = document.getElementById('loading-message');
+    const loadingSkeleton = document.getElementById('loading-skeleton');
     let allRecipes = []; // To store a copy of all recipes for client-side search
     let userFavorites = []; // To store the IDs of the user's favorite recipes
-    const token = localStorage.getItem('token'); // Check for token once at the start
+    let token = localStorage.getItem('token'); // Check for token once at the start
+
+    // Function to check authentication status
+    function checkAuthStatus() {
+      const token = localStorage.getItem('token');
+      const userInfo = localStorage.getItem('userInfo');
+      
+      if (!token || !userInfo) {
+        return false;
+      }
+      
+      try {
+        const user = JSON.parse(userInfo);
+        if (!user || !user.token) {
+          return false;
+        }
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+
+    // Function to handle navigation based on auth status
+    function navigateHome() {
+      const isAuthenticated = checkAuthStatus();
+      if (isAuthenticated) {
+        window.location.href = 'home.html';
+      } else {
+        window.location.href = 'index.html';
+      }
+    }
+
+    // Function to logout
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userInfo');
+      token = null;
+      userFavorites = [];
+      window.location.href = 'login.html';
+    }
 
     // Function to show the recipe modal
     function showRecipe(title, ingredients, procedure) {
-      document.getElementById('modalTitle').textContent = title;
-      document.getElementById('modalIngredients').innerHTML = ingredients.map(i => `<li>${i}</li>`).join('');
-      document.getElementById('modalProcedure').textContent = procedure;
+      // Handle missing or invalid data
+      const safeTitle = title || 'Untitled Recipe';
+      const safeIngredients = Array.isArray(ingredients) ? ingredients : [];
+      const safeProcedure = procedure || 'No instructions available';
+      
+      document.getElementById('modalTitle').textContent = safeTitle;
+      document.getElementById('modalIngredients').innerHTML = safeIngredients.length > 0 
+        ? safeIngredients.map(i => `<li>${i}</li>`).join('')
+        : '<li>No ingredients listed</li>';
+      document.getElementById('modalProcedure').textContent = safeProcedure;
       document.getElementById('recipeModal').classList.remove('hidden');
     }
 
@@ -97,17 +219,29 @@
 
     // Function to handle toggling a favorite recipe
     async function toggleFavorite(recipeId, buttonElement) {
-      if (!token) {
+      // Check authentication status before proceeding
+      if (!checkAuthStatus()) {
         alert('You must be logged in to save recipes.');
         window.location.href = 'login.html';
         return;
       }
+
+      // Show loading state on button
+      const originalText = buttonElement.textContent;
+      buttonElement.disabled = true;
+      buttonElement.innerHTML = '<div class="loading-spinner" style="width: 16px; height: 16px;"></div>';
 
       try {
         const response = await fetch(`/api/users/favorites/${recipeId}`, {
           method: 'PUT',
           headers: { 'Authorization': `Bearer ${token}` }
         });
+
+        if (response.status === 401) {
+          // Token is invalid, logout user
+          logout();
+          return;
+        }
 
         if (response.ok) {
           // Update the button's appearance and the userFavorites array
@@ -128,14 +262,26 @@
         }
       } catch (error) {
         console.error('Error toggling favorite:', error);
+        alert('An error occurred while updating favorites.');
+      } finally {
+        buttonElement.disabled = false;
       }
     }
 
     // Function to render recipes to the page
     function renderRecipes(recipes) {
+      // Hide loading skeleton
+      loadingSkeleton.classList.add('hidden');
+      
       recipesGrid.innerHTML = ''; // Clear existing recipes
       if (recipes.length === 0) {
-        recipesGrid.innerHTML = `<p class="col-span-full text-center text-gray-600">No recipes found matching your criteria.</p>`;
+        recipesGrid.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <div class="text-gray-500 text-lg mb-4">🍽️</div>
+            <p class="text-gray-600 text-lg">No recipes found matching your criteria.</p>
+            <p class="text-gray-500 text-sm mt-2">Try adjusting your filters or search terms.</p>
+          </div>
+        `;
         return;
       }
 
@@ -143,13 +289,20 @@
         const card = document.createElement('div');
         card.className = 'bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden';
         
-        const ingredientsString = JSON.stringify(recipe.ingredients);
+        // Handle missing or invalid data gracefully
+        const title = recipe.title || 'Untitled Recipe';
+        const description = recipe.description || 'No description available';
+        const ingredients = Array.isArray(recipe.ingredients) ? recipe.ingredients : [];
+        const instructions = recipe.instructions || 'No instructions available';
+        const imageUrl = recipe.imageUrl || 'images/placeholder_recipe.jpg';
+        const uploadedBy = recipe.uploadedBy ? (recipe.uploadedBy.username || 'Unknown') : 'Unknown';
+        
         const isFavorite = userFavorites.includes(recipe._id);
         const favoriteButtonText = isFavorite ? '💚 Saved' : '❤️ Save';
         const favoriteButtonClass = isFavorite ? 'saved bg-green-500' : 'bg-pink-500';
         
         let favoriteButtonHTML = '';
-        if (token) {
+        if (token && checkAuthStatus()) {
           favoriteButtonHTML = `
             <button onclick="toggleFavorite('${recipe._id}', this)" 
               class="ml-2 text-sm px-3 py-1 text-white rounded hover:bg-opacity-80 ${favoriteButtonClass}">
@@ -158,28 +311,51 @@
           `;
         }
 
+        // Use data attributes for safe passing
         card.innerHTML = `
-          <img src="${recipe.imageUrl}" alt="${recipe.title}" class="w-full h-48 object-cover">
+          <img src="${imageUrl}" alt="${title}" class="w-full h-48 object-cover" onerror="this.src='images/placeholder_recipe.jpg'">
           <div class="p-4">
-            <h3 class="text-xl font-semibold mb-2">${recipe.title}</h3>
-            <p class="text-gray-700 text-sm mb-3">${recipe.description}</p>
-            <p class="text-xs text-gray-500 mb-3">Uploaded by: ${recipe.uploadedBy ? recipe.uploadedBy.username : 'Unknown'}</p>
-            <button onclick='showRecipe("${recipe.title}", ${ingredientsString}, "${recipe.instructions.replace(/"/g, '&quot;')}")' 
-              class="text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">🍽 View Recipe</button>
+            <h3 class="text-xl font-semibold mb-2">${title}</h3>
+            <p class="text-gray-700 text-sm mb-3">${description}</p>
+            <p class="text-xs text-gray-500 mb-3">Uploaded by: ${uploadedBy}</p>
+            <button class="view-recipe-btn text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+              data-title="${encodeURIComponent(title)}"
+              data-ingredients="${encodeURIComponent(JSON.stringify(ingredients))}"
+              data-instructions="${encodeURIComponent(instructions)}">
+              🍽 View Recipe
+            </button>
             ${favoriteButtonHTML}
           </div>
         `;
         recipesGrid.appendChild(card);
       });
+
+      // Attach event listeners to all view-recipe buttons
+      document.querySelectorAll('.view-recipe-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const title = decodeURIComponent(this.getAttribute('data-title'));
+          const ingredients = JSON.parse(decodeURIComponent(this.getAttribute('data-ingredients')));
+          const instructions = decodeURIComponent(this.getAttribute('data-instructions'));
+          showRecipe(title, ingredients, instructions);
+        });
+      });
     }
 
     // Function to fetch the logged-in user's favorites
     async function fetchUserFavorites() {
-      if (!token) return;
+      if (!checkAuthStatus()) return;
+      
       try {
         const response = await fetch('/api/users/favorites', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
+        
+        if (response.status === 401) {
+          // Token is invalid, logout user
+          logout();
+          return;
+        }
+        
         if (response.ok) {
           const favorites = await response.json();
           userFavorites = favorites.map(fav => fav._id); // Store only the IDs for quick lookup
@@ -199,8 +375,16 @@
         renderRecipes(allRecipes);
       } catch (error) {
         console.error('Failed to fetch recipes:', error);
-        loadingMessage.textContent = 'Failed to load recipes. Please try again later.';
-        loadingMessage.className = 'col-span-full text-center text-red-600';
+        loadingSkeleton.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <div class="text-red-500 text-lg mb-4">❌</div>
+            <p class="text-red-600 text-lg">Failed to load recipes.</p>
+            <p class="text-gray-500 text-sm mt-2">Please try again later.</p>
+            <button onclick="location.reload()" class="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+              Retry
+            </button>
+          </div>
+        `;
       }
     }
     
@@ -209,6 +393,7 @@
         const mealType = document.getElementById('meal-select').value.toLowerCase();
         const cuisine = document.getElementById('cuisine-input').value.toLowerCase();
         const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        const allergyFilter = document.getElementById('allergy-input') ? document.getElementById('allergy-input').value.toLowerCase() : '';
 
         let filteredRecipes = allRecipes.filter(recipe => {
             const matchesMeal = !mealType || recipe.mealType.toLowerCase() === mealType;
@@ -216,8 +401,47 @@
             const matchesSearch = !searchTerm || 
                                   recipe.title.toLowerCase().includes(searchTerm) ||
                                   recipe.ingredients.some(ing => ing.toLowerCase().includes(searchTerm));
-            return matchesMeal && matchesCuisine && matchesSearch;
+            // Allergy filtering (only for logged-in users)
+            let matchesAllergy = true;
+            if (allergyFilter && checkAuthStatus()) {
+                const ingredients = recipe.ingredients.map(ing => ing.toLowerCase());
+                const allergyKeywords = {
+                    'nuts': ['nuts', 'almond', 'walnut', 'peanut', 'cashew', 'pecan'],
+                    'dairy': ['milk', 'cheese', 'cream', 'butter', 'yogurt', 'dairy'],
+                    'eggs': ['egg', 'eggs'],
+                    'gluten': ['wheat', 'gluten', 'flour', 'bread', 'pasta'],
+                    'shellfish': ['shrimp', 'crab', 'lobster', 'shellfish'],
+                    'soy': ['soy', 'soya'],
+                    'wheat': ['wheat', 'flour', 'bread', 'pasta']
+                };
+                if (allergyKeywords[allergyFilter]) {
+                    matchesAllergy = !allergyKeywords[allergyFilter].some(keyword => 
+                        ingredients.some(ing => ing.includes(keyword))
+                    );
+                }
+            }
+            return matchesMeal && matchesCuisine && matchesSearch && matchesAllergy;
         });
+
+        // Show allergy note if filter is applied
+        const allergyNote = document.getElementById('allergy-note');
+        if (allergyFilter && checkAuthStatus()) {
+            const excludedCount = allRecipes.length - filteredRecipes.length;
+            const allergyNames = {
+                'nuts': 'nuts',
+                'dairy': 'dairy products',
+                'eggs': 'eggs',
+                'gluten': 'gluten',
+                'shellfish': 'shellfish',
+                'soy': 'soy',
+                'wheat': 'wheat'
+            };
+            document.getElementById('allergy-name').textContent = allergyNames[allergyFilter];
+            document.getElementById('allergy-count').textContent = excludedCount;
+            allergyNote.classList.remove('hidden');
+        } else {
+            allergyNote.classList.add('hidden');
+        }
 
         renderRecipes(filteredRecipes);
     }
@@ -228,8 +452,14 @@
         control.addEventListener('change', applyFilters);
     });
 
-    // Fetch all recipes when the page loads
-    document.addEventListener('DOMContentLoaded', fetchAllRecipes);
+    // Show allergy filter for logged-in users
+    document.addEventListener('DOMContentLoaded', () => {
+      const isAuthenticated = checkAuthStatus();
+      if (isAuthenticated) {
+        document.getElementById('allergy-section').classList.remove('hidden');
+      }
+      fetchAllRecipes();
+    });
   </script>
 
   <!-- Footer -->

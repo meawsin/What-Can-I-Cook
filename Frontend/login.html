@@ -11,6 +11,19 @@
         background-size: cover;
         background-position: center;
       }
+      .loading-spinner {
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #f59e0b;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
     </style>
   </head>
   <body class="min-h-screen flex items-center justify-center">
@@ -18,14 +31,17 @@
       <img src="images/logo-removebg.png" alt="Logo" class="mx-auto w-40 h-30 object-contain">
 
       <h1 class="text-3xl font-bold text-black mb-4">What Can I Cook?</h1>
-      <h3 class="text-xl font-bold text-black mb-2">Sign In</h3>
+      <h3 class="text-xl font-bold text-black mb-2">Log In</h3>
 
       <!-- Removed action/method and added an ID -->
       <form id="login-form" class="space-y-4">
         <!-- The input can be for username or email -->
         <input type="text" name="username" placeholder="Username or Email" required class="w-full px-4 py-2 border rounded-md">
         <input type="password" name="password" placeholder="Password" required class="w-full px-4 py-2 border rounded-md">
-        <button type="submit" class="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 rounded-md">Sign In</button>
+        <button type="submit" id="loginBtn" class="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 rounded-md flex items-center justify-center">
+          <span id="loginText">Log In</span>
+          <div id="loginSpinner" class="loading-spinner ml-2 hidden"></div>
+        </button>
       </form>
 
       <!-- To display success or error messages -->
@@ -39,9 +55,17 @@
     <script>
       const form = document.getElementById('login-form');
       const messageDisplay = document.getElementById('message-display');
+      const loginBtn = document.getElementById('loginBtn');
+      const loginText = document.getElementById('loginText');
+      const loginSpinner = document.getElementById('loginSpinner');
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault(); // Prevent page reload
+
+        // Show loading state
+        loginBtn.disabled = true;
+        loginText.textContent = 'Signing In...';
+        loginSpinner.classList.remove('hidden');
 
         // Reset previous messages
         messageDisplay.textContent = '';
@@ -88,6 +112,11 @@
           console.error('Error:', error);
           messageDisplay.textContent = 'An error occurred. Please try again.';
           messageDisplay.classList.add('text-red-600');
+        } finally {
+          // Reset loading state
+          loginBtn.disabled = false;
+          loginText.textContent = 'Log In';
+          loginSpinner.classList.add('hidden');
         }
       });
     </script>

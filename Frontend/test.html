@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Test Page - What Can I Cook?</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-gray-100 p-8">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold text-center mb-8">Test Page</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Debug Recipes -->
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">Debug Recipes</h2>
+        <button id="checkRecipes" class="bg-blue-500 text-white px-4 py-2 rounded mb-4">Check All Recipes</button>
+        <button id="createSample" class="bg-green-500 text-white px-4 py-2 rounded mb-4">Create Sample Recipes</button>
+        <div id="debugOutput" class="bg-gray-100 p-4 rounded text-sm"></div>
+      </div>
+      
+      <!-- Test API -->
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">Test API</h2>
+        <button id="testAPI" class="bg-purple-500 text-white px-4 py-2 rounded mb-4">Test API Connection</button>
+        <div id="apiOutput" class="bg-gray-100 p-4 rounded text-sm"></div>
+      </div>
+    </div>
+    
+    <div class="mt-8 text-center">
+      <a href="home.html" class="bg-yellow-500 text-white px-6 py-2 rounded hover:bg-yellow-600">Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('checkRecipes').addEventListener('click', async () => {
+      const output = document.getElementById('debugOutput');
+      output.textContent = 'Checking recipes...';
+      
+      try {
+        const response = await fetch('/api/debug/recipes');
+        const data = await response.json();
+        output.innerHTML = `
+          <strong>Found ${data.count} recipes:</strong><br>
+          <pre>${JSON.stringify(data.recipes, null, 2)}</pre>
+        `;
+      } catch (error) {
+        output.textContent = `Error: ${error.message}`;
+      }
+    });
+
+    document.getElementById('createSample').addEventListener('click', async () => {
+      const output = document.getElementById('debugOutput');
+      output.textContent = 'Creating sample recipes...';
+      
+      try {
+        const response = await fetch('/api/debug/create-sample-recipes', {
+          method: 'POST'
+        });
+        const data = await response.json();
+        output.innerHTML = `
+          <strong>${data.message}</strong><br>
+          Created ${data.count} recipes
+        `;
+      } catch (error) {
+        output.textContent = `Error: ${error.message}`;
+      }
+    });
+
+    document.getElementById('testAPI').addEventListener('click', async () => {
+      const output = document.getElementById('apiOutput');
+      output.textContent = 'Testing API...';
+      
+      try {
+        const response = await fetch('/api/test');
+        const data = await response.json();
+        output.innerHTML = `
+          <strong>API Test Result:</strong><br>
+          ${data.message}
+        `;
+      } catch (error) {
+        output.textContent = `Error: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html> 
