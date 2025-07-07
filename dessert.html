@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Desserts - What Can I Cook?</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  </head>
+  <body class="min-h-screen bg-white text-black">
+    <script defer>
+      function toggleDropdown(id) {
+        const menu = document.getElementById(id);
+        menu.classList.toggle('hidden');
+      }
+
+      function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('-translate-x-full');
+      }
+
+      function submitCategories() {
+        const checkboxes = document.querySelectorAll('#categoryForm input[name="category"]:checked');
+        const selected = Array.from(checkboxes).map(cb => cb.value);
+        const resultDiv = document.getElementById('categoryResult');
+
+        if (selected.length > 0) {
+          resultDiv.innerText = 'Showing recipes for: ' + selected.join(', ');
+          resultDiv.classList.remove('hidden');
+        } else {
+          resultDiv.innerText = 'Please select at least one category.';
+          resultDiv.classList.remove('hidden');
+        }
+      }
+
+      function submitMealTypes() {
+        const checkboxes = document.querySelectorAll('#mealTypeForm input[name="mealtype"]:checked');
+        const selected = Array.from(checkboxes).map(cb => cb.value);
+        const resultDiv = document.getElementById('mealResult');
+
+        if (selected.length > 0) {
+          resultDiv.innerText = 'Showing meal types: ' + selected.join(', ');
+          resultDiv.classList.remove('hidden');
+        } else {
+          resultDiv.innerText = 'Please select at least one meal type.';
+          resultDiv.classList.remove('hidden');
+        }
+      }
+    </script>
+  </head>
+  <body class="min-h-screen bg-white text-black">
+    <div class="flex flex-col md:flex-row">
+      <!-- Sidebar -->
+      <div id="sidebar" class="fixed md:relative z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 w-64 min-h-screen bg-black p-6 flex flex-col rounded-br-3xl">
+        <div class="flex items-center mb-6">
+          <img src="logo-removebg.png" alt="Logo" class="w-20 h-20 object-contain filter invert">
+          <h1 class="text-xl font-semibold tracking-wide text-white">What Can I Cook?</h1>
+        </div>
+
+        <div class="mb-4">
+          <input type="text" placeholder="Search by Ingredients" class="w-full px-3 py-2 rounded-md text-black" />
+        </div>
+
+        <nav class="space-y-4">
+          <a href="home.html" class="block text-white text-lg hover:text-yellow-500">HOME</a>
+
+          <div>
+            <button onclick="toggleDropdown('catDropdown')" class="flex items-center text-white hover:text-yellow-500 text-lg w-full">
+              CATAGORIES <span class="ml-2">&#9660;</span>
+            </button>
+            <div id="catDropdown" class="ml-4 mt-2 bg-yellow-50 text-black rounded-xl p-4 hidden">
+              <form id="categoryForm" class="space-y-2">
+                <label><input type="checkbox" name="category" value="High Protein" class="mr-2">High Protein</label><br>
+                <label><input type="checkbox" name="category" value="Halal" class="mr-2">Halal</label><br>
+                <label><input type="checkbox" name="category" value="Vegetarian" class="mr-2">Vegetarian</label><br>
+                <label><input type="checkbox" name="category" value="Easy to Cook" class="mr-2">Easy to Cook</label><br>
+                <button type="button" onclick="submitCategories()" class="mt-2 bg-yellow-500 px-3 py-1 text-black rounded-md">Go</button>
+              </form>
+              <div id="categoryResult" class="mt-3 text-sm text-gray-700 hidden"></div>
+            </div>
+          </div>
+
+          <div>
+            <button onclick="toggleDropdown('mealDropdown')" class="flex items-center text-white hover:text-yellow-500 text-lg w-full">
+              MEAL TYPE <span class="ml-2">&#9660;</span>
+            </button>
+            <div id="mealDropdown" class="ml-4 mt-2 bg-yellow-50 text-black rounded-xl p-4 hidden">
+              <form id="mealTypeForm" class="space-y-2">
+                <label><input type="checkbox" name="mealtype" value="BREAKFAST" class="mr-2">BREAKFAST</label><br>
+                <label><input type="checkbox" name="mealtype" value="LUNCH" class="mr-2">LUNCH</label><br>
+                <label><input type="checkbox" name="mealtype" value="DINNER" class="mr-2">DINNER</label><br>
+                <label><input type="checkbox" name="mealtype" value="SNACKS" class="mr-2">SNACKS</label><br>
+                <label><input type="checkbox" name="mealtype" value="DESSERT" class="mr-2">DESSERT</label><br>
+                <label><input type="checkbox" name="mealtype" value="DRINKS" class="mr-2">DRINKS</label><br>
+                <button type="button" onclick="submitMealTypes()" class="mt-2 bg-yellow-500 px-3 py-1 text-black rounded-md">Go</button>
+              </form>
+              <div id="mealResult" class="mt-3 text-sm text-gray-700 hidden"></div>
+            </div>
+          </div>
+
+          <a href="#" class="block text-white text-lg hover:text-yellow-500">FAVOURITES</a>
+          <a href="about.html" class="block text-white text-lg hover:text-yellow-500">ABOUT US</a>
+          <a href="login.html" class="block text-white text-lg hover:text-yellow-500">LOGOUT</a>
+        </nav>
+      </div>
+
+      <!-- Top bar and main content -->
+      <div class="flex-1">
+        <!-- Top bar -->
+        <div class="flex items-center justify-between p-4 shadow-md bg-black text-white">
+          <button onclick="toggleSidebar()" class="text-3xl">☰</button>
+          <input type="text" placeholder="Search By Ingredients" class="w-full md:w-1/2 px-4 py-2 rounded-full border border-gray-300 text-black" />
+        </div>
+    
+  </body>
+</html>

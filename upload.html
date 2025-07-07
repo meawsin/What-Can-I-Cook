@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload Your Recipe</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  
+</head>
+<body class="min-h-screen bg-gradient-to-br from-yellow-500 via-white to-yellow-300 flex items-center justify-center p-4">
+  <div class="bg-white shadow-2xl rounded-xl w-full max-w-2xl p-10">
+    <h2 class="text-3xl font-extrabold text-yellow-600 text-center mb-6">🍽️ Upload Your Recipe</h2>
+    
+    <form id="uploadForm" enctype="multipart/form-data" class="space-y-6">
+      <div>
+        <label class="block mb-2 font-semibold">Recipe Title</label>
+        <input type="text" name="title" placeholder="e.g., Spicy Chicken Biryani" required
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+      </div>
+
+      <div>
+        <label class="block mb-2 font-semibold">Short Description</label>
+        <textarea name="description" rows="2" required
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          placeholder="Describe your recipe briefly..."></textarea>
+      </div>
+
+      <div>
+        <label class="block mb-2 font-semibold">Ingredients <span class="text-sm text-gray-500">(comma-separated)</span></label>
+        <input type="text" name="ingredients" placeholder="e.g., Chicken, Rice, Spices" required
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+      </div>
+
+      <div>
+        <label class="block mb-2 font-semibold">Instructions</label>
+        <textarea name="instructions" rows="5" required
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          placeholder="Step-by-step cooking guide..."></textarea>
+      </div>
+
+      <div>
+        <label class="block mb-2 font-semibold">Upload Image</label>
+        <input type="file" name="image" accept="image/*" required
+          class="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-yellow-100 file:text-yellow-700 hover:file:bg-yellow-200" />
+      </div>
+
+      <div>
+        <button type="submit"
+          class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 rounded-lg transition duration-200">
+          Submit Recipe
+        </button>
+      </div>
+    </form>
+
+    <p id="message" class="mt-6 text-center text-green-600 font-medium hidden">✅ Recipe submitted successfully!</p>
+  </div>
+
+  <script>
+    document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const res = await fetch('/api/recipes', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('message').classList.remove('hidden');
+        this.reset();
+      }
+    });
+  </script>
+</body>
+</html>

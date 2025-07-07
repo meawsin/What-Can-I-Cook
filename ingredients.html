@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Ingredients</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+        background-image: url('bg_ingredients-copy.png');
+        background-size: cover;
+        background-position: center;
+      }
+    .ingredient-selected {
+      background-color: #f3b517 !important; /* yellow-400 */
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-yellow-100 text-black font-sans">
+  <div class="max-w-2xl mx-auto py-6 px-4">
+    <h1 class="text-3xl font-bold text-yellow-700 mb-6 flex items-center gap-2">
+      🛒 Add Ingredients
+    </h1>
+
+    <input type="text" placeholder="Search ingredients..."
+      class="w-full px-4 py-2 mb-4 border border-yellow-500 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-600">
+
+    <div id="categories"></div>
+
+    <div class="mt-8 text-center">
+      <button onclick="suggestRecipes()"
+        class="px-6 py-3 bg-yellow-600 text-white font-bold rounded-full hover:bg-yellow-700 transition-colors">
+        Suggest Recipes
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const data = [
+      {
+        name: "Pantry Essentials",
+        icon: "🗃️",
+        ingredients: ["salt", "sugar", "oil", "vinegar"]
+      },
+      {
+        name: "Vegetables & Greens",
+        icon: "🥦",
+        ingredients: ["carrot", "tomato", "cucumber", "zucchini", "spinach"]
+      },
+      {
+        name: "Fruits",
+        icon: "🍎",
+        ingredients: ["apple", "banana", "mango", "grape", "pineapple", "watermelon",
+      "passionfruit", "tangerine", "dragonfruit", "jackfruit"]
+      },
+      {
+        name: "Fish & Meats",
+        icon: "🥩",
+        ingredients: [ "tilapia", "salmon", "hilsa", "rohu",  "katla", "tuna",
+      // Meats
+      "chicken", "beef", "lamb", "goat",
+      "duck", "chicken breast", "mutton"]
+      },
+      {
+        name: "Berries",
+        icon: "🥞",
+        ingredients: ["strawberry", "blueberry", "raspberry"]
+      },
+      {
+        name: "Nuts & Seeds",
+        icon: "🥜",
+        ingredients: ["almond", "walnut", "peanut", "cashew"]
+      },
+      {
+        name: "Cheeses",
+        icon: "🧀",
+        ingredients: ["cheddar", "mozzarella", "feta"]
+      }
+    ];
+
+    const categoriesContainer = document.getElementById("categories");
+
+    data.forEach((category, index) => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "bg-white rounded-xl p-4 shadow-md mb-4";
+
+      const header = document.createElement("div");
+      header.className = "flex justify-between items-center cursor-pointer text-yellow-800 font-semibold text-lg mb-2";
+      header.innerHTML = `<span>${category.icon} ${category.name}</span><span class="text-black">&#9650;</span>`;
+
+      const ingredientsContainer = document.createElement("div");
+      ingredientsContainer.className = "grid grid-cols-3 gap-2";
+      category.ingredients.forEach(ingredient => {
+        const item = document.createElement("div");
+        item.textContent = ingredient;
+        item.className = "px-4 py-2 rounded-full bg-yellow-200 text-black text-sm text-center cursor-pointer transition-all duration-150";
+        item.addEventListener("click", () => {
+          item.classList.toggle("ingredient-selected");
+        });
+        ingredientsContainer.appendChild(item);
+      });
+
+      header.addEventListener("click", () => {
+        ingredientsContainer.classList.toggle("hidden");
+        header.querySelector("span:last-child").innerHTML = ingredientsContainer.classList.contains("hidden") ? "&#9660;" : "&#9650;";
+      });
+
+      wrapper.appendChild(header);
+      wrapper.appendChild(ingredientsContainer);
+      categoriesContainer.appendChild(wrapper);
+    });
+
+    function suggestRecipes() {
+      const selected = Array.from(document.querySelectorAll('.ingredient-selected')).map(el => el.textContent);
+      alert("Selected Ingredients: " + selected.join(", "));
+    }
+  </script>
+</body>
+</html>

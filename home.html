@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>What Can I Cook?</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  </head>
+  <body class="min-h-screen bg-gradient-to-b from-yellow-100 via-white to-yellow-200 text-black">
+    <div class="flex flex-col md:flex-row">
+      <!-- Sidebar -->
+      <div id="sidebar" class="fixed md:relative z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 w-64 min-h-screen bg-black p-6 flex flex-col rounded-br-3xl">
+        <div class="flex items-center mb-6">
+          <img src="logo-removebg.png" alt="Logo" class="w-20 h-20 object-contain filter invert">
+          <h1 class="text-xl font-semibold tracking-wide text-white ml-3">What Can I Cook?</h1>
+        </div>
+        <input type="text" placeholder="Search by Ingredients" class="w-full px-3 py-2 rounded-md text-black mb-4" />
+        <nav class="space-y-4">
+          <a href="home.html" class="block text-white text-lg hover:text-yellow-500">HOME</a>
+          <div>
+            <button onclick class="flex items-center text-white hover:text-yellow-500 text-lg w-full"></button>
+            <div>
+             <a href="recipes.html" class="block text-white text-lg hover:text-yellow-500">All Recipes</a>
+            <button onclick class="flex items-center text-white hover:text-yellow-500 text-lg w-full"></button>
+        
+              
+            </div>
+          </div>
+          <a href="favourites.html" class="block text-white text-lg hover:text-yellow-500">FAVOURITES</a>
+          <a href="about.html" class="block text-white text-lg hover:text-yellow-500">ABOUT US</a>
+          <a href="login.html" class="block text-white text-lg hover:text-yellow-500">LOGOUT</a>
+        </nav>
+      </div>
+
+      <!-- Topbar + Content -->
+      <div class="flex-1">
+        <div class="flex items-center justify-between p-4 shadow-md bg-black text-white">
+          <button onclick="toggleSidebar()" class="text-3xl">☰</button>
+          <input type="text" placeholder="Search By Ingredients" class="w-full md:w-1/2 px-4 py-2 rounded-full border border-gray-300 text-black" />
+        </div>
+        
+          <!-- Meal Cards Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Repeat for each meal type -->
+            <div class="text-center">
+              <h2 class="text-xl font-bold text-yellow-600 mb-2">Breakfast</h2>
+              <img src="breakfast.jpg" class="w-full h-48 object-cover rounded-lg mb-2" />
+              <a href="breakfast.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
+            </div>
+            <!-- Add other meals similarly -->
+             <div class="text-center">
+              <h2 class="text-xl font-bold text-yellow-600 mb-2">Lunch</h2>
+              <img src="lunch.jpg" class="w-full h-48 object-cover rounded-lg mb-2" />
+              <a href="lunch.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
+            </div>
+
+            <div class="text-center">
+              <h2 class="text-xl font-bold text-yellow-600 mb-2">Dinner</h2>
+              <img src="dinner.jpg" class="w-full h-48 object-cover rounded-lg mb-2" />
+              <a href="dinner.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
+            </div>
+
+            <div class="text-center">
+              <h2 class="text-xl font-bold text-yellow-600 mb-2">Snacks</h2>
+              <img src="snacks.jpg" class="w-full h-48 object-cover rounded-lg mb-2" />
+              <a href="snacks.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
+            </div>
+
+            <div class="text-center">
+              <h2 class="text-xl font-bold text-yellow-600 mb-2">Dessert</h2>
+              <img src="dessert.jpg" class="w-full h-48 object-cover rounded-lg mb-2" />
+              <a href="dessert.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
+            </div>
+
+            <div class="text-center">
+              <h2 class="text-xl font-bold text-yellow-600 mb-2">Drinks</h2>
+              <img src="drinks.jpg" class="w-full h-48 object-cover rounded-lg mb-2" />
+              <a href="drinks.html" class="bg-yellow-500 text-black font-bold px-4 py-2 rounded hover:bg-yellow-600 inline-block">Explore</a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

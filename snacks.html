@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snacks - What Can I Cook?</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  </head>
+  <body class="bg-yellow-50 text-gray-800">
+    <div class="flex flex-col md:flex-row">
+      <script defer>
+      function toggleDropdown(id) {
+        const menu = document.getElementById(id);
+        menu.classList.toggle('hidden');
+      }
+
+      function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('-translate-x-full');
+      }
+
+      function submitCategories() {
+        const checkboxes = document.querySelectorAll('#categoryForm input[name="category"]:checked');
+        const selected = Array.from(checkboxes).map(cb => cb.value);
+        const resultDiv = document.getElementById('categoryResult');
+
+        if (selected.length > 0) {
+          resultDiv.innerText = 'Showing recipes for: ' + selected.join(', ');
+          resultDiv.classList.remove('hidden');
+        } else {
+          resultDiv.innerText = 'Please select at least one category.';
+          resultDiv.classList.remove('hidden');
+        }
+      }
+
+      function submitMealTypes() {
+        const checkboxes = document.querySelectorAll('#mealTypeForm input[name="mealtype"]:checked');
+        const selected = Array.from(checkboxes).map(cb => cb.value);
+        const resultDiv = document.getElementById('mealResult');
+
+        if (selected.length > 0) {
+          resultDiv.innerText = 'Showing meal types: ' + selected.join(', ');
+          resultDiv.classList.remove('hidden');
+        } else {
+          resultDiv.innerText = 'Please select at least one meal type.';
+          resultDiv.classList.remove('hidden');
+        }
+      }
+    </script>
+  </head>
+  <body class="min-h-screen bg-white text-black">
+    <div class="flex flex-col md:flex-row">
+      <!-- Sidebar -->
+      <div id="sidebar" class="fixed md:relative z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 w-64 min-h-screen bg-black p-6 flex flex-col rounded-br-3xl">
+        <div class="flex items-center mb-6">
+          <img src="logo-removebg.png" alt="Logo" class="w-20 h-20 object-contain filter invert">
+          <h1 class="text-xl font-semibold tracking-wide text-white ml-3">What Can I Cook?</h1>
+        </div>
+        <input type="text" placeholder="Search by Ingredients" class="w-full px-3 py-2 rounded-md text-black mb-4" />
+        <nav class="space-y-4">
+          <a href="home.html" class="block text-white text-lg hover:text-yellow-500">HOME</a>
+          <div>
+            <button onclick class="flex items-center text-white hover:text-yellow-500 text-lg w-full"></button>
+            <div>
+             <a href="recipes.html" class="block text-white text-lg hover:text-yellow-500">All Recipes</a>
+            <button onclick class="flex items-center text-white hover:text-yellow-500 text-lg w-full"></button>
+        
+              
+            </div>
+          </div>
+          <a href="favourites.html" class="block text-white text-lg hover:text-yellow-500">FAVOURITES</a>
+          <a href="about.html" class="block text-white text-lg hover:text-yellow-500">ABOUT US</a>
+          <a href="login.html" class="block text-white text-lg hover:text-yellow-500">LOGOUT</a>
+        </nav>
+      </div>
+
+      <!-- Topbar + Content -->
+      <div class="flex-1">
+        <div class="flex items-center justify-between p-4 shadow-md bg-black text-white">
+          <button onclick="toggleSidebar()" class="text-3xl">☰</button>
+          <input type="text" placeholder="Search By Ingredients" class="w-full md:w-1/2 px-4 py-2 rounded-full border border-gray-300 text-black" />
+        </div>
+      <!-- Main content -->
+      <div class="flex-1 p-6">
+        <h2 class="text-4xl text-center font-bold text-yellow-600 mb-6">Snacks</h2>
+        <div class="mb-8">
+          <input
+            type="text"
+            id="searchInput"
+            oninput="filterRecipes()"
+            placeholder="Search by ingredient..."
+            class="w-full max-w-md px-4 py-2 border border-yellow-300 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-500"
+          />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white p-4 rounded-xl shadow-md">
+            <img src="samosa.jpg" alt="Samosa" class="w-full h-40 object-cover rounded-lg mb-2">
+            <h3 class="text-xl font-semibold text-yellow-600">Spicy Beef Samosa</h3>
+            <p class="text-sm text-gray-700">Crispy Bangladeshi-style samosas filled with spicy beef and herbs. Perfect with a cup of tea.</p>
+            <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl shadow-md">
+            <img src="falafel.jpg" alt="Falafel" class="w-full h-40 object-cover rounded-lg mb-2">
+            <h3 class="text-xl font-semibold text-yellow-600">Falafel Bites</h3>
+            <p class="text-sm text-gray-700">Middle Eastern deep-fried chickpea patties served with tahini sauce and fresh veggies.</p>
+            <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl shadow-md">
+            <img src="arancini.jpg" alt="Arancini" class="w-full h-40 object-cover rounded-lg mb-2">
+            <h3 class="text-xl font-semibold text-yellow-600">Cheesy Arancini</h3>
+            <p class="text-sm text-gray-700">Italian rice balls filled with mozzarella, coated in breadcrumbs, and fried to golden perfection.</p>
+            <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl shadow-md">
+  <img src="nachos.jpg" alt="Loaded Nachos" class="w-full h-40 object-cover rounded-lg mb-2">
+  <h3 class="text-xl font-semibold text-yellow-600">Loaded Nachos</h3>
+  <p class="text-sm text-gray-700">Crispy tortilla chips topped with cheese, jalapeños, beans, and salsa.</p>
+  <button class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200" onclick="showRecipe(this)">Show Full Recipe</button>
+</div>
+
+<div class="bg-white p-4 rounded-xl shadow-md">
+  <img src="momos.jpg" alt="Steamed Momos" class="w-full h-40 object-cover rounded-lg mb-2">
+  <h3 class="text-xl font-semibold text-yellow-600">Steamed Momos</h3>
+  <p class="text-sm text-gray-700">Tibetan dumplings stuffed with spiced chicken or vegetables, served with hot chutney.</p>
+  <button class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200" onclick="showRecipe(this)">Show Full Recipe</button>
+</div>
+
+<div class="bg-white p-4 rounded-xl shadow-md">
+  <img src="cornfritters.jpg" alt="Corn Fritters" class="w-full h-40 object-cover rounded-lg mb-2">
+  <h3 class="text-xl font-semibold text-yellow-600">Corn Fritters</h3>
+  <p class="text-sm text-gray-700">Golden, crispy corn fritters packed with sweet corn and herbs.</p>
+  <button class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200" onclick="showRecipe(this)">Show Full Recipe</button>
+</div>
+
+<div class="bg-white p-4 rounded-xl shadow-md">
+  <img src="chickenpopcorn.jpg" alt="Chicken Popcorn" class="w-full h-40 object-cover rounded-lg mb-2">
+  <h3 class="text-xl font-semibold text-yellow-600">Crispy Chicken Popcorn</h3>
+  <p class="text-sm text-gray-700">Bite-sized crispy chicken pieces seasoned with bold spices – addictive snack!</p>
+  <button class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200" onclick="showRecipe(this)">Show Full Recipe</button>
+</div>
+
+<div class="bg-white p-4 rounded-xl shadow-md">
+  <img src="onionrings.jpg" alt="Onion Rings" class="w-full h-40 object-cover rounded-lg mb-2">
+  <h3 class="text-xl font-semibold text-yellow-600">Crispy Onion Rings</h3>
+  <p class="text-sm text-gray-700">Thick-cut onion rings battered and deep-fried until golden and crunchy.</p>
+  <button class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200" onclick="showRecipe(this)">Show Full Recipe</button>
+</div>
+
+<div class="bg-white p-4 rounded-xl shadow-md">
+  <img src="bananachips.jpg" alt="Banana Chips" class="w-full h-40 object-cover rounded-lg mb-2">
+  <h3 class="text-xl font-semibold text-yellow-600">Banana Chips</h3>
+  <p class="text-sm text-gray-700">Thinly sliced green bananas fried until crispy and lightly salted.</p>
+  <button class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200" onclick="showRecipe(this)">Show Full Recipe</button>
+</div>
+
+<div class="bg-white p-4 rounded-xl shadow-md">
+  <img src="deviledeggs.jpg" alt="Deviled Eggs" class="w-full h-40 object-cover rounded-lg mb-2">
+  <h3 class="text-xl font-semibold text-yellow-600">Classic Deviled Eggs</h3>
+  <p class="text-sm text-gray-700">Hard-boiled eggs with creamy mustard filling, a classic finger food.</p>
+  <button class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200" onclick="showRecipe(this)">Show Full Recipe</button>
+</div>
+
+<div class="bg-white p-4 rounded-xl shadow-md">
+  <img src="cheesetwists.jpg" alt="Cheese Twists" class="w-full h-40 object-cover rounded-lg mb-2">
+  <h3 class="text-xl font-semibold text-yellow-600">Puff Cheese Twists</h3>
+  <p class="text-sm text-gray-700">Flaky puff pastry twisted with cheddar – easy, cheesy snack delight.</p>
+  <button class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200" onclick="showRecipe(this)">Show Full Recipe</button>
+</div>
+
+<div class="bg-white p-4 rounded-xl shadow-md">
+  <img src="garlicbread.jpg" alt="Garlic Bread" class="w-full h-40 object-cover rounded-lg mb-2">
+  <h3 class="text-xl font-semibold text-yellow-600">Garlic Bread</h3>
+  <p class="text-sm text-gray-700">Buttery bread slices toasted with garlic and herbs – best served warm.</p>
+  <button class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200" onclick="showRecipe(this)">Show Full Recipe</button>
+</div>
+
+<div class="bg-white p-4 rounded-xl shadow-md">
+  <img src="stuffedmushrooms.jpg" alt="Stuffed Mushrooms" class="w-full h-40 object-cover rounded-lg mb-2">
+  <h3 class="text-xl font-semibold text-yellow-600">Stuffed Mushrooms</h3>
+  <p class="text-sm text-gray-700">Mushroom caps stuffed with herbed cream cheese and breadcrumbs, then baked.</p>
+  <button class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200" onclick="showRecipe(this)">Show Full Recipe</button>
+</div>
+
+
+          <div class="bg-white p-4 rounded-xl shadow-md">
+            <img src="pakora.jpg" alt="Pakora" class="w-full h-40 object-cover rounded-lg mb-2">
+            <h3 class="text-xl font-semibold text-yellow-600">Vegetable Pakora</h3>
+            <p class="text-sm text-gray-700">Assorted veggies dipped in seasoned gram flour batter and fried till crispy.</p>
+            <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl shadow-md">
+            <img src="cheeseballs.jpg" alt="Cheese Balls" class="w-full h-40 object-cover rounded-lg mb-2">
+            <h3 class="text-xl font-semibold text-yellow-600">Cheese Balls</h3>
+            <p class="text-sm text-gray-700">Crispy on the outside, gooey on the inside – a hit Italian snack for any party!</p>
+            <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl shadow-md">
+            <img src="springroll.jpg" alt="Spring Roll" class="w-full h-40 object-cover rounded-lg mb-2">
+            <h3 class="text-xl font-semibold text-yellow-600">Chicken Spring Rolls</h3>
+            <p class="text-sm text-gray-700">Thin crispy rolls filled with chicken and veggies, served with sweet chili sauce.</p>
+            <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+          </div>
+<footer class="footer">
+    <p class="px-2 py-6 text-xl text-center">© 2025 What Can I Cook? All rights reserved.</p>
+  </footer>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

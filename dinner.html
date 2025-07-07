@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dinner Recipes</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-yellow-50 text-gray-800">
+  <script defer>
+      function toggleDropdown(id) {
+        const menu = document.getElementById(id);
+        menu.classList.toggle('hidden');
+      }
+
+      function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('-translate-x-full');
+      }
+
+      function submitCategories() {
+        const checkboxes = document.querySelectorAll('#categoryForm input[name="category"]:checked');
+        const selected = Array.from(checkboxes).map(cb => cb.value);
+        const resultDiv = document.getElementById('categoryResult');
+
+        if (selected.length > 0) {
+          resultDiv.innerText = 'Showing recipes for: ' + selected.join(', ');
+          resultDiv.classList.remove('hidden');
+        } else {
+          resultDiv.innerText = 'Please select at least one category.';
+          resultDiv.classList.remove('hidden');
+        }
+      }
+
+      function submitMealTypes() {
+        const checkboxes = document.querySelectorAll('#mealTypeForm input[name="mealtype"]:checked');
+        const selected = Array.from(checkboxes).map(cb => cb.value);
+        const resultDiv = document.getElementById('mealResult');
+
+        if (selected.length > 0) {
+          resultDiv.innerText = 'Showing meal types: ' + selected.join(', ');
+          resultDiv.classList.remove('hidden');
+        } else {
+          resultDiv.innerText = 'Please select at least one meal type.';
+          resultDiv.classList.remove('hidden');
+        }
+      }
+    </script>
+  </head>
+  <body class="min-h-screen bg-white text-black">
+    <div class="flex flex-col md:flex-row">
+      <!-- Sidebar -->
+      <div id="sidebar" class="fixed md:relative z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 w-64 min-h-screen bg-black p-6 flex flex-col rounded-br-3xl">
+        <div class="flex items-center mb-6">
+          <img src="logo-removebg.png" alt="Logo" class="w-20 h-20 object-contain filter invert">
+          <h1 class="text-xl font-semibold tracking-wide text-white ml-3">What Can I Cook?</h1>
+        </div>
+        <input type="text" placeholder="Search by Ingredients" class="w-full px-3 py-2 rounded-md text-black mb-4" />
+        <nav class="space-y-4">
+          <a href="home.html" class="block text-white text-lg hover:text-yellow-500">HOME</a>
+          <div>
+            <button onclick class="flex items-center text-white hover:text-yellow-500 text-lg w-full"></button>
+            <div>
+             <a href="recipes.html" class="block text-white text-lg hover:text-yellow-500">All Recipes</a>
+            <button onclick class="flex items-center text-white hover:text-yellow-500 text-lg w-full"></button>
+        
+              
+            </div>
+          </div>
+          <a href="favourites.html" class="block text-white text-lg hover:text-yellow-500">FAVOURITES</a>
+          <a href="about.html" class="block text-white text-lg hover:text-yellow-500">ABOUT US</a>
+          <a href="login.html" class="block text-white text-lg hover:text-yellow-500">LOGOUT</a>
+        </nav>
+      </div>
+
+      <!-- Topbar + Content -->
+      <div class="flex-1">
+        <div class="flex items-center justify-between p-4 shadow-md bg-black text-white">
+          <button onclick="toggleSidebar()" class="text-3xl">☰</button>
+          <input type="text" placeholder="Search By Ingredients" class="w-full md:w-1/2 px-4 py-2 rounded-full border border-gray-300 text-black" />
+        </div>
+
+  <div class="container mx-auto py-10 px-4">
+    <h1 class="text-4xl font-bold text-center text-yellow-700 mb-8">Dinner Recipes</h1>
+
+    <!-- Search bar -->
+    <div class="flex justify-center mb-10">
+      <input
+        type="text"
+        id="searchInput"
+        oninput="filterRecipes()"
+        placeholder="Search by ingredient..."
+        class="w-full max-w-md px-4 py-2 border border-yellow-300 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-500"
+      />
+    </div>
+
+    <!-- Recipe Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+
+      <!-- Kacchi Biryani -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition">
+        <img src="images/kacchi_biryani.jpg" alt="Kacchi Biryani" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h2 class="text-xl font-semibold text-yellow-700">Kacchi Biryani</h2>
+          <p class="text-sm mt-2">Aromatic basmati rice layered with marinated mutton, saffron, and ghee.</p>
+          <button 
+  class="py-1 px-3 bg-pink-500 text-white text-sm font-medium rounded hover:bg-pink-600 transition-colors duration-200"
+  onclick="toggleFavorite(this)"
+  data-title="Banana muffins">
+  ❤️ Save
+</button>
+         <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+        </div>
+      </div>
+
+      <!-- Chicken Mandi -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition">
+        <img src="images/chicken_mandi.jpg" alt="Chicken Mandi" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h2 class="text-xl font-semibold text-yellow-700">Chicken Mandi</h2>
+          <p class="text-sm mt-2">Traditional Arabic rice dish with roasted chicken and rich spices.</p>
+         <button 
+  class="py-1 px-3 bg-pink-500 text-white text-sm font-medium rounded hover:bg-pink-600 transition-colors duration-200"
+  onclick="toggleFavorite(this)"
+  data-title="Banana muffins">
+  ❤️ Save
+</button>
+         <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+        </div>
+      </div>
+
+      <!-- Lasagna -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition">
+        <img src="images/lasagna.jpg" alt="Lasagna" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h2 class="text-xl font-semibold text-yellow-700">Lasagna</h2>
+          <p class="text-sm mt-2">Layered pasta with ground beef, tomato sauce, béchamel, and cheese.</p>
+          <button 
+  class="py-1 px-3 bg-pink-500 text-white text-sm font-medium rounded hover:bg-pink-600 transition-colors duration-200"
+  onclick="toggleFavorite(this)"
+  data-title="Banana muffins">
+  ❤️ Save
+</button>
+          <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+        </div>
+      </div>
+
+      <!-- Shorshe Ilish -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition">
+        <img src="images/shorshe_ilish.jpg" alt="Shorshe Ilish" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h2 class="text-xl font-semibold text-yellow-700">Shorshe Ilish</h2>
+          <p class="text-sm mt-2">Hilsa fish in mustard seed paste, green chili, and mustard oil.</p>
+         <button 
+  class="py-1 px-3 bg-pink-500 text-white text-sm font-medium rounded hover:bg-pink-600 transition-colors duration-200"
+  onclick="toggleFavorite(this)"
+  data-title="Banana muffins">
+  ❤️ Save
+</button>
+          <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+        </div>
+      </div>
+
+      <!-- Mutabbaq -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition">
+        <img src="images/mutabbaq.jpg" alt="Mutabbaq" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h2 class="text-xl font-semibold text-yellow-700">Mutabbaq</h2>
+          <button 
+  class="py-1 px-3 bg-pink-500 text-white text-sm font-medium rounded hover:bg-pink-600 transition-colors duration-200"
+  onclick="toggleFavorite(this)"
+  data-title="Banana muffins">
+  ❤️ Save
+</button>
+          <span class="text-xs bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full inline-block mt-2">Arabic</span>
+          <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+        </div>
+      </div>
+
+      <!-- Chicken Parmigiana -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition">
+        <img src="images/chicken_parmigiana.jpg" alt="Chicken Parmigiana" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h2 class="text-xl font-semibold text-yellow-700">Chicken Parmigiana</h2>
+          <p class="text-sm mt-2">Breaded chicken breast topped with marinara and melted cheese.</p>
+          <span class="text-xs bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full inline-block mt-2">Italian</span>
+          <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+        </div>
+      </div>
+
+      <!-- Rezala -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition">
+        <img src="images/rezala.jpg" alt="Rezala" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h2 class="text-xl font-semibold text-yellow-700">Chicken Rezala</h2>
+          <p class="text-sm mt-2">Mughlai-style chicken in yogurt-based white gravy with subtle spices.</p>
+          <span class="text-xs bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full inline-block mt-2">Bangladeshi</span>
+         <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+        </div>
+      </div>
+
+      <!-- Kabsa -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition">
+        <img src="images/kabsa.jpg" alt="Kabsa" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h2 class="text-xl font-semibold text-yellow-700">Kabsa</h2>
+          <p class="text-sm mt-2">Spiced rice with chicken or lamb, nuts, and raisins. Signature Saudi dish.</p>
+          <span class="text-xs bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full inline-block mt-2">Arabic</span>
+          <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+        </div>
+      </div>
+<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+        <img src="images/fish_fry.jpg" alt="Fish Fry" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h2 class="text-lg font-semibold text-yellow-700">Fish Fry</h2>
+          <p class="text-sm mt-2">Crispy and spicy pan-fried fish fillets.</p>
+          <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      data-id="123" 
+      onclick="showRecipe(this)">
+      Show Full Recipe
+    </button>
+        </div>
+    </div>
+  </div>
+  <!-- Footer -->
+  <footer class="footer">
+    <p class="text-center">© 2025 What Can I Cook? All rights reserved.</p>
+  </footer>
+
+  <!-- Filtering Script -->
+  <script>
+    function filterRecipes() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.grid > div');
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(input) ? 'block' : 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>

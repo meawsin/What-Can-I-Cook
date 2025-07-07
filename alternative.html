@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ingredient Substitutions</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<style>
+      body {
+        backdrop-filter: blur(7px);
+        background-image: url('background.png');
+        background-size: cover;
+        background-position: center;
+      }
+    </style>
+<body class="min-h-screen bg-yellow-100 text-black">
+    <!-- Navbar -->
+    <nav class="flex justify-around items-center py-6 text-2xl font-bold tracking-widest">
+      <a href="login.html" class="text-yellow-800 hover:underline">HOME</a>
+      <a href="login.html" class="text-yellow-800 hover:underline">CATAGORIES</a>
+      <a href="login.html" class="text-yellow-800 hover:underline">RECIPES</a>
+      <a href="login.html" class="text-yellow-800 color:white hover:underline">ABOUT US</a>
+      
+    </nav>
+
+  <div class="max-w-3xl mx-auto p-6">
+    <!-- Title -->
+    <h1 class="text-3xl font-bold text-yellow-200 mb-4">Ingredient Substitutions</h1>
+    <p class="text-sm text-gray-200 mb-6">Missing something? Find out what you can use instead.</p>
+
+    <!-- Input -->
+    <div class="mb-6">
+      <input
+        type="text"
+        id="ingredientInput"
+        placeholder="e.g., vinegar, egg, butter"
+        class="w-full px-4 py-2 border border-yellow-300 rounded-md focus:ring-2 focus:ring-yellow-500"
+      />
+    </div>
+
+    <!-- Result -->
+    <div id="substituteResult" class="bg-white p-4 rounded-xl shadow-md hidden">
+      <h2 class="text-xl font-semibold text-yellow-700 mb-2">Suggested Substitute:</h2>
+      <p id="subText" class="text-gray-700"></p>
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const substitutions = {
+        "vinegar": "Try lemon juice or lime juice in equal amounts.",
+        "buttermilk": "Mix 1 cup milk with 1 tbsp vinegar or lemon juice.",
+        "egg": "Use 1 tbsp flaxseed meal + 3 tbsp water, or mashed banana.",
+        "butter": "Use margarine, olive oil, or coconut oil.",
+        "sugar": "Use honey, maple syrup, or stevia.",
+        "baking powder": "Use 1/4 tsp baking soda + 1/2 tsp vinegar.",
+        "milk": "Use almond milk, soy milk, or water in some cases.",
+        "cornstarch": "Try all-purpose flour or arrowroot powder.",
+        "yogurt": "Use sour cream or buttermilk.",
+        "soy sauce": "Use tamari, coconut aminos, or Worcestershire sauce."
+      };
+
+      const inputField = document.getElementById("ingredientInput");
+      const resultBox = document.getElementById("substituteResult");
+      const resultText = document.getElementById("subText");
+
+      inputField.addEventListener("input", function () {
+        const input = inputField.value.toLowerCase().trim();
+        if (input && substitutions[input]) {
+          resultText.textContent = substitutions[input];
+          resultBox.classList.remove("hidden");
+        } else if (input) {
+          resultText.textContent = "Sorry, no suggestion found. Try another ingredient.";
+          resultBox.classList.remove("hidden");
+        } else {
+          resultBox.classList.add("hidden");
+        }
+      });
+    });
+  </script>
+</body>
+</html>

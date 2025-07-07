@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us - What Can I Cook?</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #fffaf0;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-black">
+
+  <!-- Header -->
+  <header class="bg-yellow-500 text-white py-4 shadow">
+    <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
+      <h1 class="text-3xl font-bold">About Us</h1>
+      <a href="home.html" class="bg-white text-yellow-600 font-bold px-4 py-2 rounded hover:bg-yellow-100">← Home</a>
+    </div>
+  </header>
+
+  <!-- About Content -->
+  <main class="flex-grow max-w-5xl mx-auto p-8">
+    <h2 class="text-3xl font-bold text-yellow-600 mb-6 text-center">Meet Our Team</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Member 1 -->
+      <div class="bg-white shadow-md rounded-xl p-6 text-center">
+        <img src="Mohsin.jpg" alt="Member 1" class="w-32 h-32 mx-auto rounded-full object-cover mb-4 border-4 border-yellow-300">
+        <h3 class="text-xl font-semibold text-yellow-700 mb-1">[Abd Al Mohsin Siraj]</h3>
+        <p class="text-gray-600 text-sm mb-2">Web Developer</p>
+        <p class="text-gray-700 text-sm">Specializing in Python, Java and intelligent web experiences. Passionate about building impactful </p>
+      </div>
+
+      <!-- Member 2 -->
+      <div class="bg-white shadow-md rounded-xl p-6 text-center">
+        <img src="Nishat.jpg" alt="Member 2" class="w-32 h-32 mx-auto rounded-full object-cover mb-4 border-4 border-yellow-300">
+        <h3 class="text-xl font-semibold text-yellow-700 mb-1">[Nishat Tasneem]</h3>
+        <p class="text-gray-600 text-sm mb-2">Frontend & UX Designer</p>
+        <p class="text-gray-700 text-sm">Passionate about clean, user-friendly design. Brings recipes to life with responsive layouts and delightful user experiences.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-6 text-sm text-gray-600">
+    © 2025 What Can I Cook? All rights reserved.
+  </footer>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Breakfast Recipes</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-yellow-50 text-gray-800">
+
+<!-- Sidebar -->
+<div class="flex flex-col md:flex-row">
+  <div id="sidebar" class="fixed md:relative z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 w-64 min-h-screen bg-black p-6 flex flex-col rounded-br-3xl">
+    <div class="flex items-center mb-6">
+      <img src="logo-removebg.png" alt="Logo" class="w-20 h-20 object-contain filter invert">
+      <h1 class="text-xl font-semibold tracking-wide text-white ml-3">What Can I Cook?</h1>
+    </div>
+    <input type="text" placeholder="Search by Ingredients" class="w-full px-3 py-2 rounded-md text-black mb-4" />
+    <nav class="space-y-4">
+      <a href="home.html" class="block text-white text-lg hover:text-yellow-500">HOME</a>
+      <a href="recipes.html" class="block text-white text-lg hover:text-yellow-500">All Recipes</a>
+      <a href="favourites.html" class="block text-white text-lg hover:text-yellow-500">FAVOURITES</a>
+      <a href="about.html" class="block text-white text-lg hover:text-yellow-500">ABOUT US</a>
+      <a href="login.html" class="block text-white text-lg hover:text-yellow-500">LOGOUT</a>
+    </nav>
+  </div>
+
+  <!-- Content -->
+  <div class="flex-1">
+    <div class="flex items-center justify-between p-4 shadow-md bg-black text-white">
+      <button onclick="toggleSidebar()" class="text-3xl">☰</button>
+      <input type="text" placeholder="Search By Ingredients" class="w-full md:w-1/2 px-4 py-2 rounded-full border border-gray-300 text-black"/>
+    </div>
+
+    <div class="container mx-auto p-6">
+      <h1 class="text-4xl font-bold text-center text-yellow-600 mb-6">Breakfast Recipes</h1>
+
+      <!-- Recipes Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+        <!-- Apple Pancakes -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+          <img src="images/apple_pancakes.jpg" alt="Apple Pancakes" class="w-full h-40 object-cover">
+          <div class="p-4">
+            <h2 class="text-lg font-semibold text-yellow-600">Apple Pancakes</h2>
+            <p class="text-sm mt-2">Fluffy pancakes with apple slices and a hint of cinnamon.</p>
+  
+  <!-- Save Button -->
+  <button 
+    class="mt-2 px-3 py-1 bg-pink-500 text-white text-sm font-medium rounded hover:bg-pink-600 transition-colors duration-200"
+    onclick="toggleFavorite(this)"
+    data-title="Apple Pancakes"
+    id="Apple Pancakes_btn">
+    ❤️ Save
+  </button>
+
+  <!-- Show Recipe Button -->
+  <button 
+    class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+    onclick="showRecipe('Apple Pancakes')">
+    Show Full Recipe
+  </button>
+</div>
+
+
+        <!-- Banana Muffins -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+          <img src="images/banana_muffins.jpg" alt="Banana Muffins" class="w-full h-40 object-cover">
+          <div class="p-4">
+            <h2 class="text-lg font-semibold text-yellow-600">Banana Muffins</h2>
+            <p class="text-sm mt-2">Moist and sweet muffins perfect with morning coffee.</p>
+            <button 
+    class="mt-2 px-3 py-1 bg-pink-500 text-white text-sm font-medium rounded hover:bg-pink-600 transition-colors duration-200"
+    onclick="toggleFavorite(this)"
+    data-title="Banana Muffins"
+    id="Banana Muffins_btn">
+    ❤️ Save
+  </button>
+
+  <!-- Show Recipe Button -->
+  <button 
+    class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+    onclick="showRecipe('Banana Muffins')">
+    Show Full Recipe
+  </button>
+</div>
+
+        <!-- Chia Pudding -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+          <img src="images/chia_pudding.jpg" alt="Chia Pudding" class="w-full h-40 object-cover">
+          <div class="p-4">
+            <h2 class="text-lg font-semibold text-yellow-600">Chia Pudding</h2>
+            <p class="text-sm mt-2">Healthy chia seeds soaked overnight for a creamy delight.</p>
+              <button 
+      class="mt-2 px-3 py-1 bg-pink-500 text-white text-sm font-medium rounded hover:bg-pink-600 transition-colors duration-200"
+      onclick="toggleFavorite(this)"
+      data-title="Chia Pudding"
+      id="Chia Pudding_btn">
+      ❤️ Save
+    </button>
+
+    <!-- Show Recipe Button -->
+    <button 
+      class="mt-4 px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600 transition-colors duration-200"
+      onclick="showRecipe('Chia Pudding')">
+      Show Full Recipe
+    </button>
+  </div>
+</div>
+<!-- Modal for Full Recipe -->
+<div id="recipeModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+  <div class="bg-white rounded-lg max-w-2xl w-full p-6 relative shadow-xl">
+    <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">&times;</button>
+    <h2 id="modalTitle" class="text-2xl font-bold text-yellow-600 mb-4"></h2>
+    <div id="modalIngredients" class="mb-4"></div>
+    <div id="modalProcedure" class="text-gray-800"></div>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+  const recipes = {
+    "Apple Pancakes": {
+      ingredients: [
+        "1 cup flour",
+        "1 apple (sliced thin)",
+        "1 egg",
+        "1/2 cup milk",
+        "1 tsp cinnamon",
+        "1 tbsp sugar"
+      ],
+      procedure: "Mix all ingredients until smooth. Heat a pan, pour batter, and cook until golden brown on both sides."
+    },
+    "Banana Muffins": {
+      ingredients: [
+        "2 ripe bananas",
+        "1 cup flour",
+        "1/2 cup sugar",
+        "1 egg",
+        "1/3 cup oil",
+        "1 tsp baking powder"
+      ],
+      procedure: "Mash bananas and mix with other ingredients. Pour into muffin tins and bake at 180°C for 20 mins."
+    },
+    "Chia Pudding": {
+      ingredients: [
+        "1/4 cup chia seeds",
+        "1 cup almond milk",
+        "1 tbsp honey",
+        "Fresh fruits for topping"
+      ],
+      procedure: "Mix chia seeds with milk and honey. Chill overnight. Top with fruits before serving."
+    }
+  };
+
+  function showRecipe(title) {
+    const recipe = recipes[title];
+    if (!recipe) {
+      alert("Recipe not found.");
+      return;
+    }
+
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalIngredients').innerHTML = `
+      <h3 class="font-semibold text-lg mb-1">Ingredients:</h3>
+      <ul class="list-disc pl-6 text-sm text-gray-700">
+        ${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}
+      </ul>`;
+
+    document.getElementById('modalProcedure').innerHTML = `
+      <h3 class="font-semibold text-lg mt-4 mb-1">Procedure:</h3>
+      <p class="text-sm">${recipe.procedure}</p>`;
+
+    document.getElementById('recipeModal').classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('recipeModal').classList.add('hidden');
+  }
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('-translate-x-full');
+  }
+</script>
+
+<script>
+  function toggleFavorite(button) {
+    const title = button.getAttribute('data-title');
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+    const index = favorites.indexOf(title);
+    if (index === -1) {
+      favorites.push(title);
+      button.textContent = '💚 Saved';
+      button.classList.remove('bg-pink-500');
+      button.classList.add('bg-green-500');
+    } else {
+      favorites.splice(index, 1);
+      button.textContent = '❤️ Save';
+      button.classList.remove('bg-green-500');
+      button.classList.add('bg-pink-500');
+    }
+
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  }
+
+  // Update button states on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    favorites.forEach(title => {
+      const btn = document.getElementById(title + "_btn");
+      if (btn) {
+        btn.textContent = '💚 Saved';
+        btn.classList.remove('bg-pink-500');
+        btn.classList.add('bg-green-500');
+      }
+    });
+  });
+</script>
+
+
+</body>
+</html>

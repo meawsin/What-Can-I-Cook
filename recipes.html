@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>All Recipes - What Can I Cook?</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #fdf1c1;
+    }
+    
+  </style>
+</head>
+<body class="min-h-screen text-black">
+
+  <!-- Header -->
+  <header class="bg-yellow-500 text-white py-4 shadow">
+    <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
+      <h1 class="text-3xl font-bold">All Recipes</h1>
+      <a href="index.html" class="bg-white text-yellow-600 font-bold px-4 py-2 rounded hover:bg-yellow-100">← Home</a>
+    </div>
+  </header>
+  <div>
+
+<h3 class="text-2xl text-black text-center mb-4">Use filters to find meals that suit your needs</h3>
+
+<div class="bg-gradient-to-br from-white/50 to-yellow-100 shadow-lg rounded-lg p-6 mb-6">
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-black">
+    
+    <!-- Meal Selector -->
+    <div>
+      <label class="block text-sm font-semibold mb-2">Meal</label>
+      <select class="w-full px-3 py-2 bg-white bg-opacity-90 text-gray-800 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+        <option value="">Select Meal</option>
+        <option value="breakfast">Breakfast</option>
+        <option value="lunch">Lunch</option>
+        <option value="dinner">Dinner</option>
+        <option value="snack/side">Snacks/Sides</option>
+        <option value="dessert">Dessert</option>
+      </select>
+    </div>
+
+    <!-- Special Diet -->
+    <div>
+      <label class="block text-sm font-semibold mb-2">Special Diet</label>
+      <div class="space-y-2">
+        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="vegetarian"><span class="ml-2">Vegetarian</span></label>
+        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="diabetes-friendly"><span class="ml-2">Diabetes-friendly</span></label>
+        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="dairy-free"><span class="ml-2">Dairy-free</span></label>
+        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="gluten-free"><span class="ml-2">Gluten-free</span></label>
+      </div>
+    </div>
+
+    <!-- Recipe Type -->
+    <div>
+      <label class="block text-sm font-semibold mb-2">Recipe Type</label>
+      <div class="space-y-2">
+        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="kid-friendly"><span class="ml-2">Kid-friendly</span></label>
+        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="crowd-friendly"><span class="ml-2">Crowd-friendly</span></label>
+        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="no-cook"><span class="ml-2">No Cook</span></label>
+        <label class="flex items-center"><input type="checkbox" class="form-checkbox text-yellow-500" value="freezer-friendly"><span class="ml-2">Freezer-friendly</span></label>
+      </div>
+    </div>
+
+    <!-- Cuisine Type -->
+<div>
+  <label class="block text-sm font-semibold mb-2">Cuisine</label>
+  <div class="space-y-2">
+    <label class="flex items-center">
+      <input type="checkbox" class="form-checkbox text-yellow-500" value="Bangladeshi">
+      <span class="ml-2">Bangladeshi</span>
+    </label>
+    <label class="flex items-center">
+      <input type="checkbox" class="form-checkbox text-yellow-500" value="Indian">
+      <span class="ml-2">Indian</span>
+    </label>
+    <label class="flex items-center">
+      <input type="checkbox" class="form-checkbox text-yellow-500" value="Chinese">
+      <span class="ml-2">Chinese</span>
+    </label>
+    <label class="flex items-center">
+      <input type="checkbox" class="form-checkbox text-yellow-500" value="Thai">
+      <span class="ml-2">Thai</span>
+    </label>
+    <label class="flex items-center">
+      <input type="checkbox" class="form-checkbox text-yellow-500" value="Italian">
+      <span class="ml-2">Italian</span>
+    </label>
+  </div>
+</div>
+
+    <!-- Time Filters -->
+    
+    
+  </div>
+
+  <!-- Apply Filters Button -->
+  <div class="mt-8 flex justify-center">
+    <button id="apply-filters" class="px-6 py-3 bg-yellow-500 text-black font-semibold rounded-md hover:bg-yellow-600 transition duration-200 shadow-md">
+      Apply Filters
+    </button>
+  </div>
+
+</div>
+
+
+<div class="mb-8">
+      <input
+        type="text"
+        id="searchInput"
+        oninput="filterRecipes()"
+        placeholder="Search by ingredient..."
+         class="w-full max-w-md px-4 py-2 border border-yellow-300 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-500"
+      />
+    </div>
+    </div>
+  <!-- Recipes Grid -->
+  <main class="max-w-6xl mx-auto p-6 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+    <!-- Recipe Card -->
+    <div class="bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden">
+      <img src="images/chicken_biryani.jpg" alt="Chicken Biryani" class="w-full h-48 object-cover">
+      <div class="p-4">
+        <h3 class="text-xl font-semibold mb-2">Chicken Biryani</h3>
+        <p class="text-gray-700 text-sm mb-3">A flavorful rice dish with layers of marinated chicken, fragrant spices, and herbs.</p>
+        <button onclick="showRecipe('Chicken Biryani', '• Chicken\n• Basmati Rice\n• Spices\n• Yogurt\n• Onion\n\n', '1. Marinate chicken with spices and yogurt.\n2. Partially cook rice.\n3. Layer chicken and rice.\n4. Cook on low heat until done.')" 
+          class="text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">🍽 View Recipe</button>
+      </div>
+    </div>
+    
+    <!-- You can copy & add more recipe cards here -->
+     
+    <!-- Recipe Card -->
+    <div class="bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden">
+      <img src="images/Beef_curry.jpg" alt="Beef Curry" class="w-full h-48 object-cover">
+      <div class="p-4">
+        <h3 class="text-xl font-semibold mb-2">Beef Curry</h3>
+        <p class="text-gray-700 text-sm mb-3">A flavorful rice dish with layers of marinated chicken, fragrant spices, and herbs.</p>
+        <button onclick="showRecipe('Chicken Biryani', '• Chicken\n• Basmati Rice\n• Spices\n• Yogurt\n• Onion\n\n', '1. Marinate chicken with spices and yogurt.\n2. Partially cook rice.\n3. Layer chicken and rice.\n4. Cook on low heat until done.')" 
+          class="text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">🍽 View Recipe</button>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden">
+      <img src="images/Pasta.jpg" alt="Pasta" class="w-full h-48 object-cover">
+      <div class="p-4">
+        <h3 class="text-xl font-semibold mb-2">Beef Curry</h3>
+        <p class="text-gray-700 text-sm mb-3">A flavorful rice dish with layers of marinated chicken, fragrant spices, and herbs.</p>
+        <button onclick="showRecipe('Chicken Biryani', '• Chicken\n• Basmati Rice\n• Spices\n• Yogurt\n• Onion\n\n', '1. Marinate chicken with spices and yogurt.\n2. Partially cook rice.\n3. Layer chicken and rice.\n4. Cook on low heat until done.')" 
+          class="text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">🍽 View Recipe</button>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden">
+      <img src="images/Beef_curry.jpg" alt="Beef Curry" class="w-full h-48 object-cover">
+      <div class="p-4">
+        <h3 class="text-xl font-semibold mb-2">Beef Curry</h3>
+        <p class="text-gray-700 text-sm mb-3">A flavorful rice dish with layers of marinated chicken, fragrant spices, and herbs.</p>
+        <button onclick="showRecipe('Chicken Biryani', '• Chicken\n• Basmati Rice\n• Spices\n• Yogurt\n• Onion\n\n', '1. Marinate chicken with spices and yogurt.\n2. Partially cook rice.\n3. Layer chicken and rice.\n4. Cook on low heat until done.')" 
+          class="text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">🍽 View Recipe</button>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden">
+      <img src="images/Pasta.jpg" alt="Pasta" class="w-full h-48 object-cover">
+      <div class="p-4">
+        <h3 class="text-xl font-semibold mb-2">Beef Curry</h3>
+        <p class="text-gray-700 text-sm mb-3">A flavorful rice dish with layers of marinated chicken, fragrant spices, and herbs.</p>
+        <button onclick="showRecipe('Chicken Biryani', '• Chicken\n• Basmati Rice\n• Spices\n• Yogurt\n• Onion\n\n', '1. Marinate chicken with spices and yogurt.\n2. Partially cook rice.\n3. Layer chicken and rice.\n4. Cook on low heat until done.')" 
+          class="text-sm px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">🍽 View Recipe</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Full Screen Recipe Modal -->
+  <div id="recipeModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-xl max-w-xl w-full mx-4 p-6 shadow-lg relative">
+      <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-yellow-600"></h2>
+      <h4 class="font-semibold text-lg">Ingredients:</h4>
+      <pre id="modalIngredients" class="mb-4 text-sm text-gray-700 whitespace-pre-wrap"></pre>
+      <h4 class="font-semibold text-lg">Procedure:</h4>
+      <pre id="modalProcedure" class="text-sm text-gray-700 whitespace-pre-wrap"></pre>
+      <button onclick="closeRecipe()" class="mt-6 bg-yellow-500 text-white font-bold px-4 py-2 rounded hover:bg-yellow-600">Close</button>
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script>
+    function showRecipe(title, ingredients, procedure) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalIngredients').textContent = ingredients;
+      document.getElementById('modalProcedure').textContent = procedure;
+      document.getElementById('recipeModal').classList.remove('hidden');
+    }
+
+    function closeRecipe() {
+      document.getElementById('recipeModal').classList.add('hidden');
+    }
+  </script>
+
+  <!-- Footer -->
+  <footer class="text-center py-6 text-sm text-gray-600">
+    © 2025 What Can I Cook? All rights reserved.
+  </footer>
+</body>
+</html>
