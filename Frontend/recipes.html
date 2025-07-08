@@ -47,14 +47,15 @@
         <span class="text-xl font-bold">What Can I Cook?</span>
       </a>
       <div class="hidden md:flex space-x-2 font-semibold items-center">
-        <a href="home.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-home">Home</a>
+        <a href="#" onclick="navigateHome(); return false;" class="nav-link px-4 py-2 rounded-full transition" id="nav-home">Home</a>
         <a href="user.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-profile">Profile</a>
         <a href="recipes.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-recipes">Recipes</a>
+        <a href="ingredients.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-ingredients">Ingredients</a>
         <a href="favourites.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-favourites">Favourites</a>
         <a href="upload.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-upload">Add Recipe</a>
         <a href="about.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-about">About Us</a>
         <button onclick="logout()" class="ml-2 px-4 py-2 rounded-full bg-red-100 text-red-700 hover:bg-red-200 font-bold transition">Logout</button>
-        <button class="ml-2 p-2 rounded-full bg-yellow-400 hover:bg-yellow-600" aria-label="Search"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Search</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/></svg></button>
+        <button class="ml-2 p-2 rounded-full bg-yellow-400 hover:bg-yellow-600" aria-label="Search" id="navbar-search-btn"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Search</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/></svg></button>
       </div>
       <button id="mobile-nav-toggle" class="md:hidden p-2 rounded-full bg-yellow-400 hover:bg-yellow-600 focus:outline-none" aria-label="Open navigation">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/></svg>
@@ -65,24 +66,25 @@
       <button id="close-sidebar" class="self-end mb-4 p-2 rounded-full bg-yellow-400 hover:bg-yellow-600" aria-label="Close navigation">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Close</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
-      <a href="home.html" class="nav-link px-4 py-2 rounded-full transition" id="side-home">Home</a>
+      <a href="#" onclick="navigateHome(); return false;" class="nav-link px-4 py-2 rounded-full transition" id="side-home">Home</a>
       <a href="user.html" class="nav-link px-4 py-2 rounded-full transition" id="side-profile">Profile</a>
       <a href="recipes.html" class="nav-link px-4 py-2 rounded-full transition" id="side-recipes">Recipes</a>
+      <a href="ingredients.html" class="nav-link px-4 py-2 rounded-full transition" id="side-ingredients">Ingredients</a>
       <a href="favourites.html" class="nav-link px-4 py-2 rounded-full transition" id="side-favourites">Favourites</a>
       <a href="upload.html" class="nav-link px-4 py-2 rounded-full transition" id="side-upload">Add Recipe</a>
       <a href="about.html" class="nav-link px-4 py-2 rounded-full transition" id="side-about">About Us</a>
       <button onclick="logout()" class="mt-2 px-4 py-2 rounded-full bg-red-100 text-red-700 hover:bg-red-200 font-bold transition">Logout</button>
-      <button class="mt-2 p-2 rounded-full bg-yellow-400 hover:bg-yellow-600" aria-label="Search"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Search</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/></svg></button>
+      <button class="mt-2 p-2 rounded-full bg-yellow-400 hover:bg-yellow-600" aria-label="Search" id="sidebar-search-btn"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Search</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/></svg></button>
     </div>
   </nav>
-  <main class="flex-1 flex flex-col pt-32 pb-10 px-2">
+  <main class="flex-1 flex flex-col pt-8 pb-10 px-2">
     <div class="max-w-6xl mx-auto p-6">
-      <!-- Filter Section -->
+      <!--Filter-->
       <div id="filter-section" class="bg-gradient-to-br from-white/50 to-yellow-100 shadow-lg rounded-lg p-6 mb-6">
-        <h3 class="text-2xl text-black text-center mb-4">Use filters to find meals that suit your needs</h3>
+        <h3 class="text-2xl text-yellow-700 text-center font-bold mb-4">Use filters to find meals that suit your needs</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-black">
           <div>
-            <label for="meal-select" class="block text-sm font-semibold mb-2">Meal Type</label>
+            <label for="meal-select" class="block text-sm font-bold text-yellow-700 mb-2">Meal Type</label>
             <select id="meal-select" class="filter-control w-full px-3 py-2 bg-white rounded-md border">
               <option value="">All</option>
               <option value="Breakfast">Breakfast</option>
@@ -94,15 +96,15 @@
             </select>
           </div>
           <div>
-            <label for="cuisine-input" class="block text-sm font-semibold mb-2">Cuisine</label>
+            <label for="cuisine-input" class="block text-yellow-700 text-sm font-bold mb-2">Cuisine</label>
             <input type="text" id="cuisine-input" placeholder="e.g., Italian" class="filter-control w-full px-3 py-2 bg-white rounded-md border">
           </div>
           <div class="lg:col-span-2">
-            <label for="search-input" class="block text-sm font-semibold mb-2">Search by Title or Ingredient</label>
+            <label for="search-input" class="block text-yellow-700 text-sm font-bold mb-2">Search by Title or Ingredient</label>
             <input type="text" id="search-input" placeholder="e.g., Chicken, Pasta" class="filter-control w-full px-3 py-2 bg-white rounded-md border">
           </div>
           <div id="allergy-section" class="hidden lg:col-span-2">
-            <label for="allergy-input" class="block text-sm font-semibold mb-2">Exclude Allergens</label>
+            <label for="allergy-input" class="block text-yellow-700 text-sm font-bold mb-2">Exclude Allergens</label>
             <select id="allergy-input" class="filter-control w-full px-3 py-2 bg-white rounded-md border">
               <option value="">No allergies</option>
               <option value="nuts">Nuts</option>
@@ -167,20 +169,29 @@
         <button onclick="closeRecipe()" class="mt-6 bg-yellow-500 text-white font-bold px-4 py-2 rounded hover:bg-yellow-600">Close</button>
       </div>
     </div>
+    <div id="search-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-lg mx-2 p-6 relative">
+        <button id="close-search-modal" class="absolute top-2 right-2 p-2 rounded-full bg-yellow-100 hover:bg-yellow-300" aria-label="Close search modal">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Close</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <h2 class="text-xl font-bold text-yellow-700 mb-4 text-center">Search Recipes</h2>
+        <input id="search-input" type="text" placeholder="Search by name or ingredient" class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-yellow-500 mb-4" autocomplete="off" />
+        <div id="search-results" class="space-y-3 max-h-80 overflow-y-auto"></div>
+      </div>
+    </div>
   </main>
   <footer class="text-center py-6 text-sm text-gray-600 bg-white border-t">
     &copy; 2025 What Can I Cook? All rights reserved.
   </footer>
   <script>
-    // Auth check
     const token = localStorage.getItem('token');
-    if (!token) window.location.href = 'login.html';
     function highlightNav() {
       const page = window.location.pathname.split('/').pop();
       const navMap = {
         'home.html': ['nav-home', 'side-home'],
         'user.html': ['nav-profile', 'side-profile'],
         'recipes.html': ['nav-recipes', 'side-recipes'],
+        'ingredients.html': ['nav-ingredients', 'side-ingredients'],
         'favourites.html': ['nav-favourites', 'side-favourites'],
         'upload.html': ['nav-upload', 'side-upload'],
         'about.html': ['nav-about', 'side-about']
@@ -225,49 +236,30 @@
     }
     const recipesGrid = document.getElementById('recipes-grid');
     const loadingSkeleton = document.getElementById('loading-skeleton');
-    let allRecipes = []; // To store a copy of all recipes for client-side search
-    let userFavorites = []; // To store the IDs of the user's favorite recipes
-
-    // Function to check authentication status
+    let allRecipes = [];
+    let userFavorites = [];
     function checkAuthStatus() {
       const token = localStorage.getItem('token');
       const userInfo = localStorage.getItem('userInfo');
-      
-      if (!token || !userInfo) {
-        return false;
-      }
-      
+      if (!token || !userInfo) return false;
       try {
         const user = JSON.parse(userInfo);
-        if (!user || !user.token) {
-          return false;
-        }
+        if (!user || !user.token) return false;
         return true;
-      } catch (error) {
-        return false;
-      }
+      } catch (error) { return false; }
     }
 
-    // Function to handle navigation based on auth status
     function navigateHome() {
-      const isAuthenticated = checkAuthStatus();
-      if (isAuthenticated) {
-        window.location.href = 'home.html';
-      } else {
+      const token = localStorage.getItem('token');
+      const userInfo = localStorage.getItem('userInfo');
+      if (!token || !userInfo) {
         window.location.href = 'index.html';
+      } else {
+        window.location.href = 'home.html';
       }
     }
 
-    // Function to logout
-    function logout() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('userInfo');
-      window.location.href = 'login.html';
-    }
-
-    // Function to show the recipe modal
     function showRecipe(title, ingredients, procedure) {
-      // Handle missing or invalid data
       const safeTitle = title || 'Untitled Recipe';
       const safeIngredients = Array.isArray(ingredients) ? ingredients : [];
       const safeProcedure = procedure || 'No instructions available';
@@ -280,21 +272,18 @@
       document.getElementById('recipeModal').classList.remove('hidden');
     }
 
-    // Function to close the recipe modal
     function closeRecipe() {
       document.getElementById('recipeModal').classList.add('hidden');
     }
 
-    // Function to handle toggling a favorite recipe
     async function toggleFavorite(recipeId, buttonElement) {
-      // Check authentication status before proceeding
+
       if (!checkAuthStatus()) {
         alert('You must be logged in to save recipes.');
         window.location.href = 'login.html';
         return;
       }
 
-      // Show loading state on button
       const originalText = buttonElement.textContent;
       buttonElement.disabled = true;
       buttonElement.innerHTML = '<div class="loading-spinner" style="width: 16px; height: 16px;"></div>';
@@ -306,21 +295,19 @@
         });
 
         if (response.status === 401) {
-          // Token is invalid, logout user
           logout();
           return;
         }
 
         if (response.ok) {
-          // Update the button's appearance and the userFavorites array
           const index = userFavorites.indexOf(recipeId);
           if (index > -1) {
-            userFavorites.splice(index, 1); // Unfavorited
+            userFavorites.splice(index, 1);
             buttonElement.textContent = '❤️ Save';
             buttonElement.classList.remove('saved', 'bg-green-500');
             buttonElement.classList.add('bg-pink-500');
           } else {
-            userFavorites.push(recipeId); // Favorited
+            userFavorites.push(recipeId);
             buttonElement.textContent = '💚 Saved';
             buttonElement.classList.add('saved', 'bg-green-500');
             buttonElement.classList.remove('bg-pink-500');
@@ -336,12 +323,9 @@
       }
     }
 
-    // Function to render recipes to the page
-    function renderRecipes(recipes) {
-      // Hide loading skeleton
+   function renderRecipes(recipes) {
       loadingSkeleton.classList.add('hidden');
-      
-      recipesGrid.innerHTML = ''; // Clear existing recipes
+      recipesGrid.innerHTML = '';
       if (recipes.length === 0) {
         recipesGrid.innerHTML = `
           <div class="col-span-full text-center py-12">
@@ -352,25 +336,20 @@
         `;
         return;
       }
-
       recipes.forEach(recipe => {
         const card = document.createElement('div');
         card.className = 'bg-white rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden';
-        
-        // Handle missing or invalid data gracefully
         const title = recipe.title || 'Untitled Recipe';
         const description = recipe.description || 'No description available';
         const ingredients = Array.isArray(recipe.ingredients) ? recipe.ingredients : [];
         const instructions = recipe.instructions || 'No instructions available';
         const imageUrl = recipe.imageUrl || 'images/placeholder_recipe.jpg';
         const uploadedBy = recipe.uploadedBy ? (recipe.uploadedBy.username || 'Unknown') : 'Unknown';
-        
-        const isFavorite = userFavorites.includes(recipe._id);
-        const favoriteButtonText = isFavorite ? '💚 Saved' : '❤️ Save';
-        const favoriteButtonClass = isFavorite ? 'saved bg-green-500' : 'bg-pink-500';
-        
         let favoriteButtonHTML = '';
         if (token && checkAuthStatus()) {
+          const isFavorite = userFavorites.includes(recipe._id);
+          const favoriteButtonText = isFavorite ? '💚 Saved' : '❤️ Save';
+          const favoriteButtonClass = isFavorite ? 'saved bg-green-500' : 'bg-pink-500';
           favoriteButtonHTML = `
             <button onclick="toggleFavorite('${recipe._id}', this)" 
               class="ml-2 text-sm px-3 py-1 text-white rounded hover:bg-opacity-80 ${favoriteButtonClass}">
@@ -378,8 +357,6 @@
             </button>
           `;
         }
-
-        // Use data attributes for safe passing
         card.innerHTML = `
           <img src="${imageUrl}" alt="${title}" class="w-full h-48 object-cover" onerror="this.src='images/placeholder_recipe.jpg'">
           <div class="p-4">
@@ -390,15 +367,13 @@
               data-title="${encodeURIComponent(title)}"
               data-ingredients="${encodeURIComponent(JSON.stringify(ingredients))}"
               data-instructions="${encodeURIComponent(instructions)}">
-              🍽 View Recipe
+              🍽️ View Recipe
             </button>
             ${favoriteButtonHTML}
           </div>
         `;
         recipesGrid.appendChild(card);
       });
-
-      // Attach event listeners to all view-recipe buttons
       document.querySelectorAll('.view-recipe-btn').forEach(btn => {
         btn.addEventListener('click', function() {
           const title = decodeURIComponent(this.getAttribute('data-title'));
@@ -409,33 +384,25 @@
       });
     }
 
-    // Function to fetch the logged-in user's favorites
     async function fetchUserFavorites() {
       if (!checkAuthStatus()) return;
-      
       try {
         const response = await fetch('/api/users/favorites', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        
         if (response.status === 401) {
-          // Token is invalid, logout user
           logout();
           return;
         }
-        
         if (response.ok) {
           const favorites = await response.json();
-          userFavorites = favorites.map(fav => fav._id); // Store only the IDs for quick lookup
+          userFavorites = favorites.map(fav => fav._id);
         }
       } catch (error) {
-        console.error('Could not fetch user favorites:', error);
       }
     }
-
-    // Function to fetch all recipes from the backend
     async function fetchAllRecipes() {
-      await fetchUserFavorites(); // Load user favorites first
+      await fetchUserFavorites();
       try {
         const response = await fetch('/api/recipes');
         if (!response.ok) throw new Error('Network response was not ok');
@@ -456,7 +423,6 @@
       }
     }
     
-    // Function to handle filtering
     function applyFilters() {
         const mealType = document.getElementById('meal-select').value.toLowerCase();
         const cuisine = document.getElementById('cuisine-input').value.toLowerCase();
@@ -469,7 +435,6 @@
             const matchesSearch = !searchTerm || 
                                   recipe.title.toLowerCase().includes(searchTerm) ||
                                   recipe.ingredients.some(ing => ing.toLowerCase().includes(searchTerm));
-            // Allergy filtering (only for logged-in users)
             let matchesAllergy = true;
             if (allergyFilter && checkAuthStatus()) {
                 const ingredients = recipe.ingredients.map(ing => ing.toLowerCase());
@@ -491,7 +456,6 @@
             return matchesMeal && matchesCuisine && matchesSearch && matchesAllergy;
         });
 
-        // Show allergy note if filter is applied
         const allergyNote = document.getElementById('allergy-note');
         if (allergyFilter && checkAuthStatus()) {
             const excludedCount = allRecipes.length - filteredRecipes.length;
@@ -514,19 +478,102 @@
         renderRecipes(filteredRecipes);
     }
 
-    // Add event listeners to all filter controls
-    document.querySelectorAll('.filter-control').forEach(control => {
+   document.querySelectorAll('.filter-control').forEach(control => {
         control.addEventListener('input', applyFilters);
         control.addEventListener('change', applyFilters);
     });
 
-    // Show allergy filter for logged-in users
     document.addEventListener('DOMContentLoaded', () => {
       const isAuthenticated = checkAuthStatus();
       if (isAuthenticated) {
         document.getElementById('allergy-section').classList.remove('hidden');
       }
       fetchAllRecipes();
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchModal = document.getElementById('search-modal');
+      const navbarSearchBtn = document.getElementById('navbar-search-btn');
+      const sidebarSearchBtn = document.getElementById('sidebar-search-btn');
+      const closeSearchModal = document.getElementById('close-search-modal');
+      const searchInput = document.getElementById('search-input');
+      const searchResults = document.getElementById('search-results');
+      function openSearchModal() {
+        searchModal.classList.remove('hidden');
+        searchInput.value = '';
+        searchResults.innerHTML = '';
+        searchInput.focus();
+      }
+      function closeSearch() {
+        searchModal.classList.add('hidden');
+      }
+      if (navbarSearchBtn) navbarSearchBtn.addEventListener('click', openSearchModal);
+      if (sidebarSearchBtn) sidebarSearchBtn.addEventListener('click', openSearchModal);
+      if (closeSearchModal) closeSearchModal.addEventListener('click', closeSearch);
+      document.addEventListener('keydown', (e) => {
+        if (!searchModal.classList.contains('hidden') && e.key === 'Escape') closeSearch();
+      });
+      searchModal.addEventListener('click', (e) => {
+        if (e.target === searchModal) closeSearch();
+      });
+      let searchTimeout;
+      searchInput && searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+        if (!query) {
+          searchResults.innerHTML = '';
+          return;
+        }
+        searchResults.innerHTML = '<div class="flex justify-center py-4"><div class="loading-spinner"></div></div>';
+        searchTimeout = setTimeout(() => performSearch(query), 350);
+      });
+      async function performSearch(query) {
+        let url = '/api/recipes?search=' + encodeURIComponent(query);
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error('Failed to fetch');
+          let recipes = await res.json();
+          // If query contains comma, treat as ingredient search (all must match)
+          if (query.includes(',')) {
+            const ingredients = query.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+            recipes = recipes.filter(r =>
+              ingredients.every(ing =>
+                (r.ingredients || []).some(recipeIng => recipeIng.toLowerCase().includes(ing))
+              )
+            );
+          }
+          if (recipes.length === 0) {
+            searchResults.innerHTML = '<div class="text-center text-gray-500">No recipes found.</div>';
+            return;
+          }
+          searchResults.innerHTML = recipes.map(r => renderRecipeResult(r, query)).join('');
+        } catch (err) {
+          searchResults.innerHTML = '<div class="text-center text-red-500">Error searching recipes.</div>';
+        }
+      }
+      function highlight(text, query) {
+        if (!query) return text;
+        let q = query;
+        if (query.includes(',')) q = query.split(',').map(s => s.trim()).join('|');
+        return text.replace(new RegExp(`(${q})`, 'gi'), '<mark class="bg-yellow-200">$1</mark>');
+      }
+      function renderRecipeResult(recipe, query) {
+        return `<div class="flex items-center space-x-4 bg-yellow-50 rounded-lg p-3 shadow">
+          <img src="${recipe.imageUrl || 'images/placeholder_recipe.jpg'}" alt="${recipe.title}" class="w-16 h-16 object-cover rounded-md border">
+          <div class="flex-1">
+            <div class="font-bold text-lg">${highlight(recipe.title, query)}</div>
+            <div class="text-sm text-gray-600">${highlight((recipe.ingredients || []).join(', '), query)}</div>
+          </div>
+          <a href="recipe_view.html?id=${encodeURIComponent(recipe._id)}" class="text-yellow-700 font-semibold hover:underline">View</a>
+        </div>`;
+      }
+      const token = localStorage.getItem('token');
+      const userInfo = localStorage.getItem('userInfo');
+      const isLoggedIn = token && userInfo;
+      document.querySelectorAll('button[onclick="logout()"], button.logout-btn').forEach(btn => {
+        if (!isLoggedIn) btn.style.display = 'none';
+        else btn.style.display = '';
+      });
     });
   </script>
 </body>

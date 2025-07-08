@@ -13,6 +13,11 @@ A full-stack web application that helps users discover recipes based on availabl
 - **Responsive Design**: Works on desktop, tablet, and mobile devices
 - **Image Upload**: Upload real images for recipes
 - **Loading Indicators**: Smooth user experience with loading states
+- **Live Search Modal**: Search recipes by name or ingredient from any main page
+- **Responsive Sidebar**: Mobile-friendly sidebar navigation
+- **Navigation Logic**: Home redirects to index.html if logged out; logout button only visible when logged in
+- **Ingredient-Based Search**: Find recipes using Spoonacular API by selecting ingredients
+- **Consistent UI/UX**: Shared navigation, sidebar, and modal logic via `common.js`
 
 ## Tech Stack
 
@@ -24,6 +29,7 @@ A full-stack web application that helps users discover recipes based on availabl
 - **JWT** - Authentication
 - **bcryptjs** - Password hashing
 - **Multer** - File upload handling
+- **Spoonacular API** - Ingredient-based recipe search
 
 ### Frontend
 - **HTML5** - Structure
@@ -31,6 +37,7 @@ A full-stack web application that helps users discover recipes based on availabl
 - **Tailwind CSS** - Utility-first CSS framework
 - **JavaScript (ES6+)** - Client-side functionality
 - **Fetch API** - HTTP requests
+- **common.js** - Shared navigation, sidebar, and search modal logic
 
 ## Prerequisites
 
@@ -58,11 +65,13 @@ Before running this application, make sure you have the following installed:
    MONGO_URI=mongodb+srv://your_username:your_password@your_cluster.mongodb.net/your_database
    JWT_SECRET=your-super-secret-jwt-key-here
    PORT=3000
+   SPOONACULAR_API_KEY=your_spoonacular_api_key
    ```
 
    **Important Notes:**
    - Replace `your_username`, `your_password`, `your_cluster`, and `your_database` with your actual MongoDB Atlas credentials
-   - Generate a strong random string for `JWT_SECRET` (you can use an online generator or run `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`)
+   - Generate a strong random string for `JWT_SECRET`
+   - Add your Spoonacular API key for ingredient-based search
    - If you don't have a `.env` file, the app will use fallback values for development
 
 4. **Start the development server**
@@ -83,6 +92,7 @@ What-Can-I-Cook/
 ├── Frontend/            # Frontend files
 │   ├── images/          # Static images
 │   ├── *.html           # HTML pages
+│   └── common.js        # Shared frontend logic
 ├── middleware/          # Custom middleware
 │   └── authMiddleware.js
 ├── models/             # Database models
@@ -101,22 +111,83 @@ What-Can-I-Cook/
 
 ### Authentication
 - `POST /api/users/register` - Register a new user
+  - **Body:** `{ fullName, username, email, password, dietaryPreference, allergies, favoriteMeal }`
+  - **Response:** `{ token, user }`
 - `POST /api/users/login` - Login user
+  - **Body:** `{ email, password }`
+  - **Response:** `{ token, user }`
 
 ### User Profile
-- `GET /api/users/profile` - Get user profile (Protected)
+- `GET /api/users/profile` - Get user profile (Protected, Bearer token)
+  - **Response:** `{ fullName, username, email, dietaryPreference, allergies, favoriteMeal }`
 - `PUT /api/users/profile` - Update user profile (Protected)
+  - **Body:** `{ fullName, dietaryPreference, allergies, favoriteMeal }`
+  - **Response:** `{ user }`
 
 ### Favorites
 - `GET /api/users/favorites` - Get user's favorite recipes (Protected)
+  - **Response:** `[recipe, ...]`
 - `PUT /api/users/favorites/:recipeId` - Toggle favorite recipe (Protected)
+  - **Response:** `{ favorites }`
 
 ### Recipes
 - `GET /api/recipes` - Get all recipes (Public)
+  - **Query:** `?search=...&ingredients=...`
+  - **Response:** `[recipe, ...]`
 - `POST /api/recipes` - Create a new recipe (Protected)
+  - **Body:** `{ title, description, ingredients, instructions, mealType, cuisine, image }`
+  - **Response:** `{ recipe }`
 
 ### File Upload
-- `POST /api/upload-image` - Upload recipe image (Protected)
+- `POST /api/upload-image` - Upload recipe image (Protected, multipart/form-data)
+  - **Response:** `{ imageUrl }`
+
+### Ingredient-Based Search (Spoonacular)
+- `POST /api/ingredients/search` - Get recipes by selected ingredients (Protected)
+  - **Body:** `{ ingredients: ["egg", "milk"] }`
+  - **Response:** `[ { title, image, instructions, ingredients }, ... ]`
+  - **Note:** Uses Spoonacular API under the hood
+
+### Error Handling
+- All endpoints return appropriate HTTP status codes and error messages in `{ error: "..." }` format.
+- 401 Unauthorized for missing/invalid tokens, 400 Bad Request for invalid input, 404 Not Found, etc.
+
+## Access Control
+
+- **Public Pages:**
+  - `index.html`, `about.html`, `recipes.html` (view only)
+- **Authenticated Pages:**
+  - `home.html`, `user.html`, `favourites.html`, `ingredients.html`, `upload.html`, `edit_profile.html`
+- **Navigation Logic:**
+  - Clicking "Home" when logged out redirects to `index.html`
+  - Logout button is only visible when logged in
+  - Add Recipe, Favourites, and Profile pages require authentication
+
+## Frontend Utilities
+
+- **common.js**: Handles navigation logic, sidebar toggling, and search modal functionality. Ensures consistent UI/UX across all pages.
+- **Live Search Modal**: Accessible from the navbar/sidebar on all main pages (except login, signup, index). Allows searching recipes by name or ingredient.
+- **Responsive Sidebar**: Mobile-friendly navigation for authenticated users.
+
+## Limitations / Known Issues
+
+- No user profile picture/avatar support
+- No comments or reviews on recipes
+- No admin/moderation features
+- No dark mode toggle
+- No pagination/infinite scroll for large recipe lists
+- No social sharing or notifications
+- No automated tests (unit/integration)
+- Accessibility (A11y) could be improved further
+- No deployment instructions for production (only local dev covered)
+
+## Deployment (Optional)
+
+To deploy on a platform like Heroku, Render, or Vercel:
+- Set environment variables in the platform's dashboard
+- Use `npm run build` if you add a frontend build step
+- Make sure uploads/ directory is writable or use a cloud storage solution
+- Update CORS settings if needed
 
 ## Usage
 
@@ -126,6 +197,7 @@ What-Can-I-Cook/
 4. **Save Favorites**: Click the heart icon to save recipes to your favorites
 5. **Upload Recipes**: Share your own recipes with the community (including real images!)
 6. **Filter & Search**: Use the search and filter options to find specific recipes
+7. **Ingredient-Based Search**: Use the Ingredients page to find recipes using Spoonacular API
 
 ## Troubleshooting
 
@@ -167,6 +239,7 @@ This project is licensed under the ISC License.
 - Tailwind CSS for the beautiful UI components
 - MongoDB Atlas for the database hosting
 - Express.js community for the excellent documentation
+- Spoonacular for the ingredient-based recipe API
 
 ## Support
 

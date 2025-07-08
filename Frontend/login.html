@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login - What Can I Cook?</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="icon" href="images/logo-removebg.png" />
     <style>
       body {
-        background-image: url('images/login_bg.png'); /* Ensure this path is correct */
+        background-image: url('images/login_bg.png');
         background-size: cover;
         background-position: center;
       }
@@ -33,9 +34,7 @@
       <h1 class="text-3xl font-bold text-black mb-4">What Can I Cook?</h1>
       <h3 class="text-xl font-bold text-black mb-2">Log In</h3>
 
-      <!-- Removed action/method and added an ID -->
       <form id="login-form" class="space-y-4">
-        <!-- The input can be for username or email -->
         <input type="text" name="username" placeholder="Username or Email" required class="w-full px-4 py-2 border rounded-md">
         <input type="password" name="password" placeholder="Password" required class="w-full px-4 py-2 border rounded-md">
         <button type="submit" id="loginBtn" class="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 rounded-md flex items-center justify-center">
@@ -43,10 +42,7 @@
           <div id="loginSpinner" class="loading-spinner ml-2 hidden"></div>
         </button>
       </form>
-
-      <!-- To display success or error messages -->
       <p id="message-display" class="mt-4 text-sm font-semibold"></p>
-
       <p class="mt-4 text-sm text-black">Don't have an account? 
         <a href="signup.html" class="text-yellow-600 font-semibold hover:underline">Sign Up</a>
       </p>
@@ -60,20 +56,14 @@
       const loginSpinner = document.getElementById('loginSpinner');
 
       form.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevent page reload
-
-        // Show loading state
+        e.preventDefault(); 
         loginBtn.disabled = true;
         loginText.textContent = 'Signing In...';
         loginSpinner.classList.remove('hidden');
-
-        // Reset previous messages
         messageDisplay.textContent = '';
         messageDisplay.className = 'mt-4 text-sm font-semibold';
-
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
-
         try {
           const response = await fetch('/api/users/login', {
             method: 'POST',
@@ -81,39 +71,30 @@
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              username: data.username, // Can be username or email
+              username: data.username,
               password: data.password,
             }),
           });
-
           const result = await response.json();
 
           if (response.ok) {
-            // Login successful
             messageDisplay.textContent = 'Login successful! Redirecting...';
             messageDisplay.classList.add('text-green-600');
-            
-            // Save the token and user info to localStorage
             localStorage.setItem('token', result.token);
             localStorage.setItem('userInfo', JSON.stringify(result));
-            
-            // Redirect to the home page after a short delay
             setTimeout(() => {
               window.location.href = 'home.html';
             }, 1500);
 
           } else {
-            // Display error message from the server
             messageDisplay.textContent = result.message || 'Login failed.';
             messageDisplay.classList.add('text-red-600');
           }
         } catch (error) {
-          // Handle network errors
           console.error('Error:', error);
           messageDisplay.textContent = 'An error occurred. Please try again.';
           messageDisplay.classList.add('text-red-600');
         } finally {
-          // Reset loading state
           loginBtn.disabled = false;
           loginText.textContent = 'Log In';
           loginSpinner.classList.add('hidden');

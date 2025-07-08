@@ -1,19 +1,15 @@
-// Import necessary packages
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const multer = require('multer');
 require('dotenv').config();
 
-// Import routes
 const userRoutes = require('./routes/userRoutes');
 const recipeRoutes = require('./routes/recipeRoutes'); // Import recipe routes
 
-// Initialize the app
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// --- Multer Configuration for Image Upload ---
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
@@ -27,10 +23,9 @@ const storage = multer.diskStorage({
 const upload = multer({ 
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
+    fileSize: 5 * 1024 * 1024
   },
   fileFilter: function (req, file, cb) {
-    // Accept only image files
     if (file.mimetype.startsWith('image/')) {
       cb(null, true);
     } else {
@@ -39,12 +34,10 @@ const upload = multer({
   }
 });
 
-// --- Middleware ---
 app.use(express.static(path.join(__dirname, 'Frontend')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploaded files
 app.use(express.json());
 
-// --- Database Connection ---
 const mongoURI = process.env.MONGO_URI;
 if (!mongoURI) {
   console.error('FATAL ERROR: MONGO_URI is not defined in your .env file.');
@@ -54,14 +47,13 @@ mongoose.connect(mongoURI)
   .then(() => console.log('Successfully connected to MongoDB Atlas!'))
   .catch(err => console.error('Error connecting to MongoDB:', err));
 
-// --- Image Upload Route ---
 app.post('/api/upload-image', upload.single('image'), (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No image file uploaded' });
     }
     
-    // Return the file path that can be accessed via the /uploads route
+    
     const imageUrl = `/uploads/${req.file.filename}`;
     res.json({ 
       message: 'Image uploaded successfully',
@@ -74,11 +66,9 @@ app.post('/api/upload-image', upload.single('image'), (req, res) => {
   }
 });
 
-// --- API Routes ---
 app.use('/api/users', userRoutes);
-app.use('/api/recipes', recipeRoutes); // Tell the server to use your recipe routes
+app.use('/api/recipes', recipeRoutes);
 
-// Debug route to check recipes
 app.get('/api/debug/recipes', async (req, res) => {
   try {
     const Recipe = require('./models/recipeModel');
@@ -92,13 +82,11 @@ app.get('/api/debug/recipes', async (req, res) => {
   }
 });
 
-// Route to create sample recipes for testing
 app.post('/api/debug/create-sample-recipes', async (req, res) => {
   try {
     const Recipe = require('./models/recipeModel');
     const User = require('./models/userModel');
     
-    // Get the first user or create one
     let user = await User.findOne({});
     if (!user) {
       user = await User.create({
@@ -159,7 +147,6 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'Hello from the backend! 👋' });
 });
 
-// --- Start the Server ---
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

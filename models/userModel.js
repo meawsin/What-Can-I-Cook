@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs'); // We will install this later for password hashing
-
+const bcrypt = require('bcryptjs'); 
 const userSchema = new mongoose.Schema({
   fullName: { 
     type: String, 
@@ -33,19 +32,17 @@ const userSchema = new mongoose.Schema({
     default: 'None'
   },
   allergies: {
-    type: [String], // An array of strings
+    type: [String],
     default: []
   },
-  favorites: [{ // An array of references to Recipe documents
+  favorites: [{ 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Recipe' 
   }]
 }, { 
-  timestamps: true // Automatically adds createdAt and updatedAt fields
+  timestamps: true
 });
 
-// This is a 'pre-save hook' that will automatically hash the password
-// before it gets saved to the database. We will set this up fully later.
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
     return next();
@@ -56,5 +53,4 @@ userSchema.pre('save', async function(next) {
 });
 
 const User = mongoose.model('User', userSchema);
-
 module.exports = User;

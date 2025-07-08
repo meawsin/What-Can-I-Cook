@@ -4,10 +4,8 @@ const User = require('../models/userModel');
 const protect = async (req, res, next) => {
   let token;
 
-  // Check if the request has an authorization header and if it starts with 'Bearer'
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
-      // Get token from header (e.g., "Bearer <token>")
       token = req.headers.authorization.split(' ')[1];
 
       // Verify the token using the secret key

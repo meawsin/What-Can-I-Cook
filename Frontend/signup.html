@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up - What Can I Cook?</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="icon" href="images/logo-removebg.png" />
     <style>
       body {
-        background-image: url('images/login_bg.png'); /* Assuming login_bg.png is in an images folder */
+        background-image: url('images/login_bg.png'); 
         background-size: cover;
         background-position: center;
       }
@@ -32,13 +33,11 @@
       <h1 class="text-3xl font-bold text-black mb-4">What Can I Cook?</h1>
       <h3 class="text-xl font-bold text-black mb-2">Sign Up</h3>
 
-      <!-- Removed the action attribute and added an ID to the form -->
       <form id="signup-form" class="space-y-4 text-left">
         <input type="text" name="fullName" placeholder="Full Name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
         <input type="text" name="username" placeholder="Username" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
         <input type="email" name="email" placeholder="Email Address" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
         <input type="password" name="password" placeholder="Password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
-        <!-- It's good practice to have a password confirmation, but we'll handle validation on the frontend for now -->
         <input type="password" name="confirmPassword" placeholder="Confirm Password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
 
         <label class="block text-black font-semibold mt-4">Favorite Meal Type</label>
@@ -66,10 +65,7 @@
           <div id="signupSpinner" class="loading-spinner ml-2 hidden"></div>
         </button>
       </form>
-      
-      <!-- To display success or error messages -->
       <p id="message-display" class="mt-4 text-sm font-semibold"></p>
-
       <p class="mt-4 text-sm text-black">Already have an account? 
         <a href="login.html" class="text-yellow-600 font-semibold hover:underline">Log In</a>
       </p>
@@ -83,33 +79,22 @@
       const signupSpinner = document.getElementById('signupSpinner');
 
       form.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevent the default form submission (page reload)
-
-        // Show loading state
+        e.preventDefault();
         signupBtn.disabled = true;
         signupText.textContent = 'Creating Account...';
         signupSpinner.classList.remove('hidden');
-
-        // Reset any previous messages
         messageDisplay.textContent = '';
         messageDisplay.className = 'mt-4 text-sm font-semibold';
-
-        // Get form data
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
-
-        // Basic password confirmation check
         if (data.password !== data.confirmPassword) {
           messageDisplay.textContent = 'Passwords do not match!';
           messageDisplay.classList.add('text-red-600');
-          // Reset loading state
           signupBtn.disabled = false;
           signupText.textContent = 'Sign Up';
           signupSpinner.classList.add('hidden');
           return;
         }
-
-        // Convert comma-separated allergies string to an array
         const allergies = data.allergies.split(',').map(item => item.trim()).filter(item => item);
 
         try {
@@ -132,30 +117,22 @@
           const result = await response.json();
 
           if (response.ok) {
-            // Registration successful
             messageDisplay.textContent = 'Registration successful! Redirecting to login...';
             messageDisplay.classList.add('text-green-600');
-            
-            // Save the token to localStorage
             localStorage.setItem('token', result.token);
-            
-            // Redirect to the login page after a short delay
             setTimeout(() => {
               window.location.href = 'login.html';
             }, 2000);
 
           } else {
-            // Display error message from the server
             messageDisplay.textContent = result.message || 'Registration failed. Please try again.';
             messageDisplay.classList.add('text-red-600');
           }
         } catch (error) {
-          // Handle network errors
           console.error('Error:', error);
           messageDisplay.textContent = 'An error occurred. Please check your connection and try again.';
           messageDisplay.classList.add('text-red-600');
         } finally {
-          // Reset loading state
           signupBtn.disabled = false;
           signupText.textContent = 'Sign Up';
           signupSpinner.classList.add('hidden');

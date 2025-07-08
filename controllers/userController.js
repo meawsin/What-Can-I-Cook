@@ -2,7 +2,6 @@ const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-// Function to generate a JWT token
 const generateToken = (id) => {
   const secret = process.env.JWT_SECRET || 'fallback-secret-key-for-development-only';
   return jwt.sign({ id }, secret, {
@@ -10,13 +9,10 @@ const generateToken = (id) => {
   });
 };
 
-// @desc    Register a new user
-// @route   POST /api/users/register
 const registerUser = async (req, res) => {
   try {
     const { fullName, username, email, password, favoriteMeal, dietaryPreference, allergies } = req.body;
 
-    // Input validation
     if (!fullName || !username || !email || !password) {
       return res.status(400).json({ message: 'Please fill in all required fields' });
     }
@@ -25,13 +21,11 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'Password must be at least 6 characters long' });
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ message: 'Please enter a valid email address' });
     }
 
-    // Username validation
     if (username.length < 3) {
       return res.status(400).json({ message: 'Username must be at least 3 characters long' });
     }
@@ -66,7 +60,6 @@ const registerUser = async (req, res) => {
   } catch (error) {
     console.error('Registration error:', error);
     if (error.code === 11000) {
-      // Duplicate key error
       return res.status(400).json({ message: 'User with this email or username already exists' });
     }
     res.status(500).json({ message: 'Server Error', error: error.message });
@@ -79,7 +72,6 @@ const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Input validation
     if (!username || !password) {
       return res.status(400).json({ message: 'Please provide username/email and password' });
     }

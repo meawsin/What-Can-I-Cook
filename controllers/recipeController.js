@@ -214,8 +214,6 @@ const seedRecipes = async (req, res) => {
       }
     ];
 
-    // Clear existing recipes (optional - remove this line if you want to keep existing)
-    await Recipe.deleteMany({});
     
     // Create a dummy user ID for seeding (since uploadedBy is required)
     const dummyUserId = new mongoose.Types.ObjectId();

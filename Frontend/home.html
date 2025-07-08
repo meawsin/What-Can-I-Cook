@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
+  <head>
+    <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>What Can I Cook?</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>What Can I Cook?</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="icon" href="images/logo-removebg.png" />
   <style>
     .loading-spinner {
@@ -37,9 +37,8 @@
       transform: translateX(0);
     }
   </style>
-</head>
+  </head>
 <body class="min-h-screen bg-gradient-to-b from-yellow-100 via-white to-yellow-200 text-black flex flex-col">
-  <!-- Navbar -->
   <nav class="bg-yellow-500 shadow-md w-full z-50" role="navigation" aria-label="Main navigation">
     <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-2">
       <a href="home.html" class="flex items-center space-x-2">
@@ -50,16 +49,17 @@
         <a href="home.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-home">Home</a>
         <a href="user.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-profile">Profile</a>
         <a href="recipes.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-recipes">Recipes</a>
+        <a href="ingredients.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-ingredients">Ingredients</a>
         <a href="favourites.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-favourites">Favourites</a>
         <a href="upload.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-upload">Add Recipe</a>
         <a href="about.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-about">About Us</a>
         <button onclick="logout()" class="ml-2 px-4 py-2 rounded-full bg-red-100 text-red-700 hover:bg-red-200 font-bold transition">Logout</button>
-        <button class="ml-2 p-2 rounded-full bg-yellow-400 hover:bg-yellow-600" aria-label="Search"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Search</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/></svg></button>
+        <button class="ml-2 p-2 rounded-full bg-yellow-400 hover:bg-yellow-600" aria-label="Search" id="navbar-search-btn"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Search</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/></svg></button>
       </div>
       <button id="mobile-nav-toggle" class="md:hidden p-2 rounded-full bg-yellow-400 hover:bg-yellow-600 focus:outline-none" aria-label="Open navigation">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/></svg>
       </button>
-    </div>
+        </div>
     <div id="sidebar-overlay" class="sidebar-overlay"></div>
     <div id="mobile-sidebar" class="sidebar fixed top-0 left-0 h-full w-64 bg-yellow-500 z-50 flex flex-col pt-8 px-6 space-y-2 md:hidden shadow-lg">
       <button id="close-sidebar" class="self-end mb-4 p-2 rounded-full bg-yellow-400 hover:bg-yellow-600" aria-label="Close navigation">
@@ -68,51 +68,73 @@
       <a href="home.html" class="nav-link px-4 py-2 rounded-full transition" id="side-home">Home</a>
       <a href="user.html" class="nav-link px-4 py-2 rounded-full transition" id="side-profile">Profile</a>
       <a href="recipes.html" class="nav-link px-4 py-2 rounded-full transition" id="side-recipes">Recipes</a>
+      <a href="ingredients.html" class="nav-link px-4 py-2 rounded-full transition" id="side-ingredients">Ingredients</a>
       <a href="favourites.html" class="nav-link px-4 py-2 rounded-full transition" id="side-favourites">Favourites</a>
       <a href="upload.html" class="nav-link px-4 py-2 rounded-full transition" id="side-upload">Add Recipe</a>
       <a href="about.html" class="nav-link px-4 py-2 rounded-full transition" id="side-about">About Us</a>
       <button onclick="logout()" class="mt-2 px-4 py-2 rounded-full bg-red-100 text-red-700 hover:bg-red-200 font-bold transition">Logout</button>
-      <button class="mt-2 p-2 rounded-full bg-yellow-400 hover:bg-yellow-600" aria-label="Search"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Search</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/></svg></button>
-    </div>
-  </nav>
-  <main class="flex-1 flex flex-col pt-32 pb-10 px-2">
-    <!-- Original home.html content goes here -->
-    <div class="flex-1">
-      <div class="flex items-center justify-between p-4 shadow-md bg-black text-white">
-        <button onclick="toggleSidebar()" class="text-3xl md:hidden">&#9776;</button>
-        <input id="search-input" type="text" placeholder="Search recipes..." class="w-full md:w-1/2 px-4 py-2 rounded-full border border-gray-300 text-black filter-control" />
-      </div>
-      <main class="p-6">
-        <div id="greeting" class="mb-6 text-2xl font-bold text-yellow-800"></div>
-        <div class="mb-6">
-          <div id="allergy-section" class="hidden mb-2">
-            <label for="allergy-input" class="block text-sm font-semibold mb-2">Exclude Allergens</label>
-            <select id="allergy-input" class="filter-control w-full md:w-1/3 px-3 py-2 bg-white rounded-md border">
-              <option value="">No allergies</option>
-              <option value="nuts">Nuts</option>
-              <option value="dairy">Dairy</option>
-              <option value="eggs">Eggs</option>
-              <option value="gluten">Gluten</option>
-              <option value="shellfish">Shellfish</option>
-              <option value="soy">Soy</option>
-              <option value="wheat">Wheat</option>
-            </select>
-          </div>
-          <div id="allergy-note" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-2">
-            <p class="text-sm">You said you have allergy on <strong id="allergy-name"></strong>, so we have removed <strong id="allergy-count"></strong> recipes.</p>
-          </div>
-        </div>
-        <div class="mb-8">
-          <h2 class="text-xl font-bold mb-2 text-yellow-700">Recommended for You</h2>
-          <div id="recipes-grid" class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"></div>
-          <div id="loading-skeleton" class="col-span-full">
-            <div class="flex items-center justify-center mb-6">
-              <div class="loading-spinner mr-3"></div>
-              <span class="text-lg text-gray-600">Loading recipes...</span>
+      <button class="mt-2 p-2 rounded-full bg-yellow-400 hover:bg-yellow-600" aria-label="Search" id="sidebar-search-btn"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Search</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/></svg></button>
             </div>
+  </nav>
+  <main class="flex-1 flex flex-col pt-8 pb-10 px-2">
+    <div class="w-full max-w-5xl mx-auto">
+      <section class="flex flex-col md:flex-row items-center justify-between gap-8 py-8 px-4 mb-10 bg-yellow-50 rounded-2xl shadow-lg">
+        <div class="flex-1">
+          <h1 class="text-4xl md:text-5xl font-extrabold text-yellow-700 mb-4">Welcome to What Can I Cook?</h1>
+          <p class="text-lg md:text-xl text-gray-700 mb-6">Discover, create, and share amazing recipes with the ingredients you have. Your next delicious meal is just a click away!</p>
+          <a href="ingredients.html" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-8 py-3 rounded-full text-lg shadow transition">Try Ingredient Search</a>
+            </div>
+        <img src="images/bg_ingredients.png" alt="Ingredients" class="w-64 h-64 object-contain rounded-2xl shadow-md hidden md:block">
+      </section>
+      <div class="mb-12">
+        <h2 class="text-3xl font-bold text-yellow-700 mb-6 text-center">Discover Recipes</h2>
+        <div class="relative w-full max-w-3xl mx-auto">
+          <div id="carousel" class="overflow-hidden rounded-2xl shadow-2xl bg-white min-h-[340px] flex items-center justify-center">
+            <div id="carousel-inner" class="w-full h-80 flex items-center justify-center"></div>
+            <button id="carousel-prev" class="absolute left-2 top-1/2 -translate-y-1/2 bg-yellow-400 hover:bg-yellow-600 text-white rounded-full p-3 shadow-lg" aria-label="Previous"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
+            <button id="carousel-next" class="absolute right-2 top-1/2 -translate-y-1/2 bg-yellow-400 hover:bg-yellow-600 text-white rounded-full p-3 shadow-lg" aria-label="Next"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
+          </div>
+          <div id="carousel-loading" class="flex justify-center py-8"><div class="loading-spinner"></div></div>
+              </div>
+            </div>
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold text-yellow-700 mb-6 text-center">How It Works</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow">
+            <span class="text-5xl mb-4">🛒</span>
+            <h3 class="font-bold text-lg mb-2">Pick Your Ingredients</h3>
+            <p class="text-gray-600">Select what you have at home and let us suggest recipes you can make right now.</p>
+          </div>
+          <div class="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow">
+            <span class="text-5xl mb-4">🍳</span>
+            <h3 class="font-bold text-lg mb-2">Get Recipe Ideas</h3>
+            <p class="text-gray-600">Browse a variety of recipes tailored to your ingredients and preferences.</p>
+          </div>
+          <div class="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow">
+            <span class="text-5xl mb-4">👩‍🍳</span>
+            <h3 class="font-bold text-lg mb-2">Cook & Enjoy</h3>
+            <p class="text-gray-600">Follow easy instructions, cook, and enjoy your meal. Share your favorites with friends!</p>
           </div>
         </div>
-      </main>
+      </section>
+      <div class="flex flex-wrap justify-center gap-6 mb-10">
+        <button class="menu-btn bg-yellow-200 hover:bg-yellow-400 text-yellow-900 font-bold text-xl px-8 py-6 rounded-2xl shadow transition animate-bounce-slow" data-meal="Breakfast">Breakfast</button>
+        <button class="menu-btn bg-yellow-200 hover:bg-yellow-400 text-yellow-900 font-bold text-xl px-8 py-6 rounded-2xl shadow transition animate-bounce-slow" data-meal="Lunch">Lunch</button>
+        <button class="menu-btn bg-yellow-200 hover:bg-yellow-400 text-yellow-900 font-bold text-xl px-8 py-6 rounded-2xl shadow transition animate-bounce-slow" data-meal="Dinner">Dinner</button>
+        <button class="menu-btn bg-yellow-200 hover:bg-yellow-400 text-yellow-900 font-bold text-xl px-8 py-6 rounded-2xl shadow transition animate-bounce-slow" data-meal="Snacks">Snacks</button>
+        <button class="menu-btn bg-yellow-200 hover:bg-yellow-400 text-yellow-900 font-bold text-xl px-8 py-6 rounded-2xl shadow transition animate-bounce-slow" data-meal="Dessert">Dessert</button>
+        <button class="menu-btn bg-yellow-200 hover:bg-yellow-400 text-yellow-900 font-bold text-xl px-8 py-6 rounded-2xl shadow transition animate-bounce-slow" data-meal="Drinks">Drinks</button>
+      </div>
+      <style>
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
+        .animate-bounce-slow {
+          animation: bounce-slow 2.5s infinite;
+        }
+      </style>
+      <div id="menu-sections" class="space-y-10"></div>
     </div>
     <div id="recipeModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center">
       <div class="bg-white rounded-xl max-w-xl w-full mx-4 p-6 shadow-lg relative">
@@ -128,8 +150,7 @@
   <footer class="text-center py-6 text-sm text-gray-600 bg-white border-t">
     &copy; 2025 What Can I Cook? All rights reserved.
   </footer>
-  <script>
-    // Auth check
+    <script>
     const token = localStorage.getItem('token');
     if (!token) window.location.href = 'login.html';
     function highlightNav() {
@@ -138,6 +159,7 @@
         'home.html': ['nav-home', 'side-home'],
         'user.html': ['nav-profile', 'side-profile'],
         'recipes.html': ['nav-recipes', 'side-recipes'],
+        'ingredients.html': ['nav-ingredients', 'side-ingredients'],
         'favourites.html': ['nav-favourites', 'side-favourites'],
         'upload.html': ['nav-upload', 'side-upload'],
         'about.html': ['nav-about', 'side-about']
@@ -175,12 +197,226 @@
         document.body.style.overflow = '';
       });
     }
-    function logout() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('userInfo');
-      window.location.href = 'index.html';
+      function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userInfo');
+        window.location.href = 'index.html';
+      }
+    let allRecipes = [];
+    let filteredRecipes = [];
+    let currentIndex = 0;
+    const carousel = document.getElementById('carousel');
+    const carouselInner = document.getElementById('carousel-inner');
+    const carouselPrev = document.getElementById('carousel-prev');
+    const carouselNext = document.getElementById('carousel-next');
+    const carouselLoading = document.getElementById('carousel-loading');
+    const recipeModal = document.getElementById('recipeModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalIngredients = document.getElementById('modalIngredients');
+    const modalProcedure = document.getElementById('modalProcedure');
+    const menuSections = document.getElementById('menu-sections');
+    function renderCarouselRecipe(r) {
+      return `<div class='relative w-full h-80 flex items-end justify-center cursor-pointer group' id='carousel-recipe'>
+        <img src='${r.imageUrl || "images/placeholder_recipe.jpg"}' alt='${r.title}' class='absolute inset-0 w-full h-full object-cover rounded-2xl group-hover:opacity-80 transition' />
+        <div class='relative w-full bg-gradient-to-t from-black/80 to-transparent p-6 rounded-b-2xl text-black text-2xl font-bold text-center'>${r.title}</div>
+      </div>`;
     }
-    // ... (retain all original home.html scripts for dashboard, modal, etc.) ...
-  </script>
-</body>
+    function showRecipe(idx) {
+      if (!filteredRecipes.length) return;
+      currentIndex = (idx + filteredRecipes.length) % filteredRecipes.length;
+      const r = filteredRecipes[currentIndex];
+      carouselInner.innerHTML = renderCarouselRecipe(r);
+      const recipeDiv = document.getElementById('carousel-recipe');
+      if (recipeDiv) {
+        recipeDiv.addEventListener('click', () => openRecipeModal(r._id));
+      }
+    }
+    function openRecipeModal(id) {
+      const r = allRecipes.find(x => x._id === id);
+      if (!r) return;
+      modalTitle.textContent = r.title;
+      modalIngredients.innerHTML = (r.ingredients || []).map(ing => `<li>${ing}</li>`).join('');
+      modalProcedure.textContent = r.instructions || '';
+      recipeModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      }
+      function closeRecipe() {
+      recipeModal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+    if (carouselPrev) carouselPrev.onclick = () => showRecipe(currentIndex - 1);
+    if (carouselNext) carouselNext.onclick = () => showRecipe(currentIndex + 1);
+    document.querySelectorAll('.menu-btn').forEach(btn => {
+      btn.onclick = function() {
+        const meal = this.getAttribute('data-meal');
+        showMenuSection(meal);
+      };
+    });
+    function showMenuSection(meal) {
+      menuSections.innerHTML = '';
+      const recipes = allRecipes.filter(r => r.mealType === meal).slice(0, 3);
+        if (recipes.length === 0) {
+        menuSections.innerHTML = `<div class='text-center text-gray-500 text-lg'>No recipes found for ${meal}.</div>`;
+          return;
+        }
+      menuSections.innerHTML = `
+        <div class='bg-white bg-opacity-90 rounded-2xl shadow-xl p-8 max-w-4xl mx-auto'>
+          <h3 class='text-2xl font-bold text-yellow-700 mb-6 text-center'>${meal} Recipes</h3>
+          <div class='grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3'>
+            ${recipes.map(r => `
+              <div class='flex flex-col items-center bg-yellow-50 rounded-xl shadow p-4'>
+                <img src='${r.imageUrl || "images/placeholder_recipe.jpg"}' alt='${r.title}' class='w-full h-40 object-cover rounded-lg mb-3'>
+                <div class='font-bold text-lg mb-2 text-center'>${r.title}</div>
+                <button class='view-btn bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded transition' data-id='${r._id}'>View</button>
+              </div>
+            `).join('')}
+          </div>
+            </div>
+          `;
+      menuSections.querySelectorAll('.view-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+          openRecipeModal(this.getAttribute('data-id'));
+        });
+      });
+    }
+    recipeModal.addEventListener('click', function(e) {
+      if (e.target === recipeModal) closeRecipe();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (!recipeModal.classList.contains('hidden') && e.key === 'Escape') closeRecipe();
+      if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        if (e.key === 'ArrowLeft') showRecipe(currentIndex - 1);
+        if (e.key === 'ArrowRight') showRecipe(currentIndex + 1);
+      }
+    });
+    async function fetchRecipes() {
+      carouselLoading.style.display = '';
+      carouselInner.innerHTML = '';
+      try {
+        const res = await fetch('/api/recipes');
+        allRecipes = await res.json();
+        filteredRecipes = allRecipes.slice().sort(() => Math.random() - 0.5);
+        if (filteredRecipes.length === 0) {
+          carouselInner.innerHTML = '<div class="text-center text-gray-500 w-full">No recipes found.</div>';
+        } else {
+          showRecipe(0);
+        }
+      } catch (e) {
+        carouselInner.innerHTML = '<div class="text-center text-red-500 w-full">Error loading recipes.</div>';
+      }
+      carouselLoading.style.display = 'none';
+    }
+    document.addEventListener('DOMContentLoaded', fetchRecipes);
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchModal = document.getElementById('search-modal');
+      const navbarSearchBtn = document.getElementById('navbar-search-btn');
+      const sidebarSearchBtn = document.getElementById('sidebar-search-btn');
+      const closeSearchModal = document.getElementById('close-search-modal');
+      const searchInput = document.getElementById('search-input');
+      const searchResults = document.getElementById('search-results');
+      function openSearchModal() {
+        searchModal.classList.remove('hidden');
+        searchInput.value = '';
+        searchResults.innerHTML = '';
+        searchInput.focus();
+      }
+      function closeSearch() {
+        searchModal.classList.add('hidden');
+      }
+      if (navbarSearchBtn) navbarSearchBtn.addEventListener('click', openSearchModal);
+      if (sidebarSearchBtn) sidebarSearchBtn.addEventListener('click', openSearchModal);
+      if (closeSearchModal) closeSearchModal.addEventListener('click', closeSearch);
+      document.addEventListener('keydown', (e) => {
+        if (!searchModal.classList.contains('hidden') && e.key === 'Escape') closeSearch();
+      });
+      searchModal.addEventListener('click', (e) => {
+        if (e.target === searchModal) closeSearch();
+      });
+      let searchTimeout;
+      searchInput && searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+        if (!query) {
+          searchResults.innerHTML = '';
+          return;
+        }
+        searchResults.innerHTML = '<div class="flex justify-center py-4"><div class="loading-spinner"></div></div>';
+        searchTimeout = setTimeout(() => performSearch(query), 350);
+      });
+      async function performSearch(query) {
+        let url = '/api/recipes?search=' + encodeURIComponent(query);
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error('Failed to fetch');
+          let recipes = await res.json();
+          if (query.includes(',')) {
+            const ingredients = query.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+            recipes = recipes.filter(r =>
+              ingredients.every(ing =>
+                (r.ingredients || []).some(recipeIng => recipeIng.toLowerCase().includes(ing))
+              )
+            );
+          }
+          if (recipes.length === 0) {
+            searchResults.innerHTML = '<div class="text-center text-gray-500">No recipes found.</div>';
+            return;
+          }
+          searchResults.innerHTML = recipes.map(r => renderRecipeResult(r, query)).join('');
+        } catch (err) {
+          searchResults.innerHTML = '<div class="text-center text-red-500">Error searching recipes.</div>';
+        }
+      }
+      function highlight(text, query) {
+        if (!query) return text;
+        let q = query;
+        if (query.includes(',')) q = query.split(',').map(s => s.trim()).join('|');
+        return text.replace(new RegExp(`(${q})`, 'gi'), '<mark class="bg-yellow-200">$1</mark>');
+      }
+      function renderRecipeResult(recipe, query) {
+        return `<div class="flex items-center space-x-4 bg-yellow-50 rounded-lg p-3 shadow">
+          <img src="${recipe.imageUrl || 'images/placeholder_recipe.jpg'}" alt="${recipe.title}" class="w-16 h-16 object-cover rounded-md border">
+          <div class="flex-1">
+            <div class="font-bold text-lg">${highlight(recipe.title, query)}</div>
+            <div class="text-sm text-gray-600">${highlight((recipe.ingredients || []).join(', '), query)}</div>
+          </div>
+          <a href="recipe_view.html?id=${encodeURIComponent(recipe._id)}" class="text-yellow-700 font-semibold hover:underline">View</a>
+        </div>`;
+      }
+    });
+    function renderFeaturedRecipeCard(recipe) {
+      return `<div class='bg-white rounded-xl shadow-lg overflow-hidden flex flex-col'>
+        <img src='${recipe.imageUrl || "images/placeholder_recipe.jpg"}' alt='${recipe.title}' class='w-full h-48 object-cover'>
+        <div class='p-4 flex-1 flex flex-col'>
+          <h3 class='font-bold text-lg text-yellow-700 mb-2'>${recipe.title}</h3>
+          <p class='text-gray-600 text-sm mb-4 flex-1'>${recipe.description || ''}</p>
+          <a href='recipe_view.html?id=${encodeURIComponent(recipe._id)}' class='mt-auto inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-4 py-2 rounded-full text-center transition'>View Recipe</a>
+        </div>
+      </div>`;
+    }
+    function showFeaturedRecipes() {
+      if (!window.allRecipes || !window.allRecipes.length) return;
+      const shuffled = [...window.allRecipes].sort(() => 0.5 - Math.random());
+      const featured = shuffled.slice(0, 6);
+      document.getElementById('featured-recipes').innerHTML = featured.map(renderFeaturedRecipeCard).join('');
+    }
+    setTimeout(showFeaturedRecipes, 1200);
+    document.addEventListener('DOMContentLoaded', function() {
+      const token = localStorage.getItem('token');
+      document.querySelectorAll('button[onclick="logout()"], button.logout-btn').forEach(btn => {
+        if (!token) btn.style.display = 'none';
+        else btn.style.display = '';
+        });
+      });
+    </script>
+    <div id="search-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-lg mx-2 p-6 relative">
+        <button id="close-search-modal" class="absolute top-2 right-2 p-2 rounded-full bg-yellow-100 hover:bg-yellow-300" aria-label="Close search modal">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Close</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <h2 class="text-xl font-bold text-yellow-700 mb-4 text-center">Search Recipes</h2>
+        <input id="search-input" type="text" placeholder="Search by name or ingredient" class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-yellow-500 mb-4" autocomplete="off" />
+        <div id="search-results" class="space-y-3 max-h-80 overflow-y-auto"></div>
+      </div>
+    </div>
+  </body>
 </html>

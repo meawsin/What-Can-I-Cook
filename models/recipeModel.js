@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const recipeSchema = new mongoose.Schema({
   title: { 
     type: String, 
@@ -32,13 +31,11 @@ const recipeSchema = new mongoose.Schema({
   },
   uploadedBy: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', // This links the recipe to the user who uploaded it
+    ref: 'User',
     required: true
   }
 }, {
-  timestamps: true // Automatically adds createdAt and updatedAt fields
+  timestamps: true
 });
-
 const Recipe = mongoose.model('Recipe', recipeSchema);
-
 module.exports = Recipe;

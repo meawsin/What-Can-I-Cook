@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Add Ingredients</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="icon" href="images/logo-removebg.png" />
   <style>
     body {
         background-image: url('bg_ingredients-copy.png');
@@ -12,87 +13,85 @@
         background-position: center;
       }
     .ingredient-selected {
-      background-color: #f3b517 !important; /* yellow-400 */
+      background-color: #f3b517 !important;
+    }
+    .loader {
+      border-width: 4px;
+      border-style: solid;
+      border-radius: 9999px;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
-<body class="min-h-screen bg-yellow-100 text-black font-sans">
-  <!-- Authenticated Navbar (copied from user.html, with active page logic) -->
-<script>
-  function checkAuthStatus() {
-    const token = localStorage.getItem('token');
-    const userInfo = localStorage.getItem('userInfo');
-    if (!token || !userInfo) return false;
-    try {
-      const user = JSON.parse(userInfo);
-      if (!user || !user.token) return false;
-      return true;
-    } catch (error) { return false; }
-  }
-  function logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userInfo');
-    window.location.href = 'index.html';
-  }
-  document.addEventListener('DOMContentLoaded', () => {
-    if (!checkAuthStatus()) {
-      window.location.href = 'login.html';
-      return;
-    }
-    // Insert navbar
-    const nav = document.createElement('nav');
-    nav.className = 'bg-yellow-500 p-4 shadow-md flex flex-wrap justify-between items-center';
-    nav.innerHTML = `
-      <div class="flex items-center space-x-3">
-        <a href="home.html"><img src="images/logo-removebg.png" alt="Logo" class="w-20 h-25"></a>
-        <a href="home.html"><span class="text-xl font-bold">What Can I Cook?</span></a>
+<body class="min-h-screen text-black flex flex-col bg-gradient-to-b from-yellow-100 via-white to-yellow-200">
+  <nav class="bg-yellow-500 shadow-md w-full z-50" role="navigation" aria-label="Main navigation">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-2">
+      <a href="home.html" class="flex items-center space-x-2">
+        <img src="images/logo-removebg.png" alt="Logo" class="w-14 h-14 object-contain">
+        <span class="text-xl font-bold">What Can I Cook?</span>
+      </a>
+      <div class="hidden md:flex space-x-2 font-semibold items-center">
+        <a href="home.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-home">Home</a>
+        <a href="user.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-profile">Profile</a>
+        <a href="recipes.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-recipes">Recipes</a>
+        <a href="ingredients.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-ingredients">Ingredients</a>
+        <a href="favourites.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-favourites">Favourites</a>
+        <a href="upload.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-upload">Add Recipe</a>
+        <a href="about.html" class="nav-link px-4 py-2 rounded-full transition" id="nav-about">About Us</a>
+        <button onclick="logout()" class="ml-2 px-4 py-2 rounded-full bg-red-100 text-red-700 hover:bg-red-200 font-bold transition">Logout</button>
+        <button class="ml-2 p-2 rounded-full bg-yellow-400 hover:bg-yellow-600" aria-label="Search" id="navbar-search-btn"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Search</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/></svg></button>
       </div>
-      <div class="flex space-x-4 text-black font-semibold">
-        <a href="home.html" class="nav-link">Home</a>
-        <a href="user.html" class="nav-link">Profile</a>
-        <a href="recipes.html" class="nav-link">Recipes</a>
-        <a href="favourites.html" class="nav-link">Favourites</a>
-        <a href="upload.html" class="nav-link">Add Recipe List</a>
-        <a href="about.html" class="nav-link">About Us</a>
-        <button onclick="logout()" class="hover:underline text-red-700">Logout</button>
-      </div>
-    `;
-    document.body.prepend(nav);
-    // Highlight current page
-    const path = window.location.pathname.split('/').pop();
-    document.querySelectorAll('.nav-link').forEach(link => {
-      if (link.getAttribute('href') === path) {
-        link.classList.add('underline', 'text-yellow-900');
-      }
-    });
-    // Insert footer
-    const footer = document.createElement('footer');
-    footer.className = 'text-center py-6 text-sm text-gray-600';
-    footer.innerHTML = '&copy; 2025 What Can I Cook? All rights reserved.';
-    document.body.appendChild(footer);
-    // Remove old header/footer if present
-    const oldHeader = document.querySelector('header');
-    if (oldHeader) oldHeader.remove();
-    const oldFooter = document.querySelector('footer');
-    if (oldFooter) oldFooter.remove();
-  });
-</script>
-
-  <div class="max-w-2xl mx-auto py-6 px-4">
-    <h1 class="text-3xl font-bold text-yellow-700 mb-6 flex items-center gap-2">
-      🛒 Add Ingredients
-    </h1>
-
+      <button id="mobile-nav-toggle" class="md:hidden p-2 rounded-full bg-yellow-400 hover:bg-yellow-600 focus:outline-none" aria-label="Open navigation">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/></svg>
+      </button>
+    </div>
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+    <div id="mobile-sidebar" class="sidebar fixed top-0 left-0 h-full w-64 bg-yellow-500 z-50 flex flex-col pt-8 px-6 space-y-2 md:hidden shadow-lg">
+      <button id="close-sidebar" class="self-end mb-4 p-2 rounded-full bg-yellow-400 hover:bg-yellow-600" aria-label="Close navigation">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Close</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <a href="home.html" class="nav-link px-4 py-2 rounded-full transition" id="side-home">Home</a>
+      <a href="user.html" class="nav-link px-4 py-2 rounded-full transition" id="side-profile">Profile</a>
+      <a href="recipes.html" class="nav-link px-4 py-2 rounded-full transition" id="side-recipes">Recipes</a>
+      <a href="ingredients.html" class="nav-link px-4 py-2 rounded-full transition" id="side-ingredients">Ingredients</a>
+      <a href="favourites.html" class="nav-link px-4 py-2 rounded-full transition" id="side-favourites">Favourites</a>
+      <a href="upload.html" class="nav-link px-4 py-2 rounded-full transition" id="side-upload">Add Recipe</a>
+      <a href="about.html" class="nav-link px-4 py-2 rounded-full transition" id="side-about">About Us</a>
+      <button onclick="logout()" class="mt-2 px-4 py-2 rounded-full bg-red-100 text-red-700 hover:bg-red-200 font-bold transition">Logout</button>
+      <button class="mt-2 p-2 rounded-full bg-yellow-400 hover:bg-yellow-600" aria-label="Search" id="sidebar-search-btn"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Search</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/></svg></button>
+    </div>
+  </nav>
+  <main class="flex-1 flex flex-col pt-8 pb-10 px-2">
+    <section class="min-w-4xl mx-auto p-6 bg-white bg-opacity-90 rounded-lg shadow-lg">
+      <h1 class="text-3xl font-bold text-yellow-700 mb-6 text-center">Ingredients</h1>
     <input type="text" placeholder="Search ingredients..."
       class="w-full px-4 py-2 mb-4 border border-yellow-500 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-600">
-
     <div id="categories"></div>
-
     <div class="mt-8 text-center">
       <button onclick="suggestRecipes()"
         class="px-6 py-3 bg-yellow-600 text-white font-bold rounded-full hover:bg-yellow-700 transition-colors">
         Suggest Recipes
       </button>
+      </div>
+      <div id="spoonacular-results" class="mt-8"></div>
+    </section>
+  </main>
+  <footer class="text-center py-6 text-sm text-gray-600 bg-white border-t">
+    &copy; 2025 What Can I Cook? All rights reserved.
+  </footer>
+
+  <div id="search-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-lg mx-2 p-6 relative">
+      <button id="close-search-modal" class="absolute top-2 right-2 p-2 rounded-full bg-yellow-100 hover:bg-yellow-300" aria-label="Close search modal">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><title>Close</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <h2 class="text-xl font-bold text-yellow-700 mb-4 text-center">Search Recipes</h2>
+      <input id="search-input" type="text" placeholder="Search by name or ingredient" class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-yellow-500 mb-4" autocomplete="off" />
+      <div id="search-results" class="space-y-3 max-h-80 overflow-y-auto"></div>
     </div>
   </div>
 
@@ -117,10 +116,7 @@
       {
         name: "Fish & Meats",
         icon: "🥩",
-        ingredients: [ "tilapia", "salmon", "hilsa", "rohu",  "katla", "tuna",
-      // Meats
-      "chicken", "beef", "lamb", "goat",
-      "duck", "chicken breast", "mutton"]
+        ingredients: [ "tilapia", "salmon", "hilsa", "rohu",  "katla", "tuna","chicken", "beef", "lamb", "goat", "duck", "chicken breast", "mutton"]
       },
       {
         name: "Berries",
@@ -173,8 +169,187 @@
 
     function suggestRecipes() {
       const selected = Array.from(document.querySelectorAll('.ingredient-selected')).map(el => el.textContent);
-      alert("Selected Ingredients: " + selected.join(", "));
+      const resultsDiv = document.getElementById('spoonacular-results');
+      if (selected.length === 0) {
+        resultsDiv.innerHTML = '<div class="text-red-600 text-center">Please select at least one ingredient.</div>';
+        return;
+      }
+      resultsDiv.innerHTML = '<div class="flex justify-center py-4"><div class="loader border-4 border-yellow-400 border-t-transparent rounded-full w-10 h-10 animate-spin"></div></div>';
+      const apiKey = '2a82dba7647643dfa2c69ca931c9c835';
+      const ingredientsParam = encodeURIComponent(selected.join(','));
+      fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientsParam}&number=4&apiKey=${apiKey}`)
+        .then(res => res.json())
+        .then(async recipes => {
+          if (!recipes || recipes.length === 0) {
+            resultsDiv.innerHTML = '<div class="text-center text-gray-500">No recipes found for selected ingredients.</div>';
+            return;
+          }
+          const details = await Promise.all(recipes.map(r =>
+            fetch(`https://api.spoonacular.com/recipes/${r.id}/information?apiKey=${apiKey}`)
+              .then(res => res.json())
+              .catch(() => null)
+          ));
+          resultsDiv.innerHTML = details.map(recipe => recipe ? renderSpoonacularRecipe(recipe) : '').join('');
+        })
+        .catch(err => {
+          resultsDiv.innerHTML = '<div class="text-center text-red-500">Error fetching recipes. Please try again later.</div>';
+        });
     }
+    function renderSpoonacularRecipe(recipe) {
+      const ingredients = (recipe.extendedIngredients || []).map(ing => ing.original).join(', ');
+      const instructions = recipe.instructions ? recipe.instructions : 'No instructions provided.';
+      return `<div class="bg-white rounded-xl shadow-md p-6 mb-6 flex flex-col md:flex-row gap-4">
+        <img src="${recipe.image}" alt="${recipe.title}" class="w-32 h-32 object-cover rounded-lg border self-center md:self-start">
+        <div class="flex-1">
+          <div class="font-bold text-xl text-yellow-700 mb-2">${recipe.title}</div>
+          <div class="mb-2"><span class="font-semibold">Ingredients:</span> <span class="text-gray-700">${ingredients}</span></div>
+          <div><span class="font-semibold">Instructions:</span> <span class="text-gray-700">${instructions}</span></div>
+        </div>
+      </div>`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchModal = document.getElementById('search-modal');
+      const navbarSearchBtn = document.getElementById('navbar-search-btn');
+      const closeSearchModal = document.getElementById('close-search-modal');
+      const searchInput = document.getElementById('search-input');
+      const searchResults = document.getElementById('search-results');
+      function openSearchModal() {
+        searchModal.classList.remove('hidden');
+        searchInput.value = '';
+        searchResults.innerHTML = '';
+        searchInput.focus();
+      }
+      function closeSearch() {
+        searchModal.classList.add('hidden');
+      }
+      if (navbarSearchBtn) navbarSearchBtn.addEventListener('click', openSearchModal);
+      if (closeSearchModal) closeSearchModal.addEventListener('click', closeSearch);
+      document.addEventListener('keydown', (e) => {
+        if (!searchModal.classList.contains('hidden') && e.key === 'Escape') closeSearch();
+      });
+      searchModal.addEventListener('click', (e) => {
+        if (e.target === searchModal) closeSearch();
+      });
+      let searchTimeout;
+      searchInput && searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+        if (!query) {
+          searchResults.innerHTML = '';
+          return;
+        }
+        searchResults.innerHTML = '<div class="flex justify-center py-4"><div class="loading-spinner"></div></div>';
+        searchTimeout = setTimeout(() => performSearch(query), 350);
+      });
+      async function performSearch(query) {
+        let url = '/api/recipes?search=' + encodeURIComponent(query);
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error('Failed to fetch');
+          let recipes = await res.json();
+          if (query.includes(',')) {
+            const ingredients = query.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+            recipes = recipes.filter(r =>
+              ingredients.every(ing =>
+                (r.ingredients || []).some(recipeIng => recipeIng.toLowerCase().includes(ing))
+              )
+            );
+          }
+          if (recipes.length === 0) {
+            searchResults.innerHTML = '<div class="text-center text-gray-500">No recipes found.</div>';
+            return;
+          }
+          searchResults.innerHTML = recipes.map(r => renderRecipeResult(r, query)).join('');
+        } catch (err) {
+          searchResults.innerHTML = '<div class="text-center text-red-500">Error searching recipes.</div>';
+        }
+      }
+      function highlight(text, query) {
+        if (!query) return text;
+        let q = query;
+        if (query.includes(',')) q = query.split(',').map(s => s.trim()).join('|');
+        return text.replace(new RegExp(`(${q})`, 'gi'), '<mark class="bg-yellow-200">$1</mark>');
+      }
+      function renderRecipeResult(recipe, query) {
+        return `<div class="flex items-center space-x-4 bg-yellow-50 rounded-lg p-3 shadow">
+          <img src="${recipe.imageUrl || 'images/placeholder_recipe.jpg'}" alt="${recipe.title}" class="w-16 h-16 object-cover rounded-md border">
+          <div class="flex-1">
+            <div class="font-bold text-lg">${highlight(recipe.title, query)}</div>
+            <div class="text-sm text-gray-600">${highlight((recipe.ingredients || []).join(', '), query)}</div>
+          </div>
+          <a href="recipe_view.html?id=${encodeURIComponent(recipe._id)}" class="text-yellow-700 font-semibold hover:underline">View</a>
+        </div>`;
+      }
+      
+      const token = localStorage.getItem('token');
+      if (!token) window.location.href = 'login.html';
+      function highlightNav() {
+        const page = window.location.pathname.split('/').pop();
+        const navMap = {
+          'home.html': ['nav-home', 'side-home'],
+          'user.html': ['nav-profile', 'side-profile'],
+          'recipes.html': ['nav-recipes', 'side-recipes'],
+          'ingredients.html': ['nav-ingredients', 'side-ingredients'],
+          'favourites.html': ['nav-favourites', 'side-favourites'],
+          'upload.html': ['nav-upload', 'side-upload'],
+          'about.html': ['nav-about', 'side-about']
+        };
+        Object.values(navMap).flat().forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.classList.remove('bg-orange-700', 'text-white', 'shadow-lg', 'font-bold');
+        });
+        if (navMap[page]) {
+          navMap[page].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('bg-orange-700', 'text-white', 'shadow-lg', 'font-bold');
+          });
+        }
+      }
+      highlightNav();
+      const mobileToggle = document.getElementById('mobile-nav-toggle');
+      const sidebar = document.getElementById('mobile-sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      const closeSidebar = document.getElementById('close-sidebar');
+      if (mobileToggle && sidebar && overlay && closeSidebar) {
+        mobileToggle.addEventListener('click', () => {
+          sidebar.classList.add('active');
+          overlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+        closeSidebar.addEventListener('click', () => {
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+        overlay.addEventListener('click', () => {
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      }
+      function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userInfo');
+        window.location.href = 'index.html';
+      }
+      function navigateHome() {
+        const token = localStorage.getItem('token');
+        const userInfo = localStorage.getItem('userInfo');
+        if (!token || !userInfo) {
+          window.location.href = 'index.html';
+        } else {
+          window.location.href = 'home.html';
+        }
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        const token = localStorage.getItem('token');
+        document.querySelectorAll('button[onclick="logout()"], button.logout-btn').forEach(btn => {
+          if (!token) btn.style.display = 'none';
+          else btn.style.display = '';
+        });
+      });
+    });
   </script>
 </body>
 </html>

@@ -10,16 +10,13 @@ const {
 } = require('../controllers/userController');
 const { protect } = require('../middleware/authMiddleware');
 
-// Public routes
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 
-// Private routes for profile
 router.route('/profile')
   .get(protect, getUserProfile)
   .put(protect, updateUserProfile);
 
-// Private routes for favorites
 router.route('/favorites')
   .get(protect, getFavorites);
 
