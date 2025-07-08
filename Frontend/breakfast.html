@@ -28,14 +28,104 @@
 </head>
 <body class="min-h-screen text-black">
 
-  <!-- Header -->
-  <header class="bg-yellow-500 text-white py-4 shadow">
-    <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
-      <h1 class="text-3xl font-bold">Breakfast Recipes</h1>
-      <a href="#" onclick="navigateHome(); return false;" class="bg-white text-yellow-600 font-bold px-4 py-2 rounded hover:bg-yellow-100">← Home</a>
-    </div>
-  </header>
-  
+  <!-- Authenticated Navbar (fixed top, pill highlighter, responsive prep) -->
+<script>
+  function checkAuthStatus() {
+    const token = localStorage.getItem('token');
+    const userInfo = localStorage.getItem('userInfo');
+    if (!token || !userInfo) return false;
+    try {
+      const user = JSON.parse(userInfo);
+      if (!user || !user.token) return false;
+      return true;
+    } catch (error) { return false; }
+  }
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userInfo');
+    window.location.href = 'index.html';
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!checkAuthStatus()) {
+      window.location.href = 'login.html';
+      return;
+    }
+    // Insert navbar
+    const nav = document.createElement('nav');
+    nav.className = 'bg-yellow-500 p-4 shadow-md flex flex-wrap justify-between items-center fixed top-0 left-0 w-full z-50';
+    nav.innerHTML = `
+      <div class="flex items-center space-x-3">
+        <a href="home.html"><img src="images/logo-removebg.png" alt="Logo" class="w-20 h-25"></a>
+        <a href="home.html"><span class="text-xl font-bold">What Can I Cook?</span></a>
+      </div>
+      <div class="flex space-x-4 text-black font-semibold">
+        <a href="home.html" class="nav-link px-3 py-1 rounded-full">Home</a>
+        <a href="user.html" class="nav-link px-3 py-1 rounded-full">Profile</a>
+        <a href="recipes.html" class="nav-link px-3 py-1 rounded-full">Recipes</a>
+        <a href="favourites.html" class="nav-link px-3 py-1 rounded-full">Favourites</a>
+        <a href="upload.html" class="nav-link px-3 py-1 rounded-full">Add Recipe List</a>
+        <a href="about.html" class="nav-link px-3 py-1 rounded-full">About Us</a>
+        <button onclick="logout()" class="hover:underline text-red-700 px-3 py-1 rounded-full">Logout</button>
+      </div>
+      <button id="mobile-nav-toggle" class="md:hidden ml-4 text-2xl focus:outline-none">☰</button>
+    `;
+    document.body.prepend(nav);
+    // Highlight current page with a visible pill background
+    const path = window.location.pathname.split('/').pop();
+    document.querySelectorAll('.nav-link').forEach(link => {
+      if (link.getAttribute('href') === path) {
+        link.classList.add('bg-orange-700', 'text-white', 'shadow-lg', 'font-bold');
+      } else {
+        link.classList.remove('bg-orange-700', 'text-white', 'shadow-lg', 'font-bold');
+      }
+    });
+    // Insert footer
+    const footer = document.createElement('footer');
+    footer.className = 'text-center py-6 text-sm text-gray-600';
+    footer.innerHTML = '&copy; 2025 What Can I Cook? All rights reserved.';
+    document.body.appendChild(footer);
+    // Remove old header/footer if present
+    const oldHeader = document.querySelector('header');
+    if (oldHeader) oldHeader.remove();
+    const oldFooter = document.querySelector('footer');
+    if (oldFooter) oldFooter.remove();
+    // Add top margin to main content to prevent overlap
+    const mainOrFirstDiv = document.querySelector('main, .max-w-2xl, .max-w-6xl, .max-w-4xl, .w-full, .flex-1, .container, .mx-auto');
+    if (mainOrFirstDiv) {
+      mainOrFirstDiv.style.marginTop = '90px';
+    } else {
+      document.body.style.marginTop = '90px';
+    }
+    // Responsive sidebar for mobile (basic toggle, to be improved)
+    const navLinks = nav.querySelector('div.flex.space-x-4');
+    const mobileToggle = document.getElementById('mobile-nav-toggle');
+    if (mobileToggle && navLinks) {
+      mobileToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('hidden');
+        navLinks.classList.toggle('flex-col');
+        navLinks.classList.toggle('bg-yellow-600');
+        navLinks.classList.toggle('absolute');
+        navLinks.classList.toggle('top-16');
+        navLinks.classList.toggle('left-0');
+        navLinks.classList.toggle('w-full');
+        navLinks.classList.toggle('p-4');
+      });
+      // Hide nav links by default on mobile
+      if (window.innerWidth < 768) {
+        navLinks.classList.add('hidden');
+      }
+      window.addEventListener('resize', () => {
+        if (window.innerWidth < 768) {
+          navLinks.classList.add('hidden');
+        } else {
+          navLinks.classList.remove('hidden');
+          navLinks.classList.remove('flex-col', 'bg-yellow-600', 'absolute', 'top-16', 'left-0', 'w-full', 'p-4');
+        }
+      });
+    }
+  });
+</script>
+
   <div class="max-w-6xl mx-auto p-6">
     <!-- Filter Section -->
     <div id="filter-section" class="bg-gradient-to-br from-white/50 to-yellow-100 shadow-lg rounded-lg p-4 md:p-6 mb-6">

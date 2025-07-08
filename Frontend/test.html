@@ -7,6 +7,67 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="min-h-screen bg-gray-100 p-8">
+  <!-- Authenticated Navbar (copied from user.html, with active page logic) -->
+<script>
+  function checkAuthStatus() {
+    const token = localStorage.getItem('token');
+    const userInfo = localStorage.getItem('userInfo');
+    if (!token || !userInfo) return false;
+    try {
+      const user = JSON.parse(userInfo);
+      if (!user || !user.token) return false;
+      return true;
+    } catch (error) { return false; }
+  }
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userInfo');
+    window.location.href = 'index.html';
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!checkAuthStatus()) {
+      window.location.href = 'login.html';
+      return;
+    }
+    // Insert navbar
+    const nav = document.createElement('nav');
+    nav.className = 'bg-yellow-500 p-4 shadow-md flex flex-wrap justify-between items-center';
+    nav.innerHTML = `
+      <div class="flex items-center space-x-3">
+        <a href="home.html"><img src="images/logo-removebg.png" alt="Logo" class="w-20 h-25"></a>
+        <a href="home.html"><span class="text-xl font-bold">What Can I Cook?</span></a>
+      </div>
+      <div class="flex space-x-4 text-black font-semibold">
+        <a href="home.html" class="nav-link">Home</a>
+        <a href="user.html" class="nav-link">Profile</a>
+        <a href="recipes.html" class="nav-link">Recipes</a>
+        <a href="favourites.html" class="nav-link">Favourites</a>
+        <a href="upload.html" class="nav-link">Add Recipe List</a>
+        <a href="about.html" class="nav-link">About Us</a>
+        <button onclick="logout()" class="hover:underline text-red-700">Logout</button>
+      </div>
+    `;
+    document.body.prepend(nav);
+    // Highlight current page
+    const path = window.location.pathname.split('/').pop();
+    document.querySelectorAll('.nav-link').forEach(link => {
+      if (link.getAttribute('href') === path) {
+        link.classList.add('underline', 'text-yellow-900');
+      }
+    });
+    // Insert footer
+    const footer = document.createElement('footer');
+    footer.className = 'text-center py-6 text-sm text-gray-600';
+    footer.innerHTML = '&copy; 2025 What Can I Cook? All rights reserved.';
+    document.body.appendChild(footer);
+    // Remove old header/footer if present
+    const oldHeader = document.querySelector('header');
+    if (oldHeader) oldHeader.remove();
+    const oldFooter = document.querySelector('footer');
+    if (oldFooter) oldFooter.remove();
+  });
+</script>
+
   <div class="max-w-4xl mx-auto">
     <h1 class="text-3xl font-bold text-center mb-8">Test Page</h1>
     

@@ -14,92 +14,6 @@
   </head>
   <body class="min-h-screen text-black">
     <div class="flex flex-col md:flex-row">
-      <script defer>
-      function toggleDropdown(id) {
-        const menu = document.getElementById(id);
-        menu.classList.toggle('hidden');
-      }
-
-      function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('-translate-x-full');
-      }
-
-      function submitCategories() {
-        const checkboxes = document.querySelectorAll('#categoryForm input[name="category"]:checked');
-        const selected = Array.from(checkboxes).map(cb => cb.value);
-        const resultDiv = document.getElementById('categoryResult');
-
-        if (selected.length > 0) {
-          resultDiv.innerText = 'Showing recipes for: ' + selected.join(', ');
-          resultDiv.classList.remove('hidden');
-        } else {
-          resultDiv.innerText = 'Please select at least one category.';
-          resultDiv.classList.remove('hidden');
-        }
-      }
-
-      function submitMealTypes() {
-        const checkboxes = document.querySelectorAll('#mealTypeForm input[name="mealtype"]:checked');
-        const selected = Array.from(checkboxes).map(cb => cb.value);
-        const resultDiv = document.getElementById('mealResult');
-
-        if (selected.length > 0) {
-          resultDiv.innerText = 'Showing meal types: ' + selected.join(', ');
-          resultDiv.classList.remove('hidden');
-        } else {
-          resultDiv.innerText = 'Please select at least one meal type.';
-          resultDiv.classList.remove('hidden');
-        }
-      }
-
-      // Function to check authentication status
-      function checkAuthStatus() {
-        const token = localStorage.getItem('token');
-        const userInfo = localStorage.getItem('userInfo');
-        
-        if (!token || !userInfo) {
-          return false;
-        }
-        
-        try {
-          const user = JSON.parse(userInfo);
-          if (!user || !user.token) {
-            return false;
-          }
-          return true;
-        } catch (error) {
-          return false;
-        }
-      }
-
-      // Function to handle navigation based on auth status
-      function navigateHome() {
-        const isAuthenticated = checkAuthStatus();
-        if (isAuthenticated) {
-          window.location.href = 'home.html';
-        } else {
-          window.location.href = 'index.html';
-        }
-      }
-
-      // This code runs when the page is loaded
-      document.addEventListener('DOMContentLoaded', () => {
-        const isAuthenticated = checkAuthStatus();
-        
-        // Update the home button to use the correct navigation
-        const homeButton = document.querySelector('a[href="index.html"]');
-        if (homeButton) {
-          homeButton.onclick = function(e) {
-            e.preventDefault();
-            navigateHome();
-          };
-        }
-      });
-    </script>
-  </head>
-  <body class="min-h-screen bg-white text-black">
-    <div class="flex flex-col md:flex-row">
       <!-- Sidebar -->
       <div id="sidebar" class="fixed md:relative z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 w-64 min-h-screen bg-black p-6 flex flex-col rounded-br-3xl">
         <div class="flex items-center mb-6">
@@ -294,10 +208,6 @@
       Show Full Recipe
     </button>
           </div>
-<footer class="footer">
-    <p class="px-2 py-6 text-xl text-center">© 2025 What Can I Cook? All rights reserved.</p>
-  </footer>
-        </div>
       </div>
     </div>
 
@@ -607,5 +517,102 @@
         fetchSnackRecipes();
       });
     </script>
+    <!-- Authenticated Navbar (fixed top, pill highlighter, responsive prep) -->
+<script>
+  function checkAuthStatus() {
+    const token = localStorage.getItem('token');
+    const userInfo = localStorage.getItem('userInfo');
+    if (!token || !userInfo) return false;
+    try {
+      const user = JSON.parse(userInfo);
+      if (!user || !user.token) return false;
+      return true;
+    } catch (error) { return false; }
+  }
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userInfo');
+    window.location.href = 'index.html';
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!checkAuthStatus()) {
+      window.location.href = 'login.html';
+      return;
+    }
+    // Insert navbar
+    const nav = document.createElement('nav');
+    nav.className = 'bg-yellow-500 p-4 shadow-md flex flex-wrap justify-between items-center fixed top-0 left-0 w-full z-50';
+    nav.innerHTML = `
+      <div class="flex items-center space-x-3">
+        <a href="home.html"><img src="images/logo-removebg.png" alt="Logo" class="w-20 h-25"></a>
+        <a href="home.html"><span class="text-xl font-bold">What Can I Cook?</span></a>
+      </div>
+      <div class="flex space-x-4 text-black font-semibold">
+        <a href="home.html" class="nav-link px-3 py-1 rounded-full">Home</a>
+        <a href="user.html" class="nav-link px-3 py-1 rounded-full">Profile</a>
+        <a href="recipes.html" class="nav-link px-3 py-1 rounded-full">Recipes</a>
+        <a href="favourites.html" class="nav-link px-3 py-1 rounded-full">Favourites</a>
+        <a href="upload.html" class="nav-link px-3 py-1 rounded-full">Add Recipe List</a>
+        <a href="about.html" class="nav-link px-3 py-1 rounded-full">About Us</a>
+        <button onclick="logout()" class="hover:underline text-red-700 px-3 py-1 rounded-full">Logout</button>
+      </div>
+      <button id="mobile-nav-toggle" class="md:hidden ml-4 text-2xl focus:outline-none">☰</button>
+    `;
+    document.body.prepend(nav);
+    // Highlight current page with a visible pill background
+    const path = window.location.pathname.split('/').pop();
+    document.querySelectorAll('.nav-link').forEach(link => {
+      if (link.getAttribute('href') === path) {
+        link.classList.add('bg-orange-700', 'text-white', 'shadow-lg', 'font-bold');
+      } else {
+        link.classList.remove('bg-orange-700', 'text-white', 'shadow-lg', 'font-bold');
+      }
+    });
+    // Insert footer
+    const footer = document.createElement('footer');
+    footer.className = 'text-center py-6 text-sm text-gray-600';
+    footer.innerHTML = '&copy; 2025 What Can I Cook? All rights reserved.';
+    document.body.appendChild(footer);
+    // Remove old header/footer if present
+    const oldHeader = document.querySelector('header');
+    if (oldHeader) oldHeader.remove();
+    const oldFooter = document.querySelector('footer');
+    if (oldFooter) oldFooter.remove();
+    // Add top margin to main content to prevent overlap
+    const mainOrFirstDiv = document.querySelector('main, .max-w-2xl, .max-w-6xl, .max-w-4xl, .w-full, .flex-1, .container, .mx-auto');
+    if (mainOrFirstDiv) {
+      mainOrFirstDiv.style.marginTop = '90px';
+    } else {
+      document.body.style.marginTop = '90px';
+    }
+    // Responsive sidebar for mobile (basic toggle, to be improved)
+    const navLinks = nav.querySelector('div.flex.space-x-4');
+    const mobileToggle = document.getElementById('mobile-nav-toggle');
+    if (mobileToggle && navLinks) {
+      mobileToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('hidden');
+        navLinks.classList.toggle('flex-col');
+        navLinks.classList.toggle('bg-yellow-600');
+        navLinks.classList.toggle('absolute');
+        navLinks.classList.toggle('top-16');
+        navLinks.classList.toggle('left-0');
+        navLinks.classList.toggle('w-full');
+        navLinks.classList.toggle('p-4');
+      });
+      // Hide nav links by default on mobile
+      if (window.innerWidth < 768) {
+        navLinks.classList.add('hidden');
+      }
+      window.addEventListener('resize', () => {
+        if (window.innerWidth < 768) {
+          navLinks.classList.add('hidden');
+        } else {
+          navLinks.classList.remove('hidden');
+          navLinks.classList.remove('flex-col', 'bg-yellow-600', 'absolute', 'top-16', 'left-0', 'w-full', 'p-4');
+        }
+      });
+    }
+  });
+</script>
   </body>
 </html>
