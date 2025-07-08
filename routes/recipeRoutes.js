@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createRecipe, getAllRecipes, seedRecipes } = require('../controllers/recipeController');
+const { createRecipe, getAllRecipes, seedRecipes, getRecipeById } = require('../controllers/recipeController');
 const { protect } = require('../middleware/authMiddleware');
 
 router.route('/')
@@ -8,5 +8,6 @@ router.route('/')
   .post(protect, createRecipe);
 
 router.post('/seed', seedRecipes);
+router.get('/:id', getRecipeById);
 
 module.exports = router;

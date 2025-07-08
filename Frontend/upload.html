@@ -173,6 +173,7 @@
   <script src="common.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // --- Search Modal Event Listeners (guarded) ---
       const searchModal = document.getElementById('search-modal');
       const navbarSearchBtn = document.getElementById('navbar-search-btn');
       const sidebarSearchBtn = document.getElementById('sidebar-search-btn');
@@ -180,25 +181,29 @@
       const searchInput = document.getElementById('search-input');
       const searchResults = document.getElementById('search-results');
       function openSearchModal() {
+        if (!searchModal) return;
         searchModal.classList.remove('hidden');
-        searchInput.value = '';
-        searchResults.innerHTML = '';
-        searchInput.focus();
+        if (searchInput) {
+          searchInput.value = '';
+          searchResults.innerHTML = '';
+          searchInput.focus();
+        }
       }
       function closeSearch() {
+        if (!searchModal) return;
         searchModal.classList.add('hidden');
       }
       if (navbarSearchBtn) navbarSearchBtn.addEventListener('click', openSearchModal);
       if (sidebarSearchBtn) sidebarSearchBtn.addEventListener('click', openSearchModal);
       if (closeSearchModal) closeSearchModal.addEventListener('click', closeSearch);
       document.addEventListener('keydown', (e) => {
-        if (!searchModal.classList.contains('hidden') && e.key === 'Escape') closeSearch();
+        if (searchModal && !searchModal.classList.contains('hidden') && e.key === 'Escape') closeSearch();
       });
-      searchModal.addEventListener('click', (e) => {
+      if (searchModal) searchModal.addEventListener('click', (e) => {
         if (e.target === searchModal) closeSearch();
       });
       let searchTimeout;
-      searchInput && searchInput.addEventListener('input', function() {
+      if (searchInput) searchInput.addEventListener('input', function() {
         clearTimeout(searchTimeout);
         const query = this.value.trim();
         if (!query) {
@@ -247,13 +252,108 @@
           <a href="recipe_view.html?id=${encodeURIComponent(recipe._id)}" class="text-yellow-700 font-semibold hover:underline">View</a>
         </div>`;
       }
-      const token = localStorage.getItem('token');
-      const userInfo = localStorage.getItem('userInfo');
-      const isLoggedIn = token && userInfo;
-      document.querySelectorAll('button[onclick="logout()"], button.logout-btn').forEach(btn => {
-        if (!isLoggedIn) btn.style.display = 'none';
-        else btn.style.display = '';
-      });
+
+      // --- Recipe Upload Handler ---
+    const uploadForm = document.getElementById('uploadForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const submitText = document.getElementById('submitText');
+      const submitSpinner = document.getElementById('submitSpinner');
+      const message = document.getElementById('message');
+    const imageInput = document.getElementById('image');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+      const removeImageBtn = document.getElementById('removeImage');
+      let uploadedImageUrl = '';
+
+      if (imageInput && previewImg && imagePreview && removeImageBtn) {
+    imageInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+            reader.onload = function(ev) {
+              previewImg.src = ev.target.result;
+          imagePreview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+          } else {
+            imagePreview.classList.add('hidden');
+            previewImg.src = '';
+      }
+    });
+        removeImageBtn.addEventListener('click', function() {
+      imageInput.value = '';
+      imagePreview.classList.add('hidden');
+          previewImg.src = '';
+        });
+      }
+
+      if (uploadForm) {
+    uploadForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+          if (submitBtn) submitBtn.disabled = true;
+          if (submitText) submitText.textContent = 'Uploading...';
+          if (submitSpinner) submitSpinner.classList.remove('hidden');
+          if (message) message.textContent = '';
+
+          // Gather form data
+          const formData = new FormData(uploadForm);
+          let imageUrl = '';
+          // Upload image if present
+          const imageFile = imageInput && imageInput.files[0];
+          if (imageFile) {
+            const imgForm = new FormData();
+            imgForm.append('image', imageFile);
+            try {
+              const imgRes = await fetch('/api/upload-image', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+                body: imgForm
+              });
+              const imgData = await imgRes.json();
+              if (!imgRes.ok) throw new Error(imgData.error || 'Image upload failed');
+              imageUrl = imgData.imageUrl;
+            } catch (err) {
+              if (message) message.textContent = err.message || 'Image upload failed.';
+              if (submitBtn) submitBtn.disabled = false;
+              if (submitText) submitText.textContent = 'Submit Recipe';
+              if (submitSpinner) submitSpinner.classList.add('hidden');
+              return;
+            }
+          }
+          // Prepare recipe data
+        const recipeData = {
+          title: formData.get('title'),
+            mealType: formData.get('mealType'),
+          description: formData.get('description'),
+            ingredients: formData.get('ingredients').split(',').map(s => s.trim()).filter(Boolean),
+            cuisine: formData.get('cuisine'),
+          instructions: formData.get('instructions'),
+            imageUrl
+        };
+          try {
+            const res = await fetch('/api/recipes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(recipeData)
+        });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to upload recipe');
+            if (message) message.textContent = 'Recipe uploaded successfully!';
+          uploadForm.reset();
+            if (imagePreview) imagePreview.classList.add('hidden');
+            if (previewImg) previewImg.src = '';
+          } catch (err) {
+            if (message) message.textContent = err.message || 'Failed to upload recipe.';
+          } finally {
+            if (submitBtn) submitBtn.disabled = false;
+            if (submitText) submitText.textContent = 'Submit Recipe';
+            if (submitSpinner) submitSpinner.classList.add('hidden');
+          }
+        });
+      }
     });
   </script>
   <script>

@@ -93,11 +93,64 @@
   <script src="common.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Hide/show logout button
       const token = localStorage.getItem('token');
       document.querySelectorAll('button[onclick="logout()"], button.logout-btn').forEach(btn => {
         if (!token) btn.style.display = 'none';
         else btn.style.display = '';
       });
+
+      // --- Recipe Fetch Logic ---
+      function getRecipeId() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('id');
+      }
+      async function fetchRecipe(id) {
+        try {
+          const res = await fetch(`/api/recipes/${encodeURIComponent(id)}`);
+          if (!res.ok) throw new Error('Recipe not found');
+          return await res.json();
+        } catch (err) {
+          throw err;
+        }
+      }
+      function renderRecipe(recipe) {
+        document.getElementById('recipe-image').src = recipe.imageUrl || 'images/placeholder_recipe.jpg';
+        document.getElementById('recipe-title').textContent = recipe.title;
+        const ingredientsList = document.getElementById('recipe-ingredients');
+        ingredientsList.innerHTML = '';
+        (recipe.ingredients || []).forEach(ing => {
+          const li = document.createElement('li');
+          li.textContent = ing;
+          ingredientsList.appendChild(li);
+        });
+        document.getElementById('recipe-instructions').textContent = recipe.instructions || '';
+      }
+      async function loadRecipe() {
+        const id = getRecipeId();
+        const loadingDiv = document.getElementById('recipe-loading');
+        const contentDiv = document.getElementById('recipe-content');
+        const errorDiv = document.getElementById('recipe-error');
+        if (!id) {
+          loadingDiv.style.display = 'none';
+          errorDiv.textContent = 'No recipe ID provided.';
+          errorDiv.style.display = 'block';
+          return;
+        }
+        try {
+          const recipe = await fetchRecipe(id);
+          renderRecipe(recipe);
+          loadingDiv.style.display = 'none';
+          contentDiv.style.display = 'block';
+          errorDiv.style.display = 'none';
+        } catch (err) {
+          loadingDiv.style.display = 'none';
+          contentDiv.style.display = 'none';
+          errorDiv.textContent = err.message || 'Failed to load recipe.';
+          errorDiv.style.display = 'block';
+        }
+      }
+      loadRecipe();
     });
   </script>
 </body>

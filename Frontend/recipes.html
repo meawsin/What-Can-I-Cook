@@ -558,6 +558,7 @@
         return text.replace(new RegExp(`(${q})`, 'gi'), '<mark class="bg-yellow-200">$1</mark>');
       }
       function renderRecipeResult(recipe, query) {
+        console.log('Rendering recipe with _id:', recipe._id);
         return `<div class="flex items-center space-x-4 bg-yellow-50 rounded-lg p-3 shadow">
           <img src="${recipe.imageUrl || 'images/placeholder_recipe.jpg'}" alt="${recipe.title}" class="w-16 h-16 object-cover rounded-md border">
           <div class="flex-1">

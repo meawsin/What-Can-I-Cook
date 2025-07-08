@@ -137,6 +137,27 @@ What-Can-I-Cook/
 - `POST /api/recipes` - Create a new recipe (Protected)
   - **Body:** `{ title, description, ingredients, instructions, mealType, cuisine, image }`
   - **Response:** `{ recipe }`
+- `GET /api/recipes/:id` - Get a single recipe by its MongoDB _id (Public)
+  - **Response:**
+    ```json
+    {
+      "_id": "686d8238d4f5c3feaf6380c3",
+      "title": "Masala Cheese Toast",
+      "description": "...",
+      "ingredients": ["..."],
+      "instructions": "...",
+      "imageUrl": "...",
+      "mealType": "...",
+      "cuisine": "...",
+      "uploadedBy": "...",
+      "createdAt": "...",
+      "updatedAt": "...",
+      "__v": 0
+    }
+    ```
+  - **Errors:**
+    - `404 Not Found` if the recipe does not exist
+    - `500 Server Error` for server issues
 
 ### File Upload
 - `POST /api/upload-image` - Upload recipe image (Protected, multipart/form-data)
