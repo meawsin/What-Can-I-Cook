@@ -5,7 +5,7 @@ const multer = require('multer');
 require('dotenv').config();
 
 const userRoutes = require('./routes/userRoutes');
-const recipeRoutes = require('./routes/recipeRoutes'); // Import recipe routes
+const recipeRoutes = require('./routes/recipeRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
