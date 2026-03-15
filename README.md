@@ -254,6 +254,7 @@ This project is licensed under the ISC License.
 ## Authors
 
 - **Mohsin** - *Initial work* - [meawsin](https://github.com/meawsin)
+- **Nishat** - *Initial work* - [nishat295](https://github.com/Nishat295)
 
 ## Acknowledgments
 
